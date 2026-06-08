@@ -1,1 +1,33 @@
-{"viagens":{},"dates":[]}
+{
+  "viagens": {
+    "08/06": [
+      {
+        "id": 1780961704857,
+        "tipo": "TRUCK",
+        "frota": "R3025",
+        "carreta": "",
+        "motorista": "MILTONILO DE MATOS",
+        "rota": "ROTA 01",
+        "saida": "05:00",
+        "origem": "FILIAL SBC",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1780961704857-0",
+            "fornecedor": "SEG",
+            "ji": "08:00",
+            "jf": "09:00",
+            "janela": "08:00-09:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
+      }
+    ]
+  },
+  "dates": [
+    "08/06"
+  ]
+}
