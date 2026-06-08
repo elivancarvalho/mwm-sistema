@@ -585,7 +585,7 @@ const GH_CONFIG = {
   repo:   'mwm-sistema',
   file:   'mwm_dados.json',
   branch: 'main',
-  token:  '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'   // ← substitua pelo token gerado no GitHub
+  token:  'COLE_SEU_TOKEN_AQUI'   // ← substitua pelo token gerado no GitHub
 };
 
 // ──────────────────────────────────────────────────────────────────────
@@ -633,8 +633,7 @@ async function ghGet() {
   if (!resp.ok) throw new Error(`GitHub GET ${resp.status}`);
   const meta = await resp.json();
   _fileSha = meta.sha;
-  const decoded = JSON.parse(atob(meta.content.replace(/
-/g,'')));
+  const decoded = JSON.parse(atob(meta.content.split('\n').join('')));
   return decoded;
 }
 
