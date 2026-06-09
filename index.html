@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>MWM · Sistema de Programação</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght=400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <style>
@@ -378,7 +378,6 @@ function janelaStatus(p){
   return {cls:'jok',txt:`No prazo`,urgente:false};
 }
 
-// Retorna o nome do dia da semana com base na string DD/MM e o ano corrente
 function obterNomeDiaSemana(dataTexto) {
   try {
     const [dia, mes] = dataTexto.split('/').map(Number);
@@ -464,7 +463,7 @@ async function gravarTudo() {
   try {
     const apiURL = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.file}`;
     const content = btoa(unescape(encodeURIComponent(JSON.stringify({ viagens: viagensDB, dates: availableDates }, null, 2))));
-    const body = { message: 'Sincronismo operacional mestre', content, branch: creds.branch };
+    const body = { message: 'Sincronismo mestre MWM estável', content, branch: creds.branch };
     if (_fileSha) body.sha = _fileSha;
     const resp = await fetch(apiURL, { method: 'PUT', headers: { Authorization: `token ${creds.token}`, Accept: 'application/vnd.github.v3+json' }, body: JSON.stringify(body) });
     if(resp.ok) { const r = await resp.json(); _fileSha = r.content.sha; setSyncOk(); notify('✓ Alterações guardadas na Nuvem'); }
@@ -473,7 +472,7 @@ async function gravarTudo() {
 }
 
 // ──────────────────────────────────────────────────────────────────────
-//  AUTO-PREENCHIMENTO DINÂMICO BASEADO NO DIA DA SEMANA
+//  AUTO-PREENCHIMENTO DINÂMICO
 // ──────────────────────────────────────────────────────────────────────
 function verificarEAutoPreencherCamposRota() {
   const diaSemana = obterNomeDiaSemana(currentDate);
@@ -554,18 +553,16 @@ function executarClonagemDiaCompleto() {
 }
 
 // ──────────────────────────────────────────────────────────────────────
-//  CADASTRO MANUAL CORRIGIDO
+//  CADASTRO MANUAL
 // ──────────────────────────────────────────────────────────────────────
 function abrirModalCadastroViagem() {
   document.getElementById('cadastro-mtitle').textContent = 'Cadastrar Viagem';
   
-  // Identifica dinamicamente o dia da semana da aba ativa
   const diaSemanaAtual = obterNomeDiaSemana(currentDate);
   document.getElementById('lbl-info-dia-semana').textContent = `Dia da semana ativo: ${diaSemanaAtual} (${currentDate})`;
 
-  // Carrega apenas as Rotas do Macro Seletor que pertencem a este dia específico da semana
   const macroSel = document.getElementById('form-macro-rota');
-  macroSel.innerHTML = '<option value="">-- Digitação Totalmente Manual --</option>';
+  macroSel.innerHTML = '<option value="">-- Escolha uma rota padrão ou digite manual --</option>';
   
   const rotasDoDiaEspecifico = ROTAS_MACRO_DATABASE[diaSemanaAtual] || {};
   Object.keys(rotasDoDiaEspecifico).forEach(rName => {
@@ -734,7 +731,6 @@ function renderPedidos() {
   container.innerHTML = html;
 }
 
-// Mantido idêntico ao escopo anterior para consistência total da mesa operacional
 function renderPend() {
   const vs = viagensDB[currentDate] || [];
   const container = document.getElementById('pend-apto');
@@ -766,6 +762,49 @@ function renderPend() {
   });
   container.innerHTML = html;
 }
+
+function digitarPedidoPrompt(vid, pid, valAtual) {
+  const num = prompt("Digite o número do Pedido/Solicitação da AVACORP:", valAtual === '—' ? '' : valAtual);
+  if(num === null) return;
+  const vs = viagensDB[currentDate] || [];
+  const v = vs.find(x=>x.id===vid);
+  if(v){
+    const p = v.paradas.find(x=>x.id===pid);
+    if(p) { p.pedido = num.trim() || '—'; agendarSalvamento(); updateDashboard(); }
+  }
+}
+
+function marcarParadaImportada(vid, pid) {
+  const vs = viagensDB[currentDate] || [];
+  const v = vs.find(x=>x.id===vid);
+  if(v){
+    const p = v.paradas.find(x=>x.id===pid);
+    if(p){ p.importado = !p.importado; agendarSalvamento(); updateDashboard(); }
+  }
+}
+
+function removerViagemMesa(vid) {
+  if(!confirm('Deseja excluir esta rota permanentemente?')) return;
+  viagensDB[currentDate] = (viagensDB[currentDate] || []).filter(v => v.id !== vid);
+  notify('Viagem excluída.', 'var(--red)'); agendarSalvamento(); updateDashboard();
+}
+
+function updateCTE(id,val){ const v=(viagensDB[currentDate]||[]).find(x=>x.id===id); if(v){v.cte=val; agendarSalvamento(); notify('CTE atualizado!'); updateDashboard();} }
+
+function toggleExp(id){ expanded=expanded===id?null:id; renderTable(); }
+function setSyncOk(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-ok'; }
+function setSyncErr(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-err'; }
+function setSyncPending(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-pend'; }
+function setLoadingState(on, msg=''){ 
+  const bar = document.getElementById('loading-bar');
+  const lbl = document.getElementById('loading-label');
+  if(bar) bar.style.display=on?'block':'none'; 
+  if(lbl) { lbl.style.display=on?'block':'none'; lbl.textContent=msg; }
+}
+function notify(m,c){ const n=document.getElementById('notif'); n.style.background=c||'var(--green)'; n.innerHTML=m; n.classList.add('show'); setTimeout(()=>n.classList.remove('show'), 2500); }
+function toggleSidebar(){ document.getElementById('app').classList.toggle('collapsed'); }
+function abrirModal(id){ document.getElementById('modal-'+id).classList.add('open'); }
+function fecharModal(id){ document.getElementById('modal-'+id).classList.remove('open'); }
 
 function navTo(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
