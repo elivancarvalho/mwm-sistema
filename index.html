@@ -346,7 +346,7 @@ function obterGHCredenciais() {
 }
 
 // ──────────────────────────────────────────────────────────────────────
-//  FUNÇÕES AUXILIARES OPERACIONAIS DE CÁLCULO (Posicionamento Estratégico)
+//  FUNÇÕES AUXILIARES OPERACIONAIS DE CÁLCULO
 // ──────────────────────────────────────────────────────────────────────
 function h2m(s){const[h,m]=(s||'00:00').split(':').map(Number);return h*60+m;}
 function now(){const d=new Date();return d.getHours()*60+d.getMinutes();}
@@ -472,7 +472,7 @@ function selecionarDiaParaCopiar(dataOrigem) {
   document.getElementById('btn-confirmar-clone').disabled = false;
 }
 
-function executarClonagemDiaCompleto() {
+function ejecutarClonagemDiaCompleto() {
   if(!diaSelecionadoParaClonar) return;
   const baseOrigem = viagensDB[diaSelecionadoParaClonar] || [];
   const clonesLimpos = baseOrigem.map((v, index) => {
@@ -556,7 +556,6 @@ function salvarFormViagem() {
 
   const dbVeiculo = CONJUNTURA_VEICULOS[frota] || { placa: 'MANUAL', antigo: '—' };
   
-  // FIX: Se for TRUCK, o painel exibe "—" para a carreta de forma limpa, sem caracteres corrompidos
   let carretaInfo = '—';
   if(tipo === 'CONJUNTO') {
     if(carreta) {
@@ -609,13 +608,11 @@ function renderAlertas() {
   const vs = viagensDB[currentDate] || [];
   const container = document.getElementById('alerta-wrap');
   let html = '';
-  let contagem = 0;
 
   vs.forEach(v => {
     (v.paradas || []).forEach(p => {
       const js = janelaStatus(p);
       if(!p.importado) {
-        contagem++;
         html += `
           <div style="background:var(--bg2); padding:12px; border-radius:6px; border-left:4px solid ${js.urgente?'var(--orange)':'var(--red)'}; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;">
             <div>
@@ -634,7 +631,7 @@ function renderAlertas() {
 }
 
 function renderPedidos() {
-  const vs = viajesDB = viagensDB[currentDate] || [];
+  const vs = viagensDB[currentDate] || [];
   const container = document.getElementById('pedidos-list');
   let html = '';
 
@@ -664,7 +661,7 @@ function renderPedidos() {
 }
 
 function renderPend() {
-  const vs = viagensDB[currentDate] || [];
+  const vs = viajesDB = viagensDB[currentDate] || [];
   const container = document.getElementById('pend-apto');
   let html = '';
 
@@ -734,6 +731,7 @@ function toggleSidebar(){ document.getElementById('app').classList.toggle('colla
 function abrirModal(id){ document.getElementById('modal-'+id).classList.add('open'); }
 function fecharModal(id){ document.getElementById('modal-'+id).classList.remove('open'); }
 
+// FIX DA CLASSE: classe corrigida de .add() para .classList.add()
 function navTo(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
@@ -805,4 +803,42 @@ function renderTable(){
               <td><button class="btn btn-ghost btn-sm" onclick="digitarPedidoPrompt(${v.id},'${p.id}','${p.pedido}')">${p.pedido==='—'?'+ Vincular Pedido':p.pedido}</button></td>
               <td><span class="${js.cls}">${js.txt}</span></td>
               <td>
-                <button class="btn btn-ghost btn-sm" onclick="mar
+                <button class="btn btn-ghost btn-sm" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'Desfazer Baixa':'✓ Baixar AVACORP'}</button>
+              </td>
+            </tr>`;
+          }).join('')}</tbody>
+        </table>
+        <div style="margin-top:10px;"><button class="btn btn-sm" style="background:var(--red-bg); color:var(--red);" onclick="removerViagemMesa(${v.id})">Remover Rota do Dia</button></div>
+      </div></td>`;
+      tbody.appendChild(exp);
+    }
+  });
+}
+
+function updateBadges(){
+  const vs = viagensDB[currentDate] || [];
+  const badgAlertas = document.getElementById('badge-alertas');
+  const badgAva = document.getElementById('badge-ava');
+  const badgPend = document.getElementById('badge-pend');
+  
+  if(badgPend) badgPend.textContent=vs.filter(v=>v.cte==='PENDENTE').length;
+  if(badgAva) badgAva.textContent=vs.filter(v=>avaSt(v)==='PENDENTE' || avaSt(v)==='PARCIAL').length;
+  
+  let urgentes = 0;
+  vs.forEach(v => (v.paradas||[]).forEach(p => { if(!p.importado && janelaStatus(p).urgente) urgentes++; }));
+  if(badgAlertas) badgAlertas.textContent = urgentes;
+}
+
+function salvarConfiguracoesGitHub() {
+  localStorage.setItem('mwm_gh_token', document.getElementById('cfg-token').value.trim());
+  localStorage.setItem('mwm_gh_repo', document.getElementById('cfg-repo').value.trim());
+  localStorage.setItem('mwm_gh_branch', document.getElementById('cfg-branch').value.trim());
+  notify('✓ Conexão configurada!', 'var(--green)'); carregarTodos();
+}
+function salvarCache(){ localStorage.setItem('mwm_v5_cache', JSON.stringify({viagens:viagensDB,dates:availableDates})); }
+function carregarCache(){ const s=localStorage.getItem('mwm_v5_cache'); if(s){const d=JSON.parse(s);viagensDB=d.viagens||{};availableDates=d.dates||[];} }
+
+document.addEventListener('DOMContentLoaded', () => { carregarCache(); carregarTodos(); setInterval(()=>document.getElementById('tclock').textContent=new Date().toLocaleTimeString('pt-BR'),1000); });
+</script>
+</body>
+</html>
