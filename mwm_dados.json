@@ -386,6 +386,43 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781046903006,
+        "tipo": "TRUCK",
+        "frota": "OKZ6B54",
+        "frotaAntiga": "Agregado Extra",
+        "placa": "Caminhão Terceiro",
+        "carreta": "—",
+        "motorista": "SEBASTIÃO MIGUEL",
+        "rota": "ROTA 13",
+        "saida": "05:00",
+        "origem": "THYSSENKRUPP",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781046903006-0",
+            "fornecedor": "THYSSENKRUPP",
+            "cidade": "SÃO PAULO",
+            "ji": "08:00",
+            "jf": "09:30",
+            "janela": "08:00-09:30",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781046903006-1",
+            "fornecedor": "MWM STO AMARO",
+            "cidade": "SÃO PAULO",
+            "ji": "12:30",
+            "jf": "16:00",
+            "janela": "12:30-16:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ],
     "09/06": []
