@@ -198,6 +198,43 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781046285592,
+        "tipo": "TRUCK",
+        "frota": "R3019",
+        "frotaAntiga": "3245",
+        "placa": "TBA3C89",
+        "carreta": "—",
+        "motorista": "GILMAR PEREIRA SILVA",
+        "rota": "ROTA 09",
+        "saida": "07:00",
+        "origem": "ZF CV",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781046285592-0",
+            "fornecedor": "ZF CV",
+            "cidade": "SÃO PAULO",
+            "ji": "10:00",
+            "jf": "11:00",
+            "janela": "10:00-11:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781046285592-1",
+            "fornecedor": "ENGRECON",
+            "cidade": "SÃO PAULO",
+            "ji": "13:30",
+            "jf": "14:30",
+            "janela": "13:30-14:30",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ],
     "09/06": []
