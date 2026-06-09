@@ -380,7 +380,7 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 <div class="notif" id="notif"></div>
 
 <script>
-let viajesDB = [];
+// Declarações corretas de estado global unificado
 let viagensDB = {};
 let availableDates = [];
 let currentDate = '';
@@ -404,6 +404,9 @@ function obterGHCredenciais() {
   };
 }
 
+// ──────────────────────────────────────────────────────────────────────
+//  FUNÇÕES AUXILIARES OPERACIONAIS DE CÁLCULO
+// ──────────────────────────────────────────────────────────────────────
 function h2m(s){const[h,m]=(s||'00:00').split(':').map(Number);return h*60+m;}
 function now(){const d=new Date();return d.getHours()*60+d.getMinutes();}
 
@@ -433,8 +436,12 @@ function obterNomeDiaSemana(dataTexto) {
   } catch(e) { return 'Segunda-feira'; }
 }
 
+// ──────────────────────────────────────────────────────────────────────
+//  REQUISIÇÕES DE REDE CLOUD
+// ──────────────────────────────────────────────────────────────────────
 async function carregarDicionariosRemotosGitHub() {
   const creds = obterGHCredenciais(); if(!creds.token) return false;
+  
   try {
     const urlF = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.fleetFile}?ref=${creds.branch}&t=${Date.now()}`;
     const respF = await fetch(urlF, { headers: { Authorization: `token ${creds.token}`, Accept: 'application/vnd.github.v3+json' } });
@@ -446,7 +453,7 @@ async function carregarDicionariosRemotosGitHub() {
         if(CONJUNTURA_VEICULOS[key].placa) MAPA_REVERSO_PLACAS[CONJUNTURA_VEICULOS[key].placa] = { ...CONJUNTURA_VEICULOS[key], frotaNova: key };
       });
     }
-  } catch(e) { console.error(e); }
+  } catch(e) { console.error('Erro frotas:', e); }
 
   try {
     const urlR = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.routesFile}?ref=${creds.branch}&t=${Date.now()}`;
@@ -455,7 +462,7 @@ async function carregarDicionariosRemotosGitHub() {
       const dataR = await respR.json();
       ROTAS_MACRO_DATABASE = JSON.parse(atob(dataR.content.split('\n').join('')));
     }
-  } catch(e) { console.error(e); }
+  } catch(e) { console.error('Erro rotas:', e); }
   return true;
 }
 
@@ -502,6 +509,9 @@ async function gravarTudo() {
   } catch(e) { setSyncErr(); }
 }
 
+// ──────────────────────────────────────────────────────────────────────
+//  MOTOR DO PAINEL DE DISPONIBILIDADE
+// ──────────────────────────────────────────────────────────────────────
 function renderDisponibilidade() {
   const vs = viagensDB[currentDate] || [];
   const lblSub = document.getElementById('disp-date-subtitle');
@@ -511,8 +521,7 @@ function renderDisponibilidade() {
   vs.forEach(v => {
     if(v.frota) frotasOcupadas[v.frota] = { rota: v.rota, motorista: v.motorista };
     if(v.carreta && v.carreta !== '—') {
-      const prefixoCarreta = v.carreta.split(' ')[0];
-      frotasOcupadas[prefixoCarreta] = { rota: v.rota, motorista: v.motorista };
+      const prefixoCarreta = v.carreta.split(' ')[0]; frotasOcupadas[prefixoCarreta] = { rota: v.rota, motorista: v.motorista };
     }
   });
 
@@ -525,7 +534,7 @@ function renderDisponibilidade() {
   Object.keys(CONJUNTURA_VEICULOS).forEach(prefixo => {
     const v = CONJUNTURA_VEICULOS[prefixo]; const ocupado = frotasOcupadas[prefixo];
     if(ocupado) {
-      htmlOcupados += `<div class="disp-item" style="border-left: 3px solid var(--red);"><div>document.write<strong>${prefixo}</strong> — <span style="font-size:11px; color:var(--text2)">${v.placa}</span> [${v.tipo||'CARRETA'}]</div><div style="font-size:11px; text-align:right; color:var(--red);">🔒 ${ocupado.rota}</div></div>`;
+      htmlOcupados += `<div class="disp-item" style="border-left: 3px solid var(--red);"><div><strong>${prefixo}</strong> — <span style="font-size:11px; color:var(--text2)">${v.placa}</span> [${v.tipo||'CARRETA'}]</div><div style="font-size:11px; text-align:right; color:var(--red);">🔒 ${ocupado.rota}</div></div>`;
     } else {
       countLivres++;
       htmlLivres += `<div class="disp-item" style="border-left: 3px solid var(--green);"><div><strong>${prefixo}</strong> — <span style="font-size:11px; color:var(--text2)">${v.placa}</span> [${v.tipo||'CARRETA'}]</div><div style="font-size:11px; color:var(--green);">✅ LIVRE</div></div>`;
@@ -535,6 +544,9 @@ function renderDisponibilidade() {
   const bDisp = document.getElementById('badge-disp'); if(bDisp) bDisp.textContent = countLivres;
 }
 
+// ──────────────────────────────────────────────────────────────────────
+//  MANIPULADORES DE FORMULÁRIO INTERNO
+// ──────────────────────────────────────────────────────────────────────
 function recalculasRotasDisponiveisNoDropdown() {
   const diaSelecionado = document.getElementById('form-filtro-dia-semana').value;
   const macroSel = document.getElementById('form-macro-rota');
@@ -558,15 +570,11 @@ function verificarEAutoPreencherCamposRota() {
   notify(`✓ Estrutura padrão aplicada!`);
 }
 
-// LÓGICA DO SELETOR DE AGREGADOS MANUAL
 function verificarSeFrotaEManual() {
   const frotaValor = document.getElementById('form-frota').value;
   const blocoManual = document.getElementById('form-frota-manual-block');
-  if(frotaValor === "MANUAL_AGREGADO") {
-    blocoManual.style.display = "block";
-  } else {
-    blocoManual.style.display = "none";
-  }
+  if(frotaValor === "MANUAL_AGREGADO") { blocoManual.style.display = "block"; } 
+  else { blocoManual.style.display = "none"; }
 }
 
 function abrirModalCadastroViagem() {
@@ -579,7 +587,6 @@ function abrirModalCadastroViagem() {
   const selFrota = document.getElementById('form-frota');
   const selCarreta = document.getElementById('form-carreta');
   
-  // ADICIONA A OPÇÃO MANUAL NO DROP DOWN
   selFrota.innerHTML = '<option value="">-- Escolha o Veículo --</option>';
   selFrota.innerHTML += '<option value="MANUAL_AGREGADO" style="color:var(--orange); font-weight:600;">--- DIGITAR MANUAL (AGREGADO EX) ---</option>';
   selCarreta.innerHTML = '<option value="">-- Nenhuma Carreta --</option>';
@@ -614,12 +621,10 @@ function salvarFormViagem() {
 
   let placaFinal = ''; let antigoFinal = '—';
 
-  // REGRA DE CAPTURA DO AGREGADO MANUAL
   if(frota === "MANUAL_AGREGADO") {
     const textoDigitado = document.getElementById('form-frota-manual-input').value.trim();
     frota = textoDigitado ? textoDigitado.toUpperCase() : "AGREGADO EXT";
-    placaFinal = "Caminhão Próprio Terceiro";
-    antigoFinal = "Agregado Extra";
+    placaFinal = "Caminhão Próprio Terceiro"; antigoFinal = "Agregado Extra";
   } else {
     const dbVeiculo = CONJUNTURA_VEICULOS[frota] || { placa: 'MANUAL', antigo: '—' };
     placaFinal = dbVeiculo.placa; antigoFinal = dbVeiculo.antigo;
@@ -649,6 +654,9 @@ function salvarFormViagem() {
   fecharModal('cadastro'); notify('✓ Viagem salva!'); agendarSalvamento(); updateDashboard();
 }
 
+// ──────────────────────────────────────────────────────────────────────
+//  CLONAGEM OPERACIONAL DE BASE DE HISTÓRICOS
+// ──────────────────────────────────────────────────────────────────────
 function abrirModalClonagemSemanal() {
   diaSelecionadoParaClonar = null; document.getElementById('lbl-data-destino').textContent = currentDate; document.getElementById('btn-confirmar-clone').disabled = true;
   const container = document.getElementById('clonagem-lista-dias'); container.innerHTML = '';
@@ -669,7 +677,7 @@ function selecionarDiaParaCopiar(dataOrigem) {
   const selecionado = document.getElementById(`item-clone-${dataOrigem.replace('/', '-')}`); if(selecionado) selecionado.classList.add('selected');
   document.getElementById('btn-confirmar-clone').disabled = false;
 }
-function executarClonagemDiaCompleto() {
+function ejecutarClonagemDiaCompleto() {
   if(!diaSelecionadoParaClonar) return; const baseOrigem = viagensDB[diaSelecionadoParaClonar] || [];
   const clonesLimpos = baseOrigem.map((v, index) => {
     const novoVid = Date.now() + index + Math.floor(Math.random()*1000);
@@ -691,6 +699,9 @@ function adicionarCamposParadaForm(forn='', ji='08:00', jf='16:00') {
 function abrirModalCalendario() { abrirModal('data'); }
 function criarOuMudarDataAtiva() { const d = document.getElementById('form-nova-data').value.trim(); if(!d.match(/^\d{2}\/\d{2}$/)) { alert('Use o formato DD/MM. Ex: 15/06'); return; } currentDate = d; fecharModal('data'); updateDashboard(); }
 
+// ──────────────────────────────────────────────────────────────────────
+//  RENDERIZAÇÃO DAS TELAS OPERACIONAIS
+// ──────────────────────────────────────────────────────────────────────
 function renderAlertas() {
   const vs = viagensDB[currentDate] || []; const container = document.getElementById('alerta-wrap'); let html = '';
   vs.forEach(v => {
@@ -733,6 +744,7 @@ function setTipo(v){ fTipo=v; renderTable(); }
 function setCTE(v){ fCTE=v; renderTable(); }
 function renderDateNav(){ const c=document.getElementById('date-nav'); if(!c) return; c.innerHTML = availableDates.map(d=>`<div class="date-tab ${currentDate===d?'active':''}" onclick="setDate('${d}')">${d} <span class="dtag">${(viagensDB[d]||[]).length}</span></div>`).join(''); }
 function setDate(d){ currentDate=d; expanded=null; updateDashboard(); }
+
 function renderStats(){
   const vs=viagensDB[currentDate]||[];
   document.getElementById('stats-row').innerHTML=`<div class="stat"><div class="stl">Total Viagens</div><div class="stv">${vs.length}</div></div><div class="stat"><div class="stl">Trucks</div><div class="stv" style="color:var(--accent)">${vs.filter(v=>v.tipo==='TRUCK').length}</div></div><div class="stat"><div class="stl">Conjuntos</div><div class="stv" style="color:var(--purple)">${vs.filter(v=>v.tipo==='CONJUNTO').length}</div></div><div class="stat"><div class="stl">Prontos p/ CTE</div><div class="stv" style="color:var(--green)">${vs.filter(v=>avaSt(v)==='IMPORTADO' || avaSt(v)==='N/A').length}/${vs.length}</div></div>`;
@@ -765,6 +777,19 @@ function abrirModal(id){ document.getElementById('modal-'+id).classList.add('ope
 function fecharModal(id){ document.getElementById('modal-'+id).classList.remove('open'); }
 function salvarCache(){ localStorage.setItem('mwm_v5_cache', JSON.stringify({viagens:viagensDB,dates:availableDates})); }
 function carregarCache(){ const s=localStorage.getItem('mwm_v5_cache'); if(s){const d=JSON.parse(s);viagensDB=d.viagens||{};availableDates=d.dates||[];} }
+
+function salvarConfiguracoesGitHub() {
+  localStorage.setItem('mwm_gh_token', document.getElementById('cfg-token').value.trim());
+  localStorage.setItem('mwm_gh_repo', document.getElementById('cfg-repo').value.trim());
+  localStorage.setItem('mwm_gh_branch', document.getElementById('cfg-branch').value.trim());
+  notify('✓ Conexão configurada!', 'var(--green)'); carregarTodos();
+}
+
+function setLoadingState(on, msg=''){ 
+  const bar = document.getElementById('loading-bar'); const lbl = document.getElementById('loading-label');
+  if(bar) bar.style.display=on?'block':'none'; if(lbl) { lbl.style.display=on?'block':'none'; lbl.textContent=msg; }
+}
+
 document.addEventListener('DOMContentLoaded', () => { carregarCache(); carregarTodos(); setInterval(()=>document.getElementById('tclock').textContent=new Date().toLocaleTimeString('pt-BR'),1000); });
 </script>
 </body>
