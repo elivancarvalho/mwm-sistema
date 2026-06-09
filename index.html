@@ -63,8 +63,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .pact{display:flex;gap:8px;flex-shrink:0;}
 
 .date-nav{padding:12px 26px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
-.dnav-btn{width:28px;height:28px;border-radius:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .12s;}
-.dnav-btn:hover{background:var(--bg4);}
 .date-tab{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:5px;font-size:11px;cursor:pointer;color:var(--text2);background:var(--bg3);border:1px solid var(--border);font-family:var(--mono);transition:all .12s;}
 .date-tab:hover{background:var(--bg4);}
 .date-tab.active{background:var(--accent);color:#fff;border-color:var(--accent);}
@@ -122,6 +120,7 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 .prog-fill{height:100%;border-radius:3px;}
 
 .ava-ok{background:var(--green-bg);color:var(--green);border:1px solid rgba(46,204,113,.25);padding:2px 8px;border-radius:4px;font-size:10px;}
+.ava-par{background:var(--orange-bg);color:var(--orange);border:1px solid rgba(251,146,60,.25);padding:2px 8px;border-radius:4px;font-size:10px;}
 .ava-pend{background:var(--bg4);color:var(--text3);border:1px solid var(--border2);padding:2px 8px;border-radius:4px;font-size:10px;}
 
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .18s;}
@@ -133,7 +132,6 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 .mbody{padding:18px 22px;}
 .mftr{padding:12px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;}
 
-/* SEÇÕES DO FORMULÁRIO */
 .msec { margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
 .msec:last-child { border: none; }
 .msec-t { font-size: 10px; font-weight: 600; color: var(--accent); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
@@ -142,7 +140,6 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 .fg-label{display:block;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
 .fg-label+input,.fg-label+select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:6px 8px;outline:none;font-family:var(--sans);font-size:12px;}
 
-/* ELEMENTOS DE CLONAGEM */
 .clone-list-item { display: flex; align-items: center; justify-content: space-between; padding: 10px; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 5px; cursor: pointer; transition: all 0.15s; }
 .clone-list-item:hover { border-color: var(--accent); background: var(--bg4); }
 .clone-list-item.selected { border-color: var(--green); background: rgba(46, 204, 113, 0.08); }
@@ -174,7 +171,7 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
   <div class="topbar-right">
     <span class="tclock" id="tclock">--:--:--</span>
     <div class="avatar">PS</div>
-    <span style="font-size:12px;color:var(--text2)">Painel Operacional</span><span class="sync-off" id="sync-indicator"></span>
+    <span style="font-size:12px;color:var(--text2)">Painel Cloud Dinâmico</span><span class="sync-off" id="sync-indicator"></span>
   </div>
 </header>
 
@@ -247,9 +244,9 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
   </div>
 </div>
 
-<div class="page" id="page-alertas"><div class="ph"><div><div class="pt">Alertas de Janela</div><div class="ps">Prazos</div></div></div><div style="padding:16px 26px" id="alerta-wrap"></div></div>
-<div class="page" id="page-pedidos"><div class="ph"><div><div class="pt">Pedidos — AVACORP</div><div class="ps">Notas</div></div></div><div style="padding:14px 26px" id="pedidos-list"></div></div>
-<div class="page" id="page-pend"><div class="ph"><div><div class="pt">Pendentes de CTE</div><div class="ps">Emissões</div></div></div><div style="padding:14px 26px" id="pend-apto"></div></div>
+<div class="page" id="page-alertas"><div class="ph"><div><div class="pt">Alertas de Janela</div><div class="ps">Prazos de Fechamento de Coleta</div></div></div><div style="padding:16px 26px" id="alerta-wrap"></div></div>
+<div class="page" id="page-pedidos"><div class="ph"><div><div class="pt">Pedidos — AVACORP</div><div class="ps">Gerenciamento por Número de Pedido</div></div></div><div style="padding:14px 26px" id="pedidos-list"></div></div>
+<div class="page" id="page-pend"><div class="ph"><div><div class="pt">Pendentes de CTE</div><div class="ps">Liberações Finais para Emissão</div></div></div><div style="padding:14px 26px" id="pend-apto"></div></div>
 
 <div class="page" id="page-config">
   <div class="ph"><div><div class="pt">Configurações GitHub</div><div class="ps">Gerencie suas chaves</div></div></div>
@@ -274,7 +271,7 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
       <div class="msec-t">Dados do Veículo</div>
       <div class="fg">
         <div><label class="fg-label">Tipo Operação</label><select id="form-tipo" onchange="toggleFormCarreta()"><option value="TRUCK">Truck</option><option value="CONJUNTO">Conjunto (Cavalo+Carreta)</option></select></div>
-        <div><label class="fg-label">Frota Cavalo / Truck</label><select id="form-frota" onchange="autoPreencherFormVeiculo()"></select></div>
+        <div><label class="fg-label">Frota Cavalo / Truck</label><select id="form-frota"></select></div>
         <div id="form-carreta-block" style="display:none"><label class="fg-label">Carreta Vinculada</label><select id="form-carreta"></select></div>
       </div>
     </div>
@@ -307,11 +304,8 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 <div class="modal" style="width:450px;">
   <div class="mhdr"><div class="mtitle">Copiar & Colar Programação</div><button class="mx" onclick="fecharModal('clonagem')">×</button></div>
   <div class="mbody">
-    <p style="color:var(--text2); font-size:12px; margin-bottom:12px;">Escolha abaixo qual dia você quer usar como base para copiar todas as rotas e motoristas para o dia ativo (<strong style="color:var(--accent)" id="lbl-data-destino"></strong>):</p>
+    <p style="color:var(--text2); font-size:12px; margin-bottom:12px;">Escolha qual dia usar como base para o dia ativo (<strong style="color:var(--accent)" id="lbl-data-destino"></strong>):</p>
     <div id="clonagem-lista-dias" style="max-height:250px; overflow-y:auto; margin-bottom:10px;"></div>
-    <div style="background:var(--amber-bg); color:var(--amber); padding:8px; border-radius:4px; font-size:11px;">
-      ⚠ <strong>Nota:</strong> Todas as rotas serão coladas mantendo motoristas e horários. Os números de CTE e baixas de AVACORP serão zerados para que você possa iniciar a validação das novas notas.
-    </div>
   </div>
   <div class="mftr"><button class="btn btn-ghost" onclick="fecharModal('clonagem')">Cancelar</button><button class="btn btn-primary" id="btn-confirmar-clone" disabled onclick="executarClonagemDiaCompleto()">Colar Programação</button></div>
 </div>
@@ -352,9 +346,6 @@ function obterGHCredenciais() {
   };
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  INICIALIZAÇÃO COMPLETA E MONTAGEM DA REDE
-// ──────────────────────────────────────────────────────────────────────
 async function carregarDicionarioFrotasRemoto() {
   const creds = obterGHCredenciais();
   if(!creds.token) return false;
@@ -368,8 +359,6 @@ async function carregarDicionarioFrotasRemoto() {
       Object.keys(CONJUNTURA_VEICULOS).forEach(key => {
         if(CONJUNTURA_VEICULOS[key].placa) MAPA_REVERSO_PLACAS[CONJUNTURA_VEICULOS[key].placa] = { ...CONJUNTURA_VEICULOS[key], frotaNova: key };
       });
-      const lbl = document.getElementById('frota-status-lbl');
-      if(lbl) lbl.innerHTML = `✓ Dicionário Nuvem carregado com sucesso.`;
       return true;
     }
   } catch(e) { console.error('Erro ao ler frota.json:', e); }
@@ -404,9 +393,10 @@ function updateDashboard() {
     availableDates.push(currentDate); availableDates.sort();
   }
 
-  const sub = document.getElementById('prog-date-subtitle');
-  if(sub) sub.textContent = `Emissões CTE e Janelas AVACORP — Dia Ativo: ${currentDate}`;
   renderDateNav(); renderTable(); renderStats(); updateBadges();
+  if (document.getElementById('page-alertas').classList.contains('active')) renderAlertas();
+  if (document.getElementById('page-pedidos').classList.contains('active')) renderPedidos();
+  if (document.getElementById('page-pend').classList.contains('active')) renderPend();
 }
 
 function agendarSalvamento() { clearTimeout(_saveTimeout); setSyncPending(); salvarCache(); _saveTimeout = setTimeout(() => gravarTudo(), 2500); }
@@ -416,25 +406,23 @@ async function gravarTudo() {
   try {
     const apiURL = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.file}`;
     const content = btoa(unescape(encodeURIComponent(JSON.stringify({ viagens: viagensDB, dates: availableDates }, null, 2))));
-    const body = { message: 'Sincronismo mestre MWM estável', content, branch: creds.branch };
+    const body = { message: 'Sincronismo operacional MWM', content, branch: creds.branch };
     if (_fileSha) body.sha = _fileSha;
     const resp = await fetch(apiURL, { method: 'PUT', headers: { Authorization: `token ${creds.token}`, Accept: 'application/vnd.github.v3+json' }, body: JSON.stringify(body) });
-    if(resp.ok) { const r = await resp.json(); _fileSha = r.content.sha; setSyncOk(); notify('✓ Alterações guardadas na Nuvem'); }
+    if(resp.ok) { const r = await resp.json(); _fileSha = r.content.sha; setSyncOk(); notify('✓ Modificações salvas na Nuvem'); }
     else { setSyncErr(); }
   } catch(e) { setSyncErr(); }
 }
 
 // ──────────────────────────────────────────────────────────────────────
-//  MÓDULO DE COPIAR E COLAR DIA COMPLETO (CLONAGEM SELEÇÃO)
+//  CLONAGEM OPERACIONAL
 // ──────────────────────────────────────────────────────────────────────
 function abrirModalClonagemSemanal() {
   diaSelecionadoParaClonar = null;
   document.getElementById('lbl-data-destino').textContent = currentDate;
   document.getElementById('btn-confirmar-clone').disabled = true;
-  
   const container = document.getElementById('clonagem-lista-dias');
   container.innerHTML = '';
-  
   const diasComDados = availableDates.filter(d => d !== currentDate && (viagensDB[d] || []).length > 0);
   
   if(diasComDados.length === 0) {
@@ -462,55 +450,30 @@ function selecionarDiaParaCopiar(dataOrigem) {
 
 function executarClonagemDiaCompleto() {
   if(!diaSelecionadoParaClonar) return;
-  
   const baseOrigem = viagensDB[diaSelecionadoParaClonar] || [];
-  
-  // Limpa e reseta os metadados sensíveis para a nova semana de operação
   const clonesLimpos = baseOrigem.map((v, index) => {
     const novoVid = Date.now() + index + Math.floor(Math.random()*1000);
     return {
-      id: novoVid,
-      tipo: v.tipo,
-      frota: v.frota,
-      frotaAntiga: v.frotaAntiga,
-      placa: v.placa,
-      carreta: v.carreta,
-      motorista: v.motorista,
-      rota: v.rota,
-      saida: v.saida,
-      origem: v.origem,
-      destino: v.destino,
-      cte: 'PENDENTE', // Volta para pendente para nova emissão
-      obs: v.obs || '',
+      id: novoVid, tipo: v.tipo, frota: v.frota, frotaAntiga: v.frotaAntiga, placa: v.placa, carreta: v.carreta,
+      motorista: v.motorista, rota: v.rota, saida: v.saida, origem: v.origem, destino: v.destino,
+      cte: 'PENDENTE', obs: v.obs || '',
       paradas: (v.paradas || []).map((p, idxIdx) => ({
-        id: `${novoVid}-${idxIdx}`,
-        fornecedor: p.fornecedor,
-        cidade: p.cidade || '',
-        ji: p.ji || '08:00',
-        jf: p.jf || '18:00',
-        janela: p.janela || '08:00-18:00',
-        pedido: '—', // Zera o pedido antigo para digitação limpa
-        importado: false // Zera a baixa da AVACORP
+        id: `${novoVid}-${idxIdx}`, fornecedor: p.fornecedor, cidade: p.cidade || 'SÃO PAULO', ji: p.ji || '08:00', jf: p.jf || '18:00', janela: p.janela || '08:00-18:00', pedido: '—', importado: false
       }))
     };
   });
-  
-  // Acrescenta os clones ao dia ativo
   if(!viagensDB[currentDate]) viagensDB[currentDate] = [];
   viagensDB[currentDate] = [...viagensDB[currentDate], ...clonesLimpos];
-  
   fecharModal('clonagem');
-  notify(`✓ Sucesso! Copiado ${clonesLimpos.length} rotas do dia ${diaSelecionadoParaClonar}!`);
-  agendarSalvamento();
-  updateDashboard();
+  notify(`✓ Sucesso! Copiado ${clonesLimpos.length} rotas!`);
+  agendarSalvamento(); updateDashboard();
 }
 
 // ──────────────────────────────────────────────────────────────────────
-//  CADASTRO MANUAL E FORMULÁRIO DE EDIÇÃO DE ROTAS
+//  CADASTRO MANUAL CORRIGIDO
 // ──────────────────────────────────────────────────────────────────────
 function abrirModalCadastroViagem() {
-  document.getElementById('cadastro-mtitle').textContent = 'Cadastrar Viagem Manual';
-  
+  document.getElementById('cadastro-mtitle').textContent = 'Cadastrar Viagem';
   const selFrota = document.getElementById('form-frota');
   const selCarreta = document.getElementById('form-carreta');
   
@@ -531,7 +494,7 @@ function abrirModalCadastroViagem() {
   document.getElementById('form-obs').value = '';
   document.getElementById('form-paradas-container').innerHTML = '';
   
-  adicionarCamposParadaForm(); // inicia com um campo de coleta ativo
+  adicionarCamposParadaForm();
   abrirModal('cadastro');
 }
 
@@ -540,14 +503,14 @@ function toggleFormCarreta() {
   document.getElementById('form-carreta-block').style.display = tipo === 'CONJUNTO' ? 'block' : 'none';
 }
 
-function adicionarCamposParadaForm(forn='', ji='08:00', jf='17:00') {
+function adicionarCamposParadaForm(forn='', ji='08:00', jf='16:00') {
   const container = document.getElementById('form-paradas-container');
   const div = document.createElement('div');
   div.className = 'parada-box';
   div.innerHTML = `
     <button class="btn-del-parada" onclick="this.parentElement.remove()">×</button>
     <div class="fg" style="grid-template-columns: 2fr 1fr 1fr">
-      <div><label class="fg-label">Fornecedor / Local</label><input type="text" class="f-p-forn" value="${forn}" placeholder="Ex: MAHLE"></div>
+      <div><label class="fg-label">Local Coleta (Fornecedor)</label><input type="text" class="f-p-forn" value="${forn}" placeholder="Ex: SEG AUTOMOTIVE"></div>
       <div><label class="fg-label">Início Janela</label><input type="time" class="f-p-ji" value="${ji}"></div>
       <div><label class="fg-label">Fim Janela</label><input type="time" class="f-p-jf" value="${jf}"></div>
     </div>
@@ -568,10 +531,16 @@ function salvarFormViagem() {
   if(!frota || !rota) { alert('Frota e Rota são obrigatórios.'); return; }
 
   const dbVeiculo = CONJUNTURA_VEICULOS[frota] || { placa: 'MANUAL', antigo: '—' };
+  
+  // CORREÇÃO DO "—" PARA CAMINHÕES TRUCK (Monta a conjunctura visual correta)
   let carretaInfo = '—';
-  if(tipo==='CONJUNTO' && carreta) {
-    const dbCarreta = CONJUNTURA_VEICULOS[carreta] || { placa: '—', antigo: '—' };
-    carretaInfo = `${carreta} (Placa: ${dbCarreta.placa} / Antigo: ${dbCarreta.antigo})`;
+  if(tipo === 'CONJUNTO') {
+    if(carreta) {
+      const dbCarreta = CONJUNTURA_VEICULOS[carreta] || { placa: '—', antigo: '—' };
+      carretaInfo = `${carreta} / Placa: ${dbCarreta.placa} (Antigo: ${dbCarreta.antigo})`;
+    } else {
+      carretaInfo = 'Faltando Carreta';
+    }
   }
 
   const vid = Date.now();
@@ -583,14 +552,14 @@ function salvarFormViagem() {
     const jf = box.querySelector('.f-p-jf').value;
     if(forn) {
       paradas.push({
-        id: `${vid}-${idx}`, fornecedor: forn, cidade: '', ji, jf, janela: `${ji}-${jf}`, pedido: '—', importado: false
+        id: `${vid}-${idx}`, fornecedor: forn, cidade: 'SÃO PAULO', ji, jf, janela: `${ji}-${jf}`, pedido: '—', importado: false
       });
     }
   });
 
   const novaViagem = {
     id: vid, tipo, frota, frotaAntiga: dbVeiculo.antigo, placa: dbVeiculo.placa, carreta: carretaInfo,
-    motorista: motorista || 'DIVERSOS', rota, saida, origem: paradas[0] ? paradas[0].fornecedor : 'CD SBC',
+    motorista: motorista || 'MOTORISTA PADRÃO', rota, saida, origem: paradas[0] ? paradas[0].fornecedor : 'CD SBC',
     destino: 'MWM STO AMARO', cte, obs, paradas
   };
 
@@ -598,44 +567,162 @@ function salvarFormViagem() {
   viagensDB[currentDate].push(novaViagem);
 
   fecharModal('cadastro');
-  notify('✓ Viagem cadastrada com sucesso!');
-  agendarSalvamento();
-  updateDashboard();
+  notify('✓ Viagem salva!');
+  agendarSalvamento(); updateDashboard();
 }
 
 function abrirModalCalendario() { abrirModal('data'); }
 function criarOuMudarDataAtiva() {
   const d = document.getElementById('form-nova-data').value.trim();
   if(!d.match(/^\d{2}\/\d{2}$/)) { alert('Use o formato DD/MM. Ex: 15/06'); return; }
-  currentDate = d;
-  fecharModal('data');
+  currentDate = d; fecharModal('data'); updateDashboard();
+}
+
+// ──────────────────────────────────────────────────────────────────────
+//  CORREÇÃO DE COMUNICAÇÃO DE INTERFACE (ABAS DINÂMICAS ATIVADAS)
+// ──────────────────────────────────────────────────────────────────────
+function renderAlertas() {
+  const vs = viagensDB[currentDate] || [];
+  const container = document.getElementById('alerta-wrap');
+  let html = '';
+  let contagem = 0;
+
+  vs.forEach(v => {
+    (v.paradas || []).forEach(p => {
+      const js = janelaStatus(p);
+      if(!p.importado) {
+        contagem++;
+        html += `
+          <div style="background:var(--bg2); padding:12px; border-radius:6px; border-left:4px solid ${js.urgente?'var(--orange)':'var(--red)'}; margin-bottom:8px; display:flex; align-items:center; justify-content:between;">
+            <div>
+              <strong>${v.frota} [${v.rota}]</strong> — Fornecedor: <span style="color:var(--text)">${p.fornecedor}</span><br>
+              <small style="color:var(--text3)">Motorista: ${v.motorista} | Horário Limite Janela: ${p.jf}</small>
+            </div>
+            <div style="text-align:right">
+              <span class="${js.cls}" style="font-weight:600; font-family:var(--mono)">${js.txt}</span><br>
+              <button class="btn btn-ghost btn-sm" style="margin-top:5px; padding:2px 6px;" onclick="marcarParadaImportada(${v.id}, '${p.id}')">✓ Baixar AVACORP</button>
+            </div>
+          </div>`;
+      }
+    });
+  });
+  container.innerHTML = html || '<div style="color:var(--text3); padding:10px; text-align:center;">✓ Nenhuma coleta pendente ou próxima do vencimento para hoje.</div>';
+}
+
+function renderPedidos() {
+  const vs = viagensDB[currentDate] || [];
+  const container = document.getElementById('pedidos-list');
+  let html = '';
+
+  if(vs.length === 0) {
+    container.innerHTML = '<div style="color:var(--text3); padding:10px; text-align:center;">Nenhuma rota cadastrada para listar pedidos.</div>';
+    return;
+  }
+
+  vs.forEach(v => {
+    (v.paradas || []).forEach(p => {
+      const statusAva = p.importado ? '<span class="ava-ok">IMPORTADO</span>' : '<span class="ava-pend">PENDENTE</span>';
+      html += `
+        <div style="background:var(--bg2); padding:10px; border-radius:6px; margin-bottom:6px; border:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <strong style="color:var(--accent)">Pedido: ${p.pedido}</strong> — Fornecedor: ${p.fornecedor}<br>
+            <small style="color:var(--text3)">Rota: ${v.rota} | Veículo: ${v.frota} | Motorista: ${v.motorista}</small>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            ${statusAva}
+            <button class="btn btn-ghost btn-sm" onclick="digitarPedidoPrompt(${v.id}, '${p.id}', '${p.pedido}')">✏️ Editar Pedido</button>
+            <button class="btn btn-primary btn-sm" onclick="marcarParadaImportada(${v.id}, '${p.id}')">${p.importado?'Estornar':'✓ Baixar'}</button>
+          </div>
+        </div>`;
+    });
+  });
+  container.innerHTML = html;
+}
+
+function renderPend() {
+  const vs = viagensDB[currentDate] || [];
+  const container = document.getElementById('pend-apto');
+  let html = '';
+
+  const pendentes = vs.filter(v => v.cte === 'PENDENTE');
+  if(pendentes.length === 0) {
+    container.innerHTML = '<div style="color:var(--text3); padding:10px; text-align:center;">✓ Todos os CTEs do dia ativo já foram emitidos ou cancelados.</div>';
+    return;
+  }
+
+  pendentes.forEach(v => {
+    const statusFaturamento = avaSt(v);
+    const liberadoParaEmitir = statusFaturamento === 'IMPORTADO' || statusFaturamento === 'N/A';
+    
+    html += `
+      <div style="background:var(--bg2); padding:12px; border-radius:6px; border:1px solid var(--border); margin-bottom:6px; display:flex; align-items:center; justify-content:space-between;">
+        <div>
+          <strong>${v.frota} — [${v.rota}]</strong> — Motorista: ${v.motorista}<br>
+          <small style="color:var(--text3)">Origem/Destino: ${v.origem} → ${v.destino} | Status AVACORP: ${statusFaturamento}</small>
+        </div>
+        <div>
+          ${liberadoParaEmitir 
+            ? `<button class="btn btn-success btn-sm" onclick="updateCTE(${v.id}, 'IMPRESSO')">⚙ Emitir CTE (Notas OK)</button>`
+            : `<span style="color:var(--red); font-weight:600; font-size:11px; padding:4px 8px; background:var(--red-bg); border-radius:4px;">🔒 Bloqueado (Falta AVACORP)</span>`
+          }
+        </div>
+      </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function digitarPedidoPrompt(vid, pid, valAtual) {
+  const num = prompt("Digite o número do Pedido/Solicitação da AVACORP:", valAtual === '—' ? '' : valAtual);
+  if(num === null) return;
+  const vs = viagensDB[currentDate] || [];
+  const v = vs.find(x=>x.id===vid);
+  if(v){
+    const p = v.paradas.find(x=>x.id===pid);
+    if(p) { p.pedido = num.trim() || '—'; agendarSalvamento(); updateDashboard(); }
+  }
+}
+
+function marcarParadaImportada(vid, pid) {
+  const vs = viagensDB[currentDate] || [];
+  const v = vs.find(x=>x.id===vid);
+  if(v){
+    const p = v.paradas.find(x=>x.id===pid);
+    if(p){ p.importado = !p.importado; agendarSalvamento(); updateDashboard(); }
+  }
+}
+
+function removerViagemMesa(vid) {
+  if(!confirm('Deseja excluir esta rota permanentemente?')) return;
+  viagensDB[currentDate] = (viagensDB[currentDate] || []).filter(v => v.id !== vid);
+  notify('Viagem excluída.', 'var(--red)'); agendarSalvamento(); updateDashboard();
+}
+
+function updateCTE(id,val){ const v=(viagensDB[currentDate]||[]).find(x=>x.id===id); if(v){v.cte=val; agendarSalvamento(); notify('CTE atualizado!'); updateDashboard();} }
+
+// Utilitários de renderização padrão
+function toggleExp(id){ expanded=expanded===id?null:id; renderTable(); }
+function h2m(s){const[h,m]=(s||'00:00').split(':').map(Number);return h*60+m;}
+function now(){const d=new Date();return d.getHours()*60+d.getMinutes();}
+function setSyncOk(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-ok'; }
+function setSyncErr(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-err'; }
+function setSyncPending(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-pend'; }
+function setLoadingState(on, msg=''){ document.getElementById('loading-bar').style.display=on?'block':'none'; const l=document.getElementById('loading-label'); l.style.display=on?'block':'none'; l.textContent=msg; }
+function notify(m,c){ const n=document.getElementById('notif'); n.style.background=c||'var(--green)'; n.innerHTML=m; n.classList.add('show'); setTimeout(()=>n.classList.remove('show'), 2500); }
+function toggleSidebar(){ document.getElementById('app').classList.toggle('collapsed'); }
+function abrirModal(id){ document.getElementById('modal-'+id).classList.add('open'); }
+function fecharModal(id){ document.getElementById('modal-'+id).classList.remove('open'); }
+
+function navTo(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
   updateDashboard();
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  ARQUITETURA COMPACTA DE INTERFACE E EVENTOS GERAIS
-// ──────────────────────────────────────────────────────────────────────
-function removerViagemMesa(vid) {
-  if(!confirm('Deseja excluir esta rota permanentemente do dia de hoje?')) return;
-  viagensDB[currentDate] = (viagensDB[currentDate] || []).filter(v => v.id !== vid);
-  notify('Viagem removida.', 'var(--red)');
-  agendarSalvamento(); updateDashboard();
-}
-
-function janelaStatus(p){
-  if(p.importado) return {cls:'jimported',txt:'✓ Importado',urgente:false};
-  const n=now(), fim=h2m(p.jf), restam=fim-n;
-  if(n>fim) return {cls:'jdanger',txt:`ATRASADO`,urgente:false};
-  if(restam<=30) return {cls:'jwarn',txt:`Fecha em ${restam}m!`,urgente:true};
-  return {cls:'jok',txt:`No prazo`,urgente:false};
-}
-
-function avaSt(v){
-  if(!v.paradas || !v.paradas.length) return 'N/A';
-  const rel = v.paradas.filter(p=>p.pedido && p.pedido!=='—');
-  if(!rel.length) return 'N/A'; const imp = rel.filter(p=>p.importado).length;
-  return imp===0 ? 'PENDENTE' : imp<rel.length ? 'PARCIAL' : 'IMPORTADO';
-}
+function setSearch(v){ fSearch=v; renderTable(); }
+function setTipo(v){ fTipo=v; renderTable(); }
+function setCTE(v){ fCTE=v; renderTable(); }
 
 function renderDateNav(){
   const c=document.getElementById('date-nav'); if(!c) return;
@@ -670,8 +757,8 @@ function renderTable(){
       <td>${v.motorista}</td> <td><strong>${v.rota}</strong></td>
       <td><span class="${v.tipo==='TRUCK'?'tipo-truck':'tipo-conj'}">${v.tipo}</span></td> <td>${v.saida}</td>
       <td><small style="color:var(--text2)">${v.origem} → ${v.destino}</small></td>
-      <td>${v.paradas.map(p=>`<span class="pb p52" onclick="digitarPedidoPrompt(${v.id}, '${p.id}', '${p.pedido}')" style="cursor:pointer" title="Clique para editar o pedido">${p.pedido}</span>`).join(' ')}</td>
-      <td><span class="${ava==='IMPORTADO'?'ava-ok':'ava-pend'}">${ava}</span></td>
+      <td>${v.paradas.map(p=>`<span class="pb p52" onclick="digitarPedidoPrompt(${v.id}, '${p.id}', '${p.pedido}')" style="cursor:pointer">${p.pedido}</span>`).join(' ')}</td>
+      <td><span class="${ava==='IMPORTADO'?'ava-ok':ava==='PARCIAL'?'ava-par':'ava-pend'}">${ava}</span></td>
       <td><div class="prog-track"><div class="prog-fill" style="width:${prog}%; background:var(--green)"></div></div></td>
       <td>
         <select class="ctesel" onchange="updateCTE(${v.id},this.value)">
@@ -708,47 +795,18 @@ function renderTable(){
   });
 }
 
-function digitarPedidoPrompt(vid, pid, valAtual) {
-  const num = prompt("Digite o número do Pedido/Solicitação da AVACORP:", valAtual === '—' ? '' : valAtual);
-  if(num === null) return;
-  const v = (viagensDB[currentDate]||[]).find(x=>x.id===vid);
-  if(v){
-    const p = v.paradas.find(x=>x.id===pid);
-    if(p) { p.pedido = num.trim() || '—'; agendarSalvamento(); updateDashboard(); }
-  }
-}
-
-function toggleExp(id){ expanded=expanded===id?null:id; renderTable(); }
-function updateCTE(id,val){ const v=(viagensDB[currentDate]||[]).find(x=>x.id===id); if(v){v.cte=val; agendarSalvamento(); notify('CTE atualizado');} }
-function marcarParadaImportada(vid,pid){
-  const v=(viagensDB[currentDate]||[]).find(x=>x.id===vid);
-  if(v){ const p=v.paradas.find(x=>x.id===pid); if(p){p.importado=!p.importado; agendarSalvamento(); updateDashboard(); } }
-}
 function updateBadges(){
   const vs=viagensDB[currentDate]||[];
   document.getElementById('badge-pend').textContent=vs.filter(v=>v.cte==='PENDENTE').length;
-  document.getElementById('badge-ava').textContent=vs.filter(v=>avaSt(v)==='PENDENTE').length;
+  document.getElementById('badge-ava').textContent=vs.filter(v=>avaSt(v)==='PENDENTE' || avaSt(v)==='PARCIAL').length;
 }
+
 function salvarConfiguracoesGitHub() {
   localStorage.setItem('mwm_gh_token', document.getElementById('cfg-token').value.trim());
   localStorage.setItem('mwm_gh_repo', document.getElementById('cfg-repo').value.trim());
   localStorage.setItem('mwm_gh_branch', document.getElementById('cfg-branch').value.trim());
   notify('✓ Conexão configurada!', 'var(--green)'); carregarTodos();
 }
-function h2m(s){const[h,m]=(s||'00:00').split(':').map(Number);return h*60+m;}
-function now(){const d=new Date();return d.getHours()*60+d.getMinutes();}
-function setSyncOk(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-ok'; }
-function setSyncErr(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-err'; }
-function setSyncPending(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-pend'; }
-function setLoadingState(on, msg=''){ document.getElementById('loading-bar').style.display=on?'block':'none'; const l=document.getElementById('loading-label'); l.style.display=on?'block':'none'; l.textContent=msg; }
-function notify(m,c){ const n=document.getElementById('notif'); n.style.background=c||'var(--green)'; n.innerHTML=m; n.classList.add('show'); setTimeout(()=>n.classList.remove('show'), 2500); }
-function toggleSidebar(){ document.getElementById('app').classList.toggle('collapsed'); }
-function abrirModal(id){ document.getElementById('modal-'+id).classList.add('open'); }
-function fecharModal(id){ document.getElementById('modal-'+id).classList.remove('open'); }
-function navTo(id,el){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('page-'+id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active'); }
-function setSearch(v){ fSearch=v; renderTable(); }
-function setTipo(v){ fTipo=v; renderTable(); }
-function setCTE(v){ fCTE=v; renderTable(); }
 function salvarCache(){ localStorage.setItem('mwm_v5_cache', JSON.stringify({viagens:viagensDB,dates:availableDates})); }
 function carregarCache(){ const s=localStorage.getItem('mwm_v5_cache'); if(s){const d=JSON.parse(s);viagensDB=d.viagens||{};availableDates=d.dates||[];} }
 
