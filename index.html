@@ -110,7 +110,6 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 .btn-ghost:hover{background:var(--bg3);color:var(--text);}
 .btn-sm{padding:4px 10px;font-size:11px;}
 .btn-success{background:var(--green-bg);color:var(--green);border:1px solid rgba(46,204,113,.25);}
-.btn-danger{background:var(--red-bg);color:var(--red);border:1px solid rgba(224,92,92,.2);}
 
 .tipo-truck{background:rgba(79,142,247,.1);color:var(--accent);border:1px solid rgba(79,142,247,.2);padding:2px 6px;border-radius:3px;font-size:10px;}
 .tipo-conj{background:rgba(167,139,250,.1);color:var(--purple);border:1px solid rgba(167,139,250,.2);padding:2px 6px;border-radius:3px;font-size:10px;}
@@ -171,7 +170,7 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
   <div class="topbar-right">
     <span class="tclock" id="tclock">--:--:--</span>
     <div class="avatar">PS</div>
-    <span style="font-size:12px;color:var(--text2)">Painel Cloud Dinâmico</span><span class="sync-off" id="sync-indicator"></span>
+    <span style="font-size:12px;color:var(--text2)">Painel Operacional</span><span class="sync-off" id="sync-indicator"></span>
   </div>
 </header>
 
@@ -346,6 +345,31 @@ function obterGHCredenciais() {
   };
 }
 
+// ──────────────────────────────────────────────────────────────────────
+//  FUNÇÕES AUXILIARES OPERACIONAIS DE CÁLCULO (Posicionamento Estratégico)
+// ──────────────────────────────────────────────────────────────────────
+function h2m(s){const[h,m]=(s||'00:00').split(':').map(Number);return h*60+m;}
+function now(){const d=new Date();return d.getHours()*60+d.getMinutes();}
+
+function avaSt(v){
+  if(!v.paradas || !v.paradas.length) return 'N/A';
+  const rel = v.paradas.filter(p=>p.pedido && p.pedido!=='—');
+  if(!rel.length) return 'N/A'; 
+  const imp = rel.filter(p=>p.importado).length;
+  return imp===0 ? 'PENDENTE' : imp<rel.length ? 'PARCIAL' : 'IMPORTADO';
+}
+
+function janelaStatus(p){
+  if(p.importado) return {cls:'jimported',txt:'✓ Importado',urgente:false};
+  const n=now(), fim=h2m(p.jf), restam=fim-n;
+  if(n>fim) return {cls:'jdanger',txt:`ATRASADO`,urgente:false};
+  if(restam<=30) return {cls:'jwarn',txt:`Fecha em ${restam}m!`,urgente:true};
+  return {cls:'jok',txt:`No prazo`,urgente:false};
+}
+
+// ──────────────────────────────────────────────────────────────────────
+//  REQUISIÇÕES DE REDE CLOUD
+// ──────────────────────────────────────────────────────────────────────
 async function carregarDicionarioFrotasRemoto() {
   const creds = obterGHCredenciais();
   if(!creds.token) return false;
@@ -406,10 +430,10 @@ async function gravarTudo() {
   try {
     const apiURL = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.file}`;
     const content = btoa(unescape(encodeURIComponent(JSON.stringify({ viagens: viagensDB, dates: availableDates }, null, 2))));
-    const body = { message: 'Sincronismo operacional MWM', content, branch: creds.branch };
+    const body = { message: 'Sincronismo mestre MWM estável', content, branch: creds.branch };
     if (_fileSha) body.sha = _fileSha;
     const resp = await fetch(apiURL, { method: 'PUT', headers: { Authorization: `token ${creds.token}`, Accept: 'application/vnd.github.v3+json' }, body: JSON.stringify(body) });
-    if(resp.ok) { const r = await resp.json(); _fileSha = r.content.sha; setSyncOk(); notify('✓ Modificações salvas na Nuvem'); }
+    if(resp.ok) { const r = await resp.json(); _fileSha = r.content.sha; setSyncOk(); notify('✓ Alterações guardadas na Nuvem'); }
     else { setSyncErr(); }
   } catch(e) { setSyncErr(); }
 }
@@ -532,7 +556,7 @@ function salvarFormViagem() {
 
   const dbVeiculo = CONJUNTURA_VEICULOS[frota] || { placa: 'MANUAL', antigo: '—' };
   
-  // CORREÇÃO DO "—" PARA CAMINHÕES TRUCK (Monta a conjunctura visual correta)
+  // FIX: Se for TRUCK, o painel exibe "—" para a carreta de forma limpa, sem caracteres corrompidos
   let carretaInfo = '—';
   if(tipo === 'CONJUNTO') {
     if(carreta) {
@@ -579,7 +603,7 @@ function criarOuMudarDataAtiva() {
 }
 
 // ──────────────────────────────────────────────────────────────────────
-//  CORREÇÃO DE COMUNICAÇÃO DE INTERFACE (ABAS DINÂMICAS ATIVADAS)
+//  RENDERIZAÇÃO DAS ABAS OPERACIONAIS
 // ──────────────────────────────────────────────────────────────────────
 function renderAlertas() {
   const vs = viagensDB[currentDate] || [];
@@ -593,7 +617,7 @@ function renderAlertas() {
       if(!p.importado) {
         contagem++;
         html += `
-          <div style="background:var(--bg2); padding:12px; border-radius:6px; border-left:4px solid ${js.urgente?'var(--orange)':'var(--red)'}; margin-bottom:8px; display:flex; align-items:center; justify-content:between;">
+          <div style="background:var(--bg2); padding:12px; border-radius:6px; border-left:4px solid ${js.urgente?'var(--orange)':'var(--red)'}; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;">
             <div>
               <strong>${v.frota} [${v.rota}]</strong> — Fornecedor: <span style="color:var(--text)">${p.fornecedor}</span><br>
               <small style="color:var(--text3)">Motorista: ${v.motorista} | Horário Limite Janela: ${p.jf}</small>
@@ -610,7 +634,7 @@ function renderAlertas() {
 }
 
 function renderPedidos() {
-  const vs = viagensDB[currentDate] || [];
+  const vs = viajesDB = viagensDB[currentDate] || [];
   const container = document.getElementById('pedidos-list');
   let html = '';
 
@@ -701,8 +725,6 @@ function updateCTE(id,val){ const v=(viagensDB[currentDate]||[]).find(x=>x.id===
 
 // Utilitários de renderização padrão
 function toggleExp(id){ expanded=expanded===id?null:id; renderTable(); }
-function h2m(s){const[h,m]=(s||'00:00').split(':').map(Number);return h*60+m;}
-function now(){const d=new Date();return d.getHours()*60+d.getMinutes();}
 function setSyncOk(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-ok'; }
 function setSyncErr(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-err'; }
 function setSyncPending(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-pend'; }
@@ -736,7 +758,7 @@ function renderStats(){
     <div class="stat"><div class="stl">Total Viagens</div><div class="stv">${vs.length}</div></div>
     <div class="stat"><div class="stl">Trucks</div><div class="stv" style="color:var(--accent)">${vs.filter(v=>v.tipo==='TRUCK').length}</div></div>
     <div class="stat"><div class="stl">Conjuntos</div><div class="stv" style="color:var(--purple)">${vs.filter(v=>v.tipo==='CONJUNTO').length}</div></div>
-    <div class="stat"><div class="stl">Liberados p/ CTE</div><div class="stv" style="color:var(--green)">${vs.filter(v=>avaSt(v)==='IMPORTADO' || avaSt(v)==='N/A').length}/${vs.length}</div></div>
+    <div class="stat"><div class="stl">Prontos p/ CTE</div><div class="stv" style="color:var(--green)">${vs.filter(v=>avaSt(v)==='IMPORTADO' || avaSt(v)==='N/A').length}/${vs.length}</div></div>
   `;
 }
 
@@ -783,34 +805,4 @@ function renderTable(){
               <td><button class="btn btn-ghost btn-sm" onclick="digitarPedidoPrompt(${v.id},'${p.id}','${p.pedido}')">${p.pedido==='—'?'+ Vincular Pedido':p.pedido}</button></td>
               <td><span class="${js.cls}">${js.txt}</span></td>
               <td>
-                <button class="btn btn-ghost btn-sm" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'Desfazer Baixa':'✓ Baixar AVACORP'}</button>
-              </td>
-            </tr>`;
-          }).join('')}</tbody>
-        </table>
-        <div style="margin-top:10px;"><button class="btn btn-sm" style="background:var(--red-bg); color:var(--red);" onclick="removerViagemMesa(${v.id})">Remover Rota do Dia</button></div>
-      </div></td>`;
-      tbody.appendChild(exp);
-    }
-  });
-}
-
-function updateBadges(){
-  const vs=viagensDB[currentDate]||[];
-  document.getElementById('badge-pend').textContent=vs.filter(v=>v.cte==='PENDENTE').length;
-  document.getElementById('badge-ava').textContent=vs.filter(v=>avaSt(v)==='PENDENTE' || avaSt(v)==='PARCIAL').length;
-}
-
-function salvarConfiguracoesGitHub() {
-  localStorage.setItem('mwm_gh_token', document.getElementById('cfg-token').value.trim());
-  localStorage.setItem('mwm_gh_repo', document.getElementById('cfg-repo').value.trim());
-  localStorage.setItem('mwm_gh_branch', document.getElementById('cfg-branch').value.trim());
-  notify('✓ Conexão configurada!', 'var(--green)'); carregarTodos();
-}
-function salvarCache(){ localStorage.setItem('mwm_v5_cache', JSON.stringify({viagens:viagensDB,dates:availableDates})); }
-function carregarCache(){ const s=localStorage.getItem('mwm_v5_cache'); if(s){const d=JSON.parse(s);viagensDB=d.viagens||{};availableDates=d.dates||[];} }
-
-document.addEventListener('DOMContentLoaded', () => { carregarCache(); carregarTodos(); setInterval(()=>document.getElementById('tclock').textContent=new Date().toLocaleTimeString('pt-BR'),1000); });
-</script>
-</body>
-</html>
+                <button class="btn btn-ghost btn-sm" onclick="mar
