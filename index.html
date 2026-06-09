@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <title>MWM · Sistema de Programação</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
 <style>
 :root{
   --bg:#0c0e14;--bg2:#13151f;--bg3:#1a1d28;--bg4:#222535;--bg5:#2a2e40;
@@ -24,11 +26,9 @@
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;overflow:hidden;}
 ::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
 
-/* ── APP SHELL ── */
 .app{display:grid;grid-template-columns:var(--sw) 1fr;grid-template-rows:48px 1fr;height:100vh;transition:grid-template-columns .22s ease;}
 .app.collapsed{grid-template-columns:var(--sc) 1fr;}
 
-/* ── TOPBAR ── */
 .topbar{grid-column:1/-1;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;gap:10px;z-index:20;}
 .logo{font-family:var(--mono);font-size:16px;font-weight:600;letter-spacing:3px;white-space:nowrap;flex-shrink:0;}
 .logo span{color:var(--accent);}
@@ -38,26 +38,22 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .tclock{font-family:var(--mono);font-size:12px;color:var(--green);background:var(--green-bg);border:1px solid rgba(46,204,113,.2);padding:3px 10px;border-radius:5px;min-width:72px;text-align:center;}
 .avatar{width:26px;height:26px;border-radius:50%;background:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff;flex-shrink:0;}
 
-/* ── SIDEBAR ── */
 .sidebar{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;overflow-x:hidden;position:relative;transition:width .22s ease;}
 .toggle-btn{position:absolute;right:-13px;top:18px;width:26px;height:26px;background:var(--bg3);border:1px solid var(--border2);border-radius:50%;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:30;transition:all .15s;font-size:11px;}
 .toggle-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
 .sb-section{padding:16px 10px 0;margin-bottom:8px;}
 .sb-label{font-size:9px;font-weight:600;letter-spacing:1.8px;color:var(--text3);text-transform:uppercase;padding:0 8px;margin-bottom:4px;white-space:nowrap;overflow:hidden;opacity:1;transition:opacity .15s;}
 .collapsed .sb-label{opacity:0;}
-.nav-item{display:flex;align-items:center;gap:9px;padding:8px 8px;border-radius:7px;cursor:pointer;color:var(--text2);font-size:12.5px;border:none;background:none;width:100%;text-align:left;transition:all .15s;white-space:nowrap;overflow:hidden;position:relative;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 8px;border-radius:7px;cursor:pointer;color:var(--text2);font-size:12.5px;border:none;background:none;width:100%;text-align:left;transition:all .15s;white-space:nowrap;overflow:hidden;}
 .nav-item:hover{background:var(--bg3);color:var(--text);}
 .nav-item.active{background:var(--accent3);color:var(--accent);}
 .nav-icon{width:17px;height:17px;flex-shrink:0;}
 .nav-txt{opacity:1;transition:opacity .1s;overflow:hidden;}
 .collapsed .nav-txt{opacity:0;}
-.nav-badge{margin-left:auto;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:600;flex-shrink:0;transition:opacity .1s;}
-.collapsed .nav-badge{opacity:0;}
+.nav-badge{margin-left:auto;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:600;flex-shrink:0;}
 .bc-red{background:var(--red-bg);color:var(--red);}
 .bc-orange{background:var(--orange-bg);color:var(--orange);}
-.bc-green{background:var(--green-bg);color:var(--green);}
 
-/* ── MAIN ── */
 .main{overflow-y:auto;background:var(--bg);}
 .page{display:none;}
 .page.active{display:block;}
@@ -66,44 +62,23 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .ps{font-size:11px;color:var(--text3);margin-top:2px;}
 .pact{display:flex;gap:8px;flex-shrink:0;}
 
-/* ── BTNS ── */
-.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:6px;font-size:11.5px;font-weight:500;cursor:pointer;border:none;font-family:var(--sans);transition:all .15s;}
-.btn-primary{background:var(--accent);color:#fff;}
-.btn-primary:hover{background:var(--accent2);}
-.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2);}
-.btn-ghost:hover{background:var(--bg3);color:var(--text);}
-.btn-sm{padding:4px 10px;font-size:11px;}
-.btn-success{background:var(--green-bg);color:var(--green);border:1px solid rgba(46,204,113,.25);}
-.btn-success:hover{background:#0f2e1b;}
-.btn-danger{background:var(--red-bg);color:var(--red);border:1px solid rgba(224,92,92,.2);}
-
-/* ── DATE NAV ── */
 .date-nav{padding:12px 26px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
-.dnav-btn{width:28px;height:28px;border-radius:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .12s;}
-.dnav-btn:hover{background:var(--bg4);}
 .date-tab{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:5px;font-size:11px;cursor:pointer;color:var(--text2);background:var(--bg3);border:1px solid var(--border);font-family:var(--mono);transition:all .12s;}
 .date-tab:hover{background:var(--bg4);}
 .date-tab.active{background:var(--accent);color:#fff;border-color:var(--accent);}
 .dtag{background:rgba(255,255,255,.2);border-radius:8px;padding:0 5px;font-size:9px;}
-.btn-hoje{padding:4px 9px;font-size:11px;}
-.btn-novo-dia{padding:4px 9px;font-size:11px;display:inline-flex;align-items:center;gap:4px;}
 
-/* ── STATS ── */
-.stats-row{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:14px 26px;}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 26px;}
 .stat{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;}
 .stl{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:5px;}
 .stv{font-family:var(--mono);font-size:20px;font-weight:500;}
-.sts{font-size:9px;color:var(--text3);margin-top:2px;}
 
-/* ── TABLE ── */
 .twrap{padding:0 26px 28px;overflow-x:auto;}
 .ttoolbar{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
 .swrap{position:relative;}
-.swrap input{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:6px 10px 6px 28px;font-size:11.5px;font-family:var(--sans);outline:none;width:230px;transition:border-color .12s;}
-.swrap input:focus{border-color:var(--accent);}
+.swrap input{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:6px 10px 6px 28px;font-size:11.5px;outline:none;width:230px;}
 .sico{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text3);}
-.fsel{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text2);padding:6px 10px;font-size:11.5px;font-family:var(--sans);outline:none;cursor:pointer;}
-.fsel:focus{border-color:var(--accent);}
+.fsel{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text2);padding:6px 10px;font-size:11.5px;outline:none;cursor:pointer;}
 .rcount{margin-left:auto;font-size:11px;color:var(--text3);}
 
 table{width:100%;border-collapse:collapse;min-width:1200px;}
@@ -112,249 +87,130 @@ tbody tr{border-bottom:1px solid var(--border);transition:background .08s;}
 tbody tr:hover:not(.erow){background:var(--bg2);}
 tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middle;}
 
-/* ── EXPAND ── */
 .erow td{padding:0;}
 .econtent{padding:14px 14px 14px 42px;background:var(--bg2);border-top:1px solid var(--border);}
 .esec{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:8px;}
 
-/* ── AVACORP TABLE ── */
 .atbl{width:100%;border-collapse:collapse;}
 .atbl th{text-align:left;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);padding:5px 9px;border-bottom:1px solid var(--border);}
 .atbl td{padding:7px 9px;font-size:11.5px;border-bottom:1px solid var(--border);vertical-align:middle;}
-.atbl tr:last-child td{border-bottom:none;}
 
-/* ── PEDIDO BADGES ── */
-.pb{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-family:var(--mono);font-size:10px;font-weight:600;margin-right:3px;white-space:nowrap;}
+.pb{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-family:var(--mono);font-size:10px;font-weight:600;margin-right:3px;}
 .p52{background:rgba(79,142,247,.15);color:var(--accent);border:1px solid rgba(79,142,247,.25);}
-.p18{background:rgba(45,212,191,.12);color:var(--teal);border:1px solid rgba(45,212,191,.25);}
-.p17{background:rgba(167,139,250,.12);color:var(--purple);border:1px solid rgba(167,139,250,.25);}
 
-/* ── JANELA STATUS ── */
 .jok{color:var(--green);font-size:11px;}
-.jwarn{color:var(--orange);font-size:11px;font-weight:600;animation:pulse 1s infinite;}
+.jwarn{color:var(--orange);font-size:11px;font-weight:600;}
 .jdanger{color:var(--red);font-size:11px;font-weight:600;}
-.jwaiting{color:var(--text3);font-size:11px;}
 .jimported{color:var(--green);font-size:11px;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
 
-/* ── IMPORTAR BTN ── */
-.imp-btn{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:4px;font-size:10px;font-weight:600;cursor:pointer;border:none;font-family:var(--sans);transition:all .15s;}
-.imp-no{background:var(--bg4);color:var(--text3);border:1px solid var(--border2);}
-.imp-no:hover{background:rgba(79,142,247,.1);color:var(--accent);border-color:rgba(79,142,247,.3);}
-.imp-yes{background:var(--green-bg);color:var(--green);border:1px solid rgba(46,204,113,.3);}
-.imp-yes:hover{background:#0f2e1b;}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:6px;font-size:11.5px;font-weight:500;cursor:pointer;border:none;font-family:var(--sans);transition:all .15s;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{background:var(--accent2);}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2);}
+.btn-ghost:hover{background:var(--bg3);color:var(--text);}
+.btn-sm{padding:4px 10px;font-size:11px;}
 
-/* ── TAGS ── */
-.tag{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;white-space:nowrap;}
-.tg{background:var(--green-bg);color:var(--green);}
-.ta{background:var(--amber-bg);color:var(--amber);}
-.tr{background:var(--red-bg);color:var(--red);}
-.tt{background:var(--teal-bg);color:var(--teal);}
-.tx{background:var(--bg4);color:var(--text3);}
-.to{background:var(--orange-bg);color:var(--orange);}
+.tipo-truck{background:rgba(79,142,247,.1);color:var(--accent);border:1px solid rgba(79,142,247,.2);padding:2px 6px;border-radius:3px;font-size:10px;}
+.tipo-conj{background:rgba(167,139,250,.1);color:var(--purple);border:1px solid rgba(167,139,250,.2);padding:2px 6px;border-radius:3px;font-size:10px;}
 
-.tipo-truck{background:rgba(79,142,247,.1);color:var(--accent);border:1px solid rgba(79,142,247,.2);padding:2px 6px;border-radius:3px;font-size:10px;font-weight:600;}
-.tipo-conj{background:rgba(167,139,250,.1);color:var(--purple);border:1px solid rgba(167,139,250,.2);padding:2px 6px;border-radius:3px;font-size:10px;font-weight:600;}
-.tipo-pux{background:rgba(245,166,35,.1);color:var(--amber);border:1px solid rgba(245,166,35,.2);padding:2px 6px;border-radius:3px;font-size:10px;font-weight:600;}
-
-/* ── CTE SEL ── */
-.ctesel{background:transparent;border:none;font-family:var(--sans);font-size:11px;cursor:pointer;outline:none;color:inherit;}
-.ctelocked{font-size:11px;color:var(--red);opacity:.8;display:inline-flex;align-items:center;gap:4px;cursor:default;}
-
-/* ── PROGRESS ── */
+.ctesel{background:transparent;border:none;color:inherit;font-family:var(--sans);font-size:11px;cursor:pointer;}
 .prog-track{width:80px;height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;display:inline-block;}
 .prog-fill{height:100%;border-radius:3px;}
 
-/* ── AVACORP STATUS ── */
-.ava-ok{background:var(--green-bg);color:var(--green);border:1px solid rgba(46,204,113,.25);padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;}
-.ava-par{background:var(--orange-bg);color:var(--orange);border:1px solid rgba(251,146,60,.25);padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;}
-.ava-pend{background:var(--bg4);color:var(--text3);border:1px solid var(--border2);padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;}
-.ava-na{background:var(--bg4);color:var(--text3);padding:2px 8px;border-radius:4px;font-size:10px;}
+.ava-ok{background:var(--green-bg);color:var(--green);border:1px solid rgba(46,204,113,.25);padding:2px 8px;border-radius:4px;font-size:10px;}
+.ava-pend{background:var(--bg4);color:var(--text3);border:1px solid var(--border2);padding:2px 8px;border-radius:4px;font-size:10px;}
 
-/* ── MODAL ── */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .18s;}
 .overlay.open{opacity:1;pointer-events:all;}
-.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;width:700px;max-height:88vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.6);}
-.mhdr{padding:16px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;width:600px;max-height:88vh;overflow-y:auto;}
+.mhdr{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
 .mtitle{font-size:14px;font-weight:600;}
-.mx{background:var(--bg4);border:none;color:var(--text2);width:26px;height:26px;border-radius:5px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
-.mx:hover{color:var(--text);}
+.mx{background:var(--bg4);border:none;color:var(--text2);width:26px;height:26px;border-radius:5px;cursor:pointer;}
 .mbody{padding:18px 22px;}
-.msec{margin-bottom:18px;}
-.msec-t{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:9px;}
-.fg{display:grid;gap:10px;}
-.fg2{grid-template-columns:1fr 1fr;}
-.fg3{grid-template-columns:1fr 1fr 1fr;}
-.fg4{grid-template-columns:1fr 1fr 1fr 1fr;}
-.fg-label{display:block;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
-.fg-label+input,.fg-label+select,.fg-label+textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:7px 9px;font-size:11.5px;font-family:var(--sans);outline:none;transition:border-color .12s;}
-.fg-label+input:focus,.fg-label+select:focus{border-color:var(--accent);}
 .mftr{padding:12px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;}
-.parada-row{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:7px;position:relative;}
-.pdel{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;padding:2px 5px;}
-.pdel:hover{color:var(--red);}
-.padd-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:var(--bg3);border:1px dashed var(--border2);border-radius:5px;color:var(--text3);font-size:11px;cursor:pointer;margin-top:5px;transition:all .12s;}
-.padd-btn:hover{color:var(--text2);border-color:var(--text3);}
 
-/* ── PEDIDOS PAGE ── */
-.ped-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px;}
-.ped-card.apto{border-left:3px solid var(--green);}
-.ped-card.parcial{border-left:3px solid var(--orange);}
-.ped-card.bloq{border-left:3px solid var(--border2);}
-.ped-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
-.ped-prog{flex:1;display:flex;align-items:center;gap:8px;min-width:120px;}
-.ped-track{flex:1;background:var(--bg4);border-radius:3px;height:5px;overflow:hidden;}
-.ped-fill{height:100%;border-radius:3px;}
-
-/* ── ALERTAS ── */
-.alerta-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px;}
-.alerta-card.urgente{border-left:3px solid var(--orange);animation:glow-orange 2s infinite;}
-.alerta-card.atrasado{border-left:3px solid var(--red);}
-@keyframes glow-orange{0%,100%{box-shadow:0 0 0 rgba(251,146,60,0);}50%{box-shadow:0 0 8px rgba(251,146,60,.25);}}
-
-/* ── FROTA GRID ── */
-.frota-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:9px;padding:0 26px 28px;}
-.fcard{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:13px;cursor:pointer;transition:all .12s;}
-.fcard:hover{border-color:var(--border2);background:var(--bg3);}
-
-/* ── DASH ── */
-.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:0 26px 28px;}
-.dcard{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;}
-.dcard-t{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:12px;}
-.brow{display:flex;align-items:center;gap:9px;margin-bottom:7px;}
-.blbl{font-size:11px;color:var(--text2);width:170px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.btrack{flex:1;background:var(--bg4);border-radius:3px;height:5px;overflow:hidden;}
-.bfill{height:100%;border-radius:3px;background:var(--accent);}
-.bval{font-family:var(--mono);font-size:10px;color:var(--text3);width:18px;text-align:right;}
-
-/* ── NOTIF ── */
-.notif{position:fixed;bottom:22px;right:22px;padding:10px 16px;border-radius:8px;font-size:12px;font-weight:500;transform:translateY(70px);opacity:0;transition:all .28s;z-index:300;color:#fff;max-width:320px;}
-.notif.show{transform:translateY(0);opacity:1;}
-
-/* ── NOVO DIA MODAL ── */
-#modal-dia .modal{width:360px;}
-
-/* ── RESPONSIVE COLLAPSE ── */
-.mn{font-family:var(--mono);font-size:11px;color:var(--text);font-weight:500;}
-td code{font-family:var(--mono);font-size:10px;background:var(--bg4);padding:1px 5px;border-radius:3px;}
-
-/* ── LOADING BAR ── */
-#loading-bar{position:fixed;top:48px;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--teal),var(--accent));background-size:200%;animation:shimmer 1.2s infinite;z-index:100;display:none;}
-@keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
-#loading-label{position:fixed;top:54px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--text2);background:var(--bg2);padding:3px 10px;border-radius:4px;border:1px solid var(--border);z-index:101;}
-
-/* ── SYNC INDICATOR ── */
-.sync-ok{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;margin-left:6px;flex-shrink:0;title:'Sincronizado';}
-.sync-err{width:7px;height:7px;border-radius:50%;background:var(--amber);display:inline-block;margin-left:6px;flex-shrink:0;animation:pulse 1s infinite;}
-.sync-off{width:7px;height:7px;border-radius:50%;background:var(--text3);display:inline-block;margin-left:6px;flex-shrink:0;}
-.sync-pend{width:7px;height:7px;border-radius:50%;background:#60a5fa;display:inline-block;margin-left:6px;flex-shrink:0;animation:pulse 0.6s infinite;}
-
-/* ── CLONE BTN ── */
-.btn-clone{background:rgba(45,212,191,.1);color:var(--teal);border:1px solid rgba(45,212,191,.25);}
-.btn-clone:hover{background:rgba(45,212,191,.18);}
-
-/* ── MODAL CLONAR ── */
-#modal-clonar .modal{width:420px;}
-.clone-day-list{max-height:280px;overflow-y:auto;margin-top:10px;}
-.clone-day-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:7px;cursor:pointer;border:1px solid transparent;transition:all .12s;margin-bottom:4px;}
-.clone-day-item:hover{background:var(--bg3);border-color:var(--border);}
-.clone-day-item.selected{background:var(--accent3);border-color:var(--accent);}
-.clone-day-item .cdi-date{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text);}
-.clone-day-item .cdi-count{font-size:11px;color:var(--text3);}
-.clone-day-item .cdi-badge{font-size:10px;padding:1px 7px;border-radius:3px;background:var(--bg4);color:var(--text3);}
-.clone-day-item.selected .cdi-badge{background:var(--accent);color:#fff;}
-.clone-preview{margin-top:12px;padding:10px 12px;background:var(--bg3);border-radius:6px;border:1px solid var(--border);font-size:12px;color:var(--text2);display:none;}
-.clone-preview.show{display:block;}
-
-/* ── USER BADGE ── */
-.user-badge{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3);cursor:pointer;padding:3px 8px;border-radius:5px;border:1px solid transparent;}
-.user-badge:hover{border-color:var(--border);background:var(--bg3);}
-
-/* CONFIG GITHUB INTERFACE */
 .config-container { max-width: 500px; background: var(--bg2); border: 1px solid var(--border); padding: 20px; border-radius: 8px; margin: 20px auto; }
+.fg-label{display:block;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+.fg-label+input,.fg-label+select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:7px 9px;outline:none;}
+
+.notif{position:fixed;bottom:22px;right:22px;padding:10px 16px;border-radius:8px;font-size:12px;font-weight:500;transform:translateY(70px);opacity:0;transition:all .28s;z-index:300;color:#fff;}
+.notif.show{transform:translateY(0);opacity:1;}
+#loading-bar{position:fixed;top:48px;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--teal),var(--accent));background-size:200%;animation:shimmer 1.2s infinite;display:none;z-index:100;}
+#loading-label{position:fixed;top:54px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--text2);background:var(--bg2);padding:3px 10px;border-radius:4px;border:1px solid var(--border);z-index:101;display:none;}
+
+.sync-ok{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;margin-left:6px;}
+.sync-err{width:7px;height:7px;border-radius:50%;background:var(--red);display:inline-block;margin-left:6px;}
+.sync-off{width:7px;height:7px;border-radius:50%;background:var(--text3);display:inline-block;margin-left:6px;}
+.sync-pend{width:7px;height:7px;border-radius:50%;background:#60a5fa;display:inline-block;margin-left:6px;}
+
+.import-box { border: 2px dashed var(--border2); padding: 30px; border-radius: 8px; text-align: center; background: var(--bg3); cursor: pointer; transition: all 0.2s; margin-bottom: 15px; }
+.import-box:hover { border-color: var(--accent); background: rgba(79, 142, 247, 0.04); }
+.import-box p { color: var(--text2); margin-bottom: 10px; font-size: 13px; }
 </style>
 </head>
 <body>
 <div id="loading-bar"></div><div id="loading-label"></div>
 <div class="app" id="app">
 
-<!-- ═══ TOPBAR ═══ -->
 <header class="topbar">
   <div class="logo">MW<span>M</span></div>
   <div class="tsep"></div>
-  <span class="tlabel">Sistema de Programação · AVACORP</span>
+  <span class="tlabel">Sistema de Programação Mestre MWM</span>
   <div class="topbar-right">
     <span class="tclock" id="tclock">--:--:--</span>
     <div class="avatar">PS</div>
-    <span style="font-size:12px;color:var(--text2)">Programação</span><span class="sync-off" id="sync-indicator" title="Aguardando login"></span>
+    <span style="font-size:12px;color:var(--text2)">Painel Cloud Dinâmico</span><span class="sync-off" id="sync-indicator"></span>
   </div>
 </header>
 
-<!-- ═══ SIDEBAR ═══ -->
 <nav class="sidebar" id="sidebar">
   <button class="toggle-btn" id="toggle-btn" onclick="toggleSidebar()">◀</button>
 
   <div class="sb-section">
     <div class="sb-label">Operação</div>
     <button class="nav-item active" onclick="navTo('prog',this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke-width="2"/><line x1="3" y1="9" x2="21" y2="9" stroke-width="2"/><line x1="8" y1="2" x2="8" y2="6" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke-width="2"/></svg>
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke-width="2"/><line x1="3" y1="9" x2="21" y2="9" stroke-width="2"/></svg>
       <span class="nav-txt">Programação</span>
     </button>
     <button class="nav-item" onclick="navTo('alertas',this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-width="2"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke-width="2"/></svg>
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-width="2"/></svg>
       <span class="nav-txt">Alertas de Janela</span>
       <span class="nav-badge bc-orange" id="badge-alertas">0</span>
     </button>
     <button class="nav-item" onclick="navTo('pedidos',this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke-width="2"/><polyline points="14 2 14 8 20 8" stroke-width="2"/></svg>
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke-width="2"/></svg>
       <span class="nav-txt">Pedidos AVACORP</span>
       <span class="nav-badge bc-orange" id="badge-ava">0</span>
     </button>
     <button class="nav-item" onclick="navTo('pend',this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke-width="2"/><line x1="12" y1="16" x2="12.01" y2="16" stroke-width="2"/></svg>
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke-width="2"/></svg>
       <span class="nav-txt">Pendentes CTE</span>
       <span class="nav-badge bc-red" id="badge-pend">0</span>
     </button>
   </div>
   <div class="sb-section">
-    <div class="sb-label">Cadastros</div>
-    <button class="nav-item" onclick="navTo('frota',this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2" stroke-width="2"/><path d="M16 8h4l3 5v3h-7V8z" stroke-width="2"/><circle cx="5.5" cy="18.5" r="2.5" stroke-width="2"/><circle cx="18.5" cy="18.5" r="2.5" stroke-width="2"/></svg>
-      <span class="nav-txt">Frota</span>
-    </button>
-    <button class="nav-item" onclick="navTo('mot',this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke-width="2"/><circle cx="12" cy="7" r="4" stroke-width="2"/></svg>
-      <span class="nav-txt">Motoristas</span>
-    </button>
-  </div>
-  <div class="sb-section">
-    <div class="sb-label">Análise</div>
-    <button class="nav-item" onclick="navTo('dash',this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" stroke-width="2"/></svg>
-      <span class="nav-txt">Indicadores</span>
+    <div class="sb-label">Ferramentas</div>
+    <button class="nav-item" onclick="abrirModalImportarExcel()">
+      <span style="color:var(--green); font-weight:600; margin-right:5px;">↑</span>
+      <span class="nav-txt" style="color:var(--text);">Importar Planilha</span>
     </button>
   </div>
   <div class="sb-section">
     <div class="sb-label">Sistema</div>
     <button class="nav-item" onclick="navTo('config',this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke-width="2"/></svg>
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke-width="2"/></svg>
       <span class="nav-txt">Conexão GitHub</span>
     </button>
   </div>
 </nav>
 
-<!-- ═══ MAIN ═══ -->
 <main class="main">
 
-<!-- PROGRAMAÇÃO -->
 <div class="page active" id="page-prog">
   <div class="ph">
-    <div><div class="pt">Programação Diária</div><div class="ps" id="prog-date-subtitle">Rotas, AVACORP e CTE</div></div>
+    <div><div class="pt">Programação Operacional</div><div class="ps" id="prog-date-subtitle">Aguardando nuvem...</div></div>
     <div class="pact">
-      <button class="btn btn-clone" onclick="abrirModalClonar()">⎘ Clonar de outro dia</button>
-      <button class="btn btn-ghost" onclick="exportXLSX()">↓ Exportar Excel</button>
-      <button class="btn btn-ghost" onclick="gravarTudo()">💾 Salvar Nuvem</button>
-      <button class="btn btn-primary" onclick="abrirModal('nova-viagem')">+ Nova Viagem</button>
+      <button class="btn btn-ghost" onclick="gravarTudo()">💾 Sincronizar Nuvem</button>
     </div>
   </div>
   <div class="date-nav" id="date-nav"></div>
@@ -363,116 +219,36 @@ td code{font-family:var(--mono);font-size:10px;background:var(--bg4);padding:1px
     <div class="ttoolbar">
       <div class="swrap">
         <svg class="sico" width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"/></svg>
-        <input type="text" placeholder="Frota, motorista, pedido 52xxx, rota..." oninput="setSearch(this.value)">
+        <input type="text" placeholder="Buscar frota, motorista, rota..." oninput="setSearch(this.value)">
       </div>
-      <select class="fsel" onchange="setTipo(this.value)"><option value="">Todos os tipos</option><option value="TRUCK">Truck</option><option value="CONJUNTO">Conjunto</option><option value="PUXADA">Puxada</option></select>
-      <select class="fsel" onchange="setCTE(this.value)"><option value="">Todos CTE</option><option value="IMPRESSO">Impresso</option><option value="ENVIADO">Enviado</option><option value="FRUSTRADA">Frustrada</option><option value="NULA">Nula</option><option value="PENDENTE">Pendente</option></select>
-      <select class="fsel" onchange="setAva(this.value)"><option value="">AVACORP — todos</option><option value="IMPORTADO">Importado</option><option value="PARCIAL">Parcial</option><option value="PENDENTE">Pendente</option></select>
+      <select class="fsel" onchange="setTipo(this.value)"><option value="">Todos os tipos</option><option value="TRUCK">Truck</option><option value="CONJUNTO">Conjunto</option></select>
+      <select class="fsel" onchange="setCTE(this.value)"><option value="">Todos CTE</option><option value="PENDENTE">Pendente</option><option value="IMPRESSO">Impresso</option></select>
       <span class="rcount" id="rcount"></span>
     </div>
     <table>
       <thead><tr>
         <th style="width:20px"></th>
-        <th>Frota · Placa</th><th>Carreta</th><th>Motorista</th><th>Rota</th><th>Tipo</th>
-        <th>Saída</th><th>Origem → Destino</th><th>Pedido(s)</th>
-        <th>AVACORP</th><th>Progresso</th><th>CTE</th><th>Obs</th>
+        <th>Frota (Nova / Antiga)</th><th>Placa do Veículo</th><th>Carreta (Nova / Placa / Antiga)</th><th>Motorista</th><th>Rota</th><th>Tipo</th>
+        <th>Saída CD</th><th>Origem → Destino</th><th>Pedido(s)</th>
+        <th>AVACORP</th><th>Coletas</th><th>CTE</th><th>Obs</th>
       </tr></thead>
       <tbody id="main-tbody"></tbody>
     </table>
   </div>
 </div>
 
-<!-- ALERTAS -->
-<div class="page" id="page-alertas">
-  <div class="ph"><div><div class="pt">Alertas de Janela</div><div class="ps">Coletas próximas do fechamento ou atrasadas</div></div>
-    <div class="pact"><button class="btn btn-ghost btn-sm" onclick="renderAlertas()">↺ Atualizar</button></div>
-  </div>
-  <div style="padding:16px 26px 28px">
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px" id="alerta-stats"></div>
-    <div id="alerta-urgente-wrap"></div>
-    <div id="alerta-atrasado-wrap"></div>
-    <div id="alerta-ok-wrap"></div>
-  </div>
-</div>
+<div class="page" id="page-alertas"><div class="ph"><div><div class="pt">Alertas de Janela</div><div class="ps">Prazos</div></div></div><div style="padding:16px 26px" id="alerta-wrap"></div></div>
+<div class="page" id="page-pedidos"><div class="ph"><div><div class="pt">Pedidos — AVACORP</div><div class="ps">Notas</div></div></div><div style="padding:14px 26px" id="pedidos-list"></div></div>
+<div class="page" id="page-pend"><div class="ph"><div><div class="pt">Pendentes de CTE</div><div class="ps">Emissões</div></div></div><div style="padding:14px 26px" id="pend-apto"></div></div>
 
-<!-- PEDIDOS AVACORP -->
-<div class="page" id="page-pedidos">
-  <div class="ph">
-    <div><div class="pt">Pedidos — AVACORP</div><div class="ps">Importação de notas por pedido</div></div>
-  </div>
-  <div style="padding:14px 26px 28px" id="pedidos-list"></div>
-</div>
-
-<!-- PENDENTES CTE -->
-<div class="page" id="page-pend">
-  <div class="ph"><div><div class="pt">Pendentes de CTE</div><div class="ps">Viagens prontas para emitir e as que aguardam AVACORP</div></div></div>
-  <div style="padding:14px 26px;display:grid;gap:14px">
-    <div class="dcard"><div class="dcard-t">✅ Aptos para emitir CTE</div><div id="pend-apto"></div></div>
-    <div class="dcard"><div class="dcard-t">⏳ Aguardando importação AVACORP</div><div id="pend-ava"></div></div>
-    <div class="dcard"><div class="dcard-t">Frustradas / Nulas</div><div id="pend-frust"></div></div>
-  </div>
-</div>
-
-<!-- FROTA -->
-<div class="page" id="page-frota">
-  <div class="ph">
-    <div><div class="pt">Frota</div><div class="ps" id="frota-sub"></div></div>
-    <div class="pact">
-      <div class="swrap"><svg class="sico" width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"/></svg><input type="text" placeholder="Frota, placa, tipo..." oninput="filtFrota(this.value)" style="width:190px"></div>
-      <select class="fsel" onchange="filtFrotaTipo(this.value)"><option value="">Todos</option><option value="TRUCK">Trucks</option><option value="CAVALO">Cavalos</option><option value="CARRETA">Carretas</option><option value="EMPILHADEIRA">Empilhadeiras</option></select>
-    </div>
-  </div>
-  <div style="height:14px"></div>
-  <div class="frota-grid" id="frota-grid"></div>
-</div>
-
-<!-- MOTORISTAS -->
-<div class="page" id="page-mot">
-  <div class="ph"><div><div class="pt">Motoristas</div><div class="ps">Time operacional</div></div></div>
-  <div style="padding:16px 26px">
-    <table><thead><tr><th>#</th><th>Nome</th><th>Rotas hoje</th><th>Status</th></tr></thead><tbody id="mot-tbody"></tbody></table>
-  </div>
-</div>
-
-<!-- INDICADORES -->
-<div class="page" id="page-dash">
-  <div class="ph"><div><div class="pt">Indicadores</div><div class="ps">Visão consolidada do dia corrente</div></div></div>
-  <div style="height:14px"></div>
-  <div class="stats-row" id="dash-stats-row"></div>
-  <div class="dash-grid">
-    <div class="dcard"><div class="dcard-t">Resumo da Frota no Dia</div><div id="bar-frota-dash"></div></div>
-    <div class="dcard"><div class="dcard-t">Rotas por Tipo de Veículo</div><div id="bar-tipo-dash"></div></div>
-  </div>
-</div>
-
-<!-- TELA DE CONFIGURAÇÃO DO GITHUB -->
 <div class="page" id="page-config">
-  <div class="ph">
-    <div><div class="pt">Configurações de Conexão GitHub</div><div class="ps">Configure as credenciais de sincronização de dados com segurança</div></div>
-  </div>
-  <div style="padding: 26px;">
-    <div class="config-container">
-      <div class="msec">
-        <div class="msec-t">Credenciais Individuais</div>
-        <div class="fg" style="margin-top:10px;">
-          <div>
-            <label class="fg-label">GitHub Personal Access Token (PAT)</label>
-            <input type="password" id="cfg-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
-            <small style="color:var(--text3); display:block; margin-top:4px;">Gere um token clássico com escopo 'repo'. Ele ficará salvo apenas neste computador.</small>
-          </div>
-          <div style="margin-top:10px;">
-            <label class="fg-label">Repositório Proprietário/Nome</label>
-            <input type="text" id="cfg-repo" value="elivancarvalho/mwm-sistema">
-          </div>
-          <div style="margin-top:10px;">
-            <label class="fg-label">Branch</label>
-            <input type="text" id="cfg-branch" value="main">
-          </div>
-          <div style="margin-top:15px;">
-            <button class="btn btn-primary" onclick="salvarConfiguracoesGitHub()">Salvar Configurações</button>
-          </div>
-        </div>
-      </div>
+  <div class="ph"><div><div class="pt">Configurações GitHub</div><div class="ps">Gerencie suas conexões de rede</div></div></div>
+  <div class="config-container">
+    <div class="fg">
+      <div><label class="fg-label">GitHub Token (PAT)</label><input type="password" id="cfg-token"></div>
+      <div style="margin-top:10px;"><label class="fg-label">Repositório</label><input type="text" id="cfg-repo" value="elivancarvalho/mwm-sistema"></div>
+      <div style="margin-top:10px;"><label class="fg-label">Branch</label><input type="text" id="cfg-branch" value="main"></div>
+      <div style="margin-top:15px;"><button class="btn btn-primary" onclick="salvarConfiguracoesGitHub()">Salvar Configurações</button></div>
     </div>
   </div>
 </div>
@@ -480,787 +256,367 @@ td code{font-family:var(--mono);font-size:10px;background:var(--bg4);padding:1px
 </main>
 </div>
 
-<!-- MODAL CLONAR DIA -->
-<div class="overlay" id="modal-clonar">
+<div class="overlay" id="modal-importar">
 <div class="modal">
-  <div class="mhdr">
-    <div>
-      <div class="mtitle">Clonar programação de outro dia</div>
-      <div style="font-size:11px;color:var(--text3);margin-top:2px">Selecione o dia base → as viagens serão copiadas para <strong id="clone-destino" style="color:var(--accent)"></strong></div>
-    </div>
-    <button class="mx" onclick="fecharModal('clonar')">×</button>
-  </div>
+  <div class="mhdr"><div class="mtitle">Importar Planilha Mensal (.xlsx)</div><button class="mx" onclick="fecharModal('importar')">×</button></div>
   <div class="mbody">
-    <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Dias disponíveis com viagens cadastradas:</div>
-    <div class="clone-day-list" id="clone-day-list"></div>
-    <div class="clone-preview" id="clone-preview">
-      <div style="color:var(--text);font-weight:500;margin-bottom:4px" id="clone-preview-title"></div>
-      <div id="clone-preview-rotas" style="color:var(--text2)"></div>
+    <div class="import-box" onclick="document.getElementById('excel-file').click()">
+      <p>Arraste ou escolha a Planilha Mensal de Coletas</p>
+      <span style="font-size:11px; color:var(--text3);" id="frota-status-lbl">Carregando dicionário da nuvem...</span>
+      <input type="file" id="excel-file" accept=".xlsx, .xls" style="display:none" onchange="processarExcelMWM(this)">
     </div>
-    <div style="margin-top:10px;padding:8px 12px;background:var(--amber-bg);border-radius:5px;font-size:11px;color:var(--amber);display:flex;gap:6px;align-items:center">
-      <span>⚠</span>
-      <span>As viagens serão clonadas com <strong>CTE zerado (Pendente)</strong> e <strong>AVACORP resetado</strong>. Você pode editar qualquer campo depois.</span>
+    <div style="padding:10px; background:var(--bg3); border-radius:6px; font-size:11px; color:var(--text2); border:1px solid var(--border)">
+      🌐 <strong>Dicionário Remoto Ativo:</strong> O arquivo de frotas foi desacoplado do código. Toda amarração de placas e modelos agora vem diretamente do seu arquivo <code>frota.json</code> hospedado no GitHub.
     </div>
   </div>
-  <div class="mftr">
-    <button class="btn btn-ghost" onclick="fecharModal('clonar')">Cancelar</button>
-    <button class="btn btn-primary" id="clone-confirm-btn" onclick="confirmarClonagem()" disabled style="opacity:.4;cursor:not-allowed">Clonar viagens</button>
-  </div>
-</div>
-</div>
-
-<!-- MODAL NOVA VIAGEM -->
-<div class="overlay" id="modal-nova-viagem">
-<div class="modal">
-  <div class="mhdr"><div class="mtitle">Nova Viagem</div><button class="mx" onclick="fecharModal('nova-viagem')">×</button></div>
-  <div class="mbody">
-    <div class="msec"><div class="msec-t">Veículo & Motorista</div>
-      <div class="fg fg4">
-        <div><label class="fg-label">Tipo</label><select id="nv-tipo" onchange="onTipoChange()"><option value="TRUCK">Truck</option><option value="CONJUNTO">Conjunto</option><option value="PUXADA">Puxada</option></select></div>
-        <div><label class="fg-label">Frota / Cavalo</label><select id="nv-frota"></select></div>
-        <div id="grp-carreta"><label class="fg-label">Carreta</label><select id="nv-carreta"></select></div>
-        <div><label class="fg-label">Motorista</label><select id="nv-motorista"></select></div>
-      </div>
-    </div>
-    <div class="msec"><div class="msec-t">Rota & Horário</div>
-      <div class="fg fg4">
-        <div><label class="fg-label">Rota</label><input type="text" id="nv-rota" placeholder="ROTA 01"></div>
-        <div><label class="fg-label">Saída CD</label><input type="time" id="nv-hora"></div>
-        <div><label class="fg-label">Origem</label><select id="nv-origem"><option>MWM STO AMARO</option><option>FILIAL SBC</option><option>MWM JUNDIAI</option><option>CARGOLIFT</option><option>CD SBC</option></select></div>
-        <div><label class="fg-label">Destino</label><select id="nv-destino"><option>MWM STO AMARO</option><option>FILIAL SBC</option><option>MWM JUNDIAI</option><option>CARGOLIFT</option></select></div>
-      </div>
-    </div>
-    <div class="msec"><div class="msec-t">Coletas / Paradas — Nº Pedido por parada</div>
-      <div id="paradas-wrap"></div>
-      <div class="padd-btn" onclick="addParada()">+ Adicionar parada</div>
-    </div>
-    <div class="msec"><div class="msec-t">CTE & Obs</div>
-      <div class="fg fg3">
-        <div><label class="fg-label">Status CTE</label><select id="nv-cte"><option value="PENDENTE">Pendente</option><option value="IMPRESSO">Impresso</option><option value="ENVIADO">Enviado</option><option value="FRUSTRADA">Frustrada</option><option value="NULA">Nula</option></select></div>
-        <div><label class="fg-label">Nº CTE</label><input type="text" id="nv-numcte" placeholder="52178"></div>
-        <div><label class="fg-label">Observação</label><input type="text" id="nv-obs" placeholder="CARREGADO..."></div>
-      </div>
-    </div>
-  </div>
-  <div class="mftr"><button class="btn btn-ghost" onclick="fecharModal('nova-viagem')">Cancelar</button><button class="btn btn-primary" onclick="salvarNovaViagemForm()">Salvar Viagem</button></div>
-</div>
-</div>
-
-<!-- MODAL NOVO DIA -->
-<div class="overlay" id="modal-novo-dia">
-<div class="modal" style="width:360px">
-  <div class="mhdr"><div class="mtitle">Adicionar Novo Dia</div><button class="mx" onclick="fecharModal('novo-dia')">×</button></div>
-  <div class="mbody">
-    <div><label class="fg-label">Data (DD/MM)</label><input type="text" id="nd-data" placeholder="29/05" maxlength="5" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:8px 10px;font-size:13px;font-family:var(--mono);outline:none"></div>
-  </div>
-  <div class="mftr"><button class="btn btn-ghost" onclick="fecharModal('novo-dia')">Cancelar</button><button class="btn btn-primary" onclick="criarNovoDia()">Criar</button></div>
+  <div class="mftr"><button class="btn btn-ghost" onclick="fecharModal('importar')">Fechar</button></div>
 </div>
 </div>
 
 <div class="notif" id="notif"></div>
 
 <script>
-// ═══════════════════════════════════════════════════════════════════════
-//  MWM · SISTEMA DE PROGRAMAÇÃO v4.5
-//  Armazenamento Dinâmico Protegido (LocalStorage + GitHub Client-Side API)
-// ═══════════════════════════════════════════════════════════════════════
-
-let viagensDB    = {};
+let viagensDB = {};
 let availableDates = [];
-let currentDate  = new Date().toLocaleDateString('pt-BR').slice(0,5);
-let fSearch='', fTipo='', fCTE='', fAva='', expanded=null;
+let currentDate = '';
+let fSearch='', fTipo='', fCTE='', expanded=null;
 let _saveTimeout = null;
-let _fileSha     = null;
+let _fileSha = null;
 
-const FROTA_DATA=[
-  {novo:'R3025',placa:'TBB3I31',antigo:'3253',tipo:'CAMINHÃO TRUCK'},{novo:'R3019',placa:'TBA3C89',antigo:'3245',tipo:'CAMINHÃO TRUCK'},
-  {novo:'R3020',placa:'TBA3C87',antigo:'3246',tipo:'CAMINHÃO TRUCK'},{novo:'R3021',placa:'TBA3C65',antigo:'3247',tipo:'CAMINHÃO TRUCK'},
-  {novo:'R3022',placa:'TBB5J94',antigo:'3249',tipo:'CAMINHÃO TRUCK'},{novo:'R3023',placa:'TBB6A15',antigo:'3251',tipo:'CAMINHÃO TRUCK'},
-  {novo:'R3026',placa:'TBB6A14',antigo:'3254',tipo:'CAMINHÃO TRUCK'},{novo:'R3002',placa:'APG8526',antigo:'366',tipo:'CAMINHÃO TRUCK'},
-  {novo:'TL2011',placa:'SUI0A86',antigo:'3238',tipo:'CAVALO 4X2'},{novo:'TL2012',placa:'SWK5B42',antigo:'3239',tipo:'CAVALO 4X2'},
-  {novo:'TL2013',placa:'SUQ1I07',antigo:'3240',tipo:'CAVALO 4X2'},{novo:'TL2014',placa:'SST1D31',antigo:'3241',tipo:'CAVALO 4X2'},
-  {novo:'TL2015',placa:'FPK9I21',antigo:'3242',tipo:'CAVALO 4X2'},{novo:'TL2016',placa:'SVF8H61',antigo:'3243',tipo:'CAVALO 4X2'},
-  {novo:'TL2017',placa:'SWT3J11',antigo:'3244',tipo:'CAVALO 4X2'},{novo:'B10021',placa:'OWN8B50',antigo:'—',tipo:'CAVALO 6X2'},
-  {novo:'T2019',placa:'BCZ2B18',antigo:'661',tipo:'CAVALO 6X2'},{novo:'T2021',placa:'BCZ4A86',antigo:'663',tipo:'CAVALO 6X2'},
-  {novo:'SL3020',placa:'FAW3H34',antigo:'2520',tipo:'CARRETA SIDER'},{novo:'SL3021',placa:'DPL0E52',antigo:'2521',tipo:'CARRETA SIDER'},
-  {novo:'SL3022',placa:'FWF5I52',antigo:'2522',tipo:'CARRETA SIDER'},{novo:'SL3023',placa:'FUD1D17',antigo:'2523',tipo:'CARRETA SIDER'},
-  {novo:'SL3031',placa:'GJV6J42',antigo:'2531',tipo:'CARRETA SIDER'},{novo:'S3002',placa:'AJW8991',antigo:'288',tipo:'CARRETA REBAIXADA'},
-  {novo:'S3036',placa:'ESU8034',antigo:'452',tipo:'CARRETA VANDERLEIA'},{novo:'S3079',placa:'EKU7A68',antigo:'2532',tipo:'CARRETA SIDER'},
-  {novo:'S3117',placa:'JLS5900',antigo:'584',tipo:'CARRETA VANDERLEIA'},{novo:'109',placa:'EMP0109',antigo:'109',tipo:'EMPILHADEIRA'},
-  {novo:'535',placa:'AVO6988',antigo:'535',tipo:'AUTOMÓVEL'},{novo:'536',placa:'AVO6G27',antigo:'536',tipo:'AUTOMÓVEL'},
-];
-const MOTORISTAS=['MILTONILO DE MATOS','ANDERSON MACENA MELENDRE','JOSE APARECIDO','TULIO DOS SANTOS CORDEIRO','GILMAR PEREIRA SILVA','SILVIO','ROBERTO','ELSON VIEIRA BORGES','ANDREIA MARTINS DE ANDRADE','IVAN LEONILDO','LUCIANO LEMES DA SILVA','MARCELO DIAS','CELSO SOARES','JOSE AMAURY','MARCIO BALESTRIN','FERNANDO DE OLIVEIRA','CELSO MOREIRA','AGNALDO PEREIRA DE JESUS','MARCO AURELIO CLARO','IRENE MANOEL','IRENE MARIA','WESLEY DOS SANTOS SOUZA DIAS'];
+// Tabelas de conjunturas globais que serão preenchidas via API do GitHub
+let CONJUNTURA_VEICULOS = {};
+let MAPA_REVERSO_PLACAS = {};
 
-// ──────────────────────────────────────────────────────────────────────
-//  MANIPULAÇÃO DE CONFIGURAÇÕES DO USUÁRIO (Prevenção de Token Exposto)
-// ──────────────────────────────────────────────────────────────────────
 function obterGHCredenciais() {
   return {
     ownerRepo: localStorage.getItem('mwm_gh_repo') || 'elivancarvalho/mwm-sistema',
     branch: localStorage.getItem('mwm_gh_branch') || 'main',
     token: localStorage.getItem('mwm_gh_token') || '',
-    file: 'mwm_dados.json'
+    file: 'mwm_dados.json',
+    fleetFile: 'frota.json'
   };
 }
 
-function carregarCamposConfig() {
-  const creds = obterGHCredenciais();
-  document.getElementById('cfg-token').value = creds.token;
-  document.getElementById('cfg-repo').value = creds.ownerRepo;
-  document.getElementById('cfg-branch').value = creds.branch;
-}
-
-function salvarConfiguracoesGitHub() {
-  const token = document.getElementById('cfg-token').value.trim();
-  const repo = document.getElementById('cfg-repo').value.trim();
-  const branch = document.getElementById('cfg-branch').value.trim();
-
-  if(!token) {
-    notify('⚠ Por favor, digite um Token do GitHub válido.', 'var(--red)');
-    return;
-  }
-
-  localStorage.setItem('mwm_gh_token', token);
-  localStorage.setItem('mwm_gh_repo', repo);
-  localStorage.setItem('mwm_gh_branch', branch);
-
-  notify('✓ Configurações salvas localmente neste dispositivo!', 'var(--green)');
-  carregarTodos();
-}
+function abrirModalImportarExcel() { abrirModal('importar'); }
 
 // ──────────────────────────────────────────────────────────────────────
-//  GITHUB API DINÂMICA
+//  REQUISIÇÃO SÍNCRONA DE ESTRUTURA REFRESH (MÓDULO DE EXPANSÃO INTERNO)
 // ──────────────────────────────────────────────────────────────────────
-async function ghGet() {
+async function carregarDicionarioFrotasRemoto() {
   const creds = obterGHCredenciais();
-  if(!creds.token) {
-    setSyncErr();
-    return null;
-  }
+  if(!creds.token) return false;
   
-  const apiURL = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.file}?ref=${creds.branch}&t=${Date.now()}`;
-  const resp = await fetch(apiURL, {
-    headers: {
-      Authorization: `token ${creds.token}`,
-      Accept: 'application/vnd.github.v3+json'
+  try {
+    const url = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.fleetFile}?ref=${creds.branch}&t=${Date.now()}`;
+    const resp = await fetch(url, { headers: { Authorization: `token ${creds.token}`, Accept: 'application/vnd.github.v3+json' } });
+    if(resp.ok) {
+      const data = await resp.json();
+      CONJUNTURA_VEICULOS = JSON.parse(atob(data.content.split('\n').join('')));
+      
+      // Reconstrói o mapa reverso de placas na memória do navegador
+      MAPA_REVERSO_PLACAS = {};
+      Object.keys(CONJUNTURA_VEICULOS).forEach(key => {
+        if(CONJUNTURA_VEICULOS[key].placa) {
+          MAPA_REVERSO_PLACAS[CONJUNTURA_VEICULOS[key].placa] = { ...CONJUNTURA_VEICULOS[key], frotaNova: key };
+        }
+      });
+      const lbl = document.getElementById('frota-status-lbl');
+      if(lbl) lbl.innerHTML = `✓ Dicionário Nuvem Ativado (${Object.keys(CONJUNTURA_VEICULOS).length} frotas mapeadas)`;
+      return true;
     }
-  });
-
-  if (resp.status === 401) {
-    notify('❌ Falha de Autenticação (401). Verifique seu Token na aba do GitHub.', 'var(--red)');
-    setSyncErr();
-    return null;
-  }
-  if (resp.status === 404) return null;
-  if (!resp.ok) throw new Error(`GitHub GET ${resp.status}`);
-  
-  const meta = await resp.json();
-  _fileSha = meta.sha;
-  const decoded = JSON.parse(atob(meta.content.split('\n').join('')));
-  return decoded;
-}
-
-async function ghPut(dados) {
-  const creds = obterGHCredenciais();
-  if(!creds.token) {
-    notify('⚠ Dados salvos localmente, mas não enviados: Token não configurado.', 'var(--amber)');
-    return;
-  }
-
-  const apiURL = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.file}`;
-  const content = btoa(unescape(encodeURIComponent(JSON.stringify(dados, null, 2))));
-  const body = {
-    message: `MWM Sincronismo automático — ${new Date().toLocaleString('pt-BR')}`,
-    content,
-    branch: creds.branch
-  };
-  if (_fileSha) body.sha = _fileSha;
-
-  const resp = await fetch(apiURL, {
-    method: 'PUT',
-    headers: {
-      Authorization: `token ${creds.token}`,
-      Accept: 'application/vnd.github.v3+json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(body)
-  });
-
-  if (resp.status === 401) {
-    notify('❌ Erro 401 ao salvar. Seu Token pode ter expirado.', 'var(--red)');
-    setSyncErr();
-    return;
-  }
-
-  if (!resp.ok) {
-    const err = await resp.json().catch(()=>({}));
-    throw new Error(`GitHub PUT ${resp.status}: ${err.message||''}`);
-  }
-  const result = await resp.json();
-  _fileSha = result.content.sha;
-  return result;
+  } catch(e) { console.error('Erro ao ler frota.json da nuvem:', e); }
+  return false;
 }
 
 // ──────────────────────────────────────────────────────────────────────
-//  CAMADA DE CONTROLE DE DADOS
+//  MOTOR DE PARSER DA PLANILHA — INTEGRAÇÃO TOTAL 3-LINHAS + DICIONÁRIO API
+// ──────────────────────────────────────────────────────────────────────
+function processarExcelMWM(input) {
+  const file = input.files[0];
+  if(!file) return;
+
+  setLoadingState(true, 'Consolidando dados via Dicionário Dinâmico...');
+  const reader = new FileReader();
+  
+  reader.onload = function(e) {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, {type: 'array'});
+      
+      let totalDias = 0; let totalViagens = 0;
+
+      workbook.SheetNames.forEach(sheetName => {
+        if (!sheetName.includes('.') || sheetName.includes('PLACA') || sheetName.includes('PESQUISA') || sheetName.includes('INSTRUCOES') || sheetName.includes('MOTORISTAS') || sheetName.includes('VIAGENS') || sheetName.includes('PARADAS') || sheetName.includes('FROTA')) return;
+
+        const dataChave = sheetName.split(' ')[0].replace('.', '/');
+        const sheet = workbook.Sheets[sheetName];
+        const rows = XLSX.utils.sheet_to_json(sheet, {header: 1, defval: ''});
+
+        if(!viagensDB[dataChave]) viagensDB[dataChave] = [];
+        totalDias++;
+
+        let blocoAtual = 'TRUCK'; let viagemCorrente = null;
+        let idxColeta = 6, idxEntrega = 7, idxJanela = 8, idxPedido = 10, idxCidade = 11;
+
+        for(let l=0; l<Math.min(rows.length, 6); l++) {
+          const r = rows[l]; if(!r) continue;
+          for(let c=0; c<r.length; c++) {
+            const val = String(r[c] || '').toUpperCase().trim();
+            if(val === 'COLETA') idxColeta = c;
+            if(val === 'ENTREGA') idxEntrega = c;
+            if(val === 'JANELA') idxJanela = c;
+            if(val === 'SOLICITAÇÃO' || val === 'PEDIDO') idxPedido = c;
+            if(val.includes('CIDADE')) idxCidade = c;
+          }
+        }
+
+        for(let i=0; i<rows.length; i++) {
+          const row = rows[i]; if(!row || row.length === 0) continue;
+          const celulaA = String(row[0] || '').trim();
+
+          if(celulaA.includes('FROTA CD')) { blocoAtual = 'CONJUNTO'; continue; }
+          if(celulaA === 'TRUCK') { blocoAtual = 'TRUCK'; continue; }
+          if(celulaA === 'CAVALO' || celulaA === 'FROTA' || celulaA.includes('PROGRAMAÇÃO')) continue;
+
+          const cadastroPorFrota = CONJUNTURA_VEICULOS[celulaA];
+          const cadastroPorPlaca = MAPA_REVERSO_PLACAS[celulaA];
+          const ehAgregado = celulaA.startsWith('C99') || celulaA.startsWith('C10');
+
+          if(cadastroPorFrota || cadastroPorPlaca || ehAgregado) {
+            let frotaNovo = ''; let placaFinal = ''; let antigoFinal = ''; let tipoFinal = blocoAtual;
+            
+            if(ehAgregado) {
+              frotaNovo = celulaA;
+              const rowL2 = rows[i+1] || [];
+              placaFinal = String(rowL2[0] || 'AGREGADO').trim();
+              antigoFinal = 'Agregado';
+            } else if (cadastroPorFrota) {
+              frotaNovo = celulaA; placaFinal = cadastroPorFrota.placa; antigoFinal = cadastroPorFrota.antigo; tipoFinal = cadastroPorFrota.tipo || blocoAtual;
+            } else if (cadastroPorPlaca) {
+              frotaNovo = cadastroPorPlaca.frotaNova; placaFinal = celulaA; antigoFinal = cadastroPorPlaca.antigo; tipoFinal = cadastroPorPlaca.tipo || blocoAtual;
+            }
+
+            const carretaNovo = tipoFinal === 'CONJUNTO' ? String(row[1] || '').trim() : '';
+            const motorista = String(row[2] || '').trim(); const saida = String(row[3] || '').trim();
+            const rota = String(row[4] || '').trim(); const obs = String(row[5] || '').trim();
+
+            if(!rota || rota === '-' || rota === ' ') continue;
+
+            let infoCarretaFinal = '—';
+            if(tipoFinal === 'CONJUNTO' && carretaNovo) {
+              const dadosCarreta = CONJUNTURA_VEICULOS[carretaNovo] || MAPA_REVERSO_PLACAS[carretaNovo];
+              if(dadosCarreta) { infoCarretaFinal = `${carretaNovo} (Placa: ${dadosCarreta.placa || carretaNovo} / Antigo: ${dadosCarreta.antigo || '—'})`; }
+              else { infoCarretaFinal = carretaNovo; }
+            }
+
+            const coletaf = String(row[idxColeta] || '').trim(); const entregaf = String(row[idxEntrega] || '').trim();
+            const janela = String(row[idxJanela] || '').trim(); const pedido = String(row[idxPedido] || '').trim();
+            const cidade = String(row[idxCidade] || '').trim();
+
+            const vid = Date.now() + Math.floor(Math.random()*100000);
+            let statusCteInicial = 'PENDENTE';
+            if(obs.toUpperCase().includes('IMPRESSO') || rota.toUpperCase().includes('IMPRESSO')) statusCteInicial = 'IMPRESSO';
+            if(obs.toUpperCase().includes('NULA') || rota.toUpperCase().includes('NULA')) statusCteInicial = 'NULA';
+
+            viagemCorrente = {
+              id: vid, tipo: tipoFinal, frota: frotaNovo, frotaAntiga: antigoFinal, placa: placaFinal, carreta: infoCarretaFinal, motorista,
+              rota, saida: saida || '—', origem: coletaf || 'FILIAL SBC', destino: entregaf || 'MWM STO AMARO', cte: statusCteInicial, obs, paradas: []
+            };
+
+            if(coletaf && coletaf !== ' ') {
+              let ji = '08:00', jf = '18:00';
+              if(janela.includes('-')) { [ji, jf] = janela.split('-').map(x=>x.trim()); }
+              viagemCorrente.paradas.push({ id: `${vid}-0`, fornecedor: coletaf, cidade, ji, jf, janela, pedido: pedido || '—', importado: false });
+            }
+            viagensDB[dataChave].push(viagemCorrente); totalViagens++;
+            i += 2; // Salto vertical seguro
+          } 
+          else if(viagemCorrente && String(row[idxColeta] || '').trim() !== '' && String(row[idxColeta] || '').trim() !== 'COLETA') {
+            const coletaf = String(row[idxColeta] || '').trim(); const entregaf = String(row[idxEntrega] || '').trim();
+            const janela = String(row[idxJanela] || '').trim(); const pedido = String(row[idxPedido] || '').trim();
+            const cidade = String(row[idxCidade] || '').trim();
+
+            let ji = '08:00', jf = '18:00'; if(janela.includes('-')) { [ji, jf] = janela.split('-').map(x=>x.trim()); }
+            viagemCorrente.paradas.push({ id: `${viagemCorrente.id}-${viagemCorrente.paradas.length}`, fornecedor: coletaf, cidade, ji, jf, janela, pedido: pedido || '—', importado: false });
+          }
+        }
+      });
+
+      availableDates = Object.keys(viagensDB).sort();
+      if(availableDates.length > 0) currentDate = availableDates[0];
+      fecharModal('importar'); setLoadingState(false);
+      notify(`✓ Sucesso! ${totalViagens} rotas carregadas usando frotas da nuvem.`, 'var(--green)');
+      agendarSalvamento(); setDate(currentDate);
+    } catch(err) { console.error(err); setLoadingState(false); alert('Erro estrutural de leitura.'); }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// ──────────────────────────────────────────────────────────────────────
+//  GERENCIAMENTO CLOUD E ARMAZENAMENTO COMPACTO
 // ──────────────────────────────────────────────────────────────────────
 async function carregarTodos() {
-  setLoadingState(true, 'Carregando dados da nuvem...');
+  setLoadingState(true, 'Buscando dados...');
   const creds = obterGHCredenciais();
+  if(!creds.token) { carregarCache(); setSyncErr(); setLoadingState(false); updateDashboard(); return; }
   
-  if(!creds.token) {
-    notify('ℹ Bem-vindo! Configure seu token na aba "Conexão GitHub" para ativar a nuvem.', 'var(--accent)');
-    carregarCache();
-    setSyncErr();
-    setLoadingState(false);
-    return;
-  }
+  // Executa o carregamento das frotas em paralelo para máxima velocidade
+  await carregarDicionarioFrotasRemoto();
 
   try {
-    const dados = await ghGet();
-    if (dados) {
-      viagensDB      = dados.viagens || {};
-      availableDates = dados.dates   || Object.keys(viagensDB).sort();
-    }
-    const hoje = new Date().toLocaleDateString('pt-BR').slice(0,5);
-    if (!availableDates.includes(hoje)) {
-      availableDates = [...new Set([...availableDates, hoje])].sort();
-    }
-    salvarCache();
-    setSyncOk();
-  } catch(e) {
-    console.error('Erro ao carregar GitHub:', e);
-    setSyncErr();
-    notify('⚠ Sem conexão remota — usando cache local temporário', 'var(--amber)');
-    carregarCache();
-  } finally {
-    setLoadingState(false);
-    document.getElementById('prog-date-subtitle').textContent = `Rotas, AVACORP e CTE — Dia Ativo: ${currentDate}`;
-    renderDateNav(); renderTable(); renderStats(); updateBadges();
-  }
+    const apiURL = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.file}?ref=${creds.branch}&t=${Date.now()}`;
+    const resp = await fetch(apiURL, { headers: { Authorization: `token ${creds.token}`, Accept: 'application/vnd.github.v3+json' } });
+    if(resp.status===200){
+      const meta = await resp.json(); _fileSha = meta.sha;
+      const d = JSON.parse(atob(meta.content.split('\n').join('')));
+      viagensDB = d.viagens || {}; availableDates = d.dates || Object.keys(viagensDB).sort();
+      salvarCache(); setSyncOk();
+    } else { setSyncErr(); carregarCache(); }
+  } catch(e) { setSyncErr(); carregarCache(); }
+  setLoadingState(false); updateDashboard();
 }
 
-function agendarSalvamento() {
-  clearTimeout(_saveTimeout);
-  setSyncPending();
-  salvarCache();
-  _saveTimeout = setTimeout(() => gravarTudo(), 2500);
+function updateDashboard() {
+  if(!currentDate && availableDates.length) currentDate = availableDates[0];
+  if(!currentDate) currentDate = new Date().toLocaleDateString('pt-BR').slice(0,5);
+  const sub = document.getElementById('prog-date-subtitle');
+  if(sub) sub.textContent = `Emissões CTE e Janelas AVACORP — Dia Ativo: ${currentDate}`;
+  renderDateNav(); renderTable(); renderStats(); updateBadges();
 }
+
+function agendarSalvamento() { clearTimeout(_saveTimeout); setSyncPending(); salvarCache(); _saveTimeout = setTimeout(() => gravarTudo(), 2500); }
 
 async function gravarTudo() {
+  const creds = obterGHCredenciais(); if(!creds.token) return;
   try {
-    await ghPut({ viagens: viagensDB, dates: availableDates });
-    setSyncOk();
-  } catch(e) {
-    console.error('Erro ao gravar GitHub:', e);
-    if (e.message.includes('409') || e.message.includes('sha')) {
-      notify('Conflito detectado — sincronizando novamente...', 'var(--amber)');
-      await carregarTodos();
-      setTimeout(() => gravarTudo(), 1000);
-    } else {
-      setSyncErr();
-      notify('⚠ Salvo localmente, erro ao sincronizar com nuvem.', 'var(--amber)');
-    }
-  }
+    const apiURL = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.file}`;
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify({ viagens: viagensDB, dates: availableDates }, null, 2))));
+    const body = { message: 'Sincronismo dinâmico estruturado', content, branch: creds.branch };
+    if (_fileSha) body.sha = _fileSha;
+    const resp = await fetch(apiURL, { method: 'PUT', headers: { Authorization: `token ${creds.token}`, Accept: 'application/vnd.github.v3+json' }, body: JSON.stringify(body) });
+    if(resp.ok) { const r = await resp.json(); _fileSha = r.content.sha; setSyncOk(); notify('✓ Modificações salvas na Nuvem'); }
+    else { setSyncErr(); }
+  } catch(e) { setSyncErr(); }
 }
 
-async function salvarViagem(viagem) {
-  if (!viagensDB[currentDate]) viagensDB[currentDate] = [];
-  const idx = viagensDB[currentDate].findIndex(v => v.id === viagem.id);
-  if (idx >= 0) viagensDB[currentDate][idx] = viagem;
-  else viagensDB[currentDate].push(viagem);
-  if (!availableDates.includes(currentDate)) {
-    availableDates = [...new Set([...availableDates, currentDate])].sort();
-  }
-  agendarSalvamento();
-}
-
-async function deletarViagem(id) {
-  viagensDB[currentDate] = (viagensDB[currentDate] || []).filter(v => v.id !== id);
-  agendarSalvamento();
-}
-
-function salvarCache()   { try { localStorage.setItem('mwm_v4_cache', JSON.stringify({viagens:viagensDB,dates:availableDates})); } catch(e){} }
-function carregarCache() { try { const s=localStorage.getItem('mwm_v4_cache'); if(s){const d=JSON.parse(s);viagensDB=d.viagens||{};availableDates=d.dates||[];} } catch(e){} }
-
-// ──────────────────────────────────────────────────────────────────────
-//  SYNC VISUALS & LAYOUT ENGINE
-// ──────────────────────────────────────────────────────────────────────
-function setSyncOk()      { const s=document.getElementById('sync-indicator'); if(s){s.className='sync-ok';  s.title='Sincronizado com GitHub';} }
-function setSyncErr()     { const s=document.getElementById('sync-indicator'); if(s){s.className='sync-err'; s.title='Desconectado ou Token Pendente';} }
-function setSyncPending() { const s=document.getElementById('sync-indicator'); if(s){s.className='sync-pend';s.title='Enviando alterações...';} }
-function setLoadingState(on, msg='') {
-  const el=document.getElementById('loading-bar');
-  const lb=document.getElementById('loading-label');
-  if(el) el.style.display = on?'block':'none';
-  if(lb) lb.textContent = on ? msg : '';
-}
-
-function toggleSidebar(){
-  const app=document.getElementById('app');const btn=document.getElementById('toggle-btn');
-  app.classList.toggle('collapsed');
-  const c=app.classList.contains('collapsed');
-  document.getElementById('sidebar').style.width=c?'var(--sc)':'var(--sw)';
-  btn.innerHTML=c?'▶':'◀';
-  setTimeout(()=>{if(document.getElementById('page-prog').classList.contains('active'))renderTable();},220);
-}
-
-function navTo(id,el){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  el.classList.add('active');
-  if(id==='pedidos') renderPedidos();
-  if(id==='pend') renderPend();
-  if(id==='frota') renderFrota();
-  if(id==='mot') renderMot();
-  if(id==='dash') renderDash();
-  if(id==='alertas') renderAlertas();
-  if(id==='config') carregarCamposConfig();
-}
-
-// ──────────────────────────────────────────────────────────────────────
-//  LÓGICA OPERACIONAL INTERNA DO SISTEMA[cite: 1, 2]
-// ──────────────────────────────────────────────────────────────────────
 function h2m(s){const[h,m]=(s||'00:00').split(':').map(Number);return h*60+m;}
 function now(){const d=new Date();return d.getHours()*60+d.getMinutes();}
+function salvarCache(){ localStorage.setItem('mwm_v5_cache', JSON.stringify({viagens:viagensDB,dates:availableDates})); }
+function carregarCache(){ const s=localStorage.getItem('mwm_v5_cache'); if(s){const d=JSON.parse(s);viagensDB=d.viagens||{};availableDates=d.dates||[];} }
 
 function janelaStatus(p){
-  if(p.importado) return {cls:'jimported',txt:'✓ Importado',urgente:false,atrasado:false};
-  const n=now(),ini=h2m(p.ji),fim=h2m(p.jf),restam=fim-n;
-  if(n<ini) return {cls:'jwaiting',txt:`Aguarda ${p.ji}`,urgente:false,atrasado:false};
-  if(n>fim) return {cls:'jdanger',txt:`ATRASADO (${p.jf})`,urgente:false,atrasado:true};
-  if(restam<=20) return {cls:'jwarn',txt:`⚠ Fecha em ${restam}min!`,urgente:true,atrasado:false};
-  return {cls:'jok',txt:`No prazo (até ${p.jf})`,urgente:false,atrasado:false};
+  if(p.importado) return {cls:'jimported',txt:'✓ Importado',urgente:false};
+  const n=now(), fim=h2m(p.jf), restam=fim-n;
+  if(n>fim) return {cls:'jdanger',txt:`ATRASADO`,urgente:false};
+  if(restam<=30) return {cls:'jwarn',txt:`Fecha em ${restam}m!`,urgente:true};
+  return {cls:'jok',txt:`No prazo`,urgente:false};
 }
 
 function avaSt(v){
   if(!v.paradas || !v.paradas.length) return 'N/A';
-  const rel=v.paradas.filter(p=>p.pedido&&p.pedido!=='—'&&p.pedido!=='NULA');
-  if(!rel.length) return 'N/A';
-  const imp=rel.filter(p=>p.importado).length;
-  if(imp===0) return 'PENDENTE';
-  if(imp<rel.length) return 'PARCIAL';
-  return 'IMPORTADO';
-}
-function cteApto(v){const s=avaSt(v);return s==='IMPORTADO'||s==='N/A';}
-function getProgresso(v){
-  if(!v.paradas) return {total:0,imp:0,pct:100};
-  const rel=v.paradas.filter(p=>p.pedido&&p.pedido!=='—'&&p.pedido!=='NULA');
-  const imp=rel.filter(p=>p.importado).length;
-  return{total:rel.length,imp,pct:rel.length?Math.round(imp/rel.length*100):100};
-}
-
-function pedidosUniq(v){
-  if(!v.paradas) return [];
-  return [...new Set(v.paradas.map(p=>p.pedido).filter(p=>p&&p!=='—'&&p!=='NULA'))];
-}
-function pb(p){if(!p||p==='—'||p==='NULA') return '';const cl=p.startsWith('18')?'p18':p.startsWith('17')?'p17':'p52';return `<span class="pb ${cl}">${p}</span>`;}
-function avaBadge(s){
-  const m={IMPORTADO:'ava-ok',PARCIAL:'ava-par',PENDENTE:'ava-pend','N/A':'ava-na'};
-  const t={IMPORTADO:'✓ Importado',PARCIAL:'Parcial',PENDENTE:'Pendente','N/A':'—'};
-  return `<span class="${m[s]}">${t[s]}</span>`;
-}
-function cteTag(c){const m={IMPRESSO:'tg',ENVIADO:'tt',FRUSTRADA:'tr',NULA:'tx',PENDENTE:'ta'};return `<span class="tag ${m[c]||'tx'}">${c}</span>`;}
-function tipoTag(t){const m={TRUCK:'tipo-truck',CONJUNTO:'tipo-conj',PUXADA:'tipo-pux'};return `<span class="${m[t]||''}">${t}</span>`;}
-function notify(msg,color){const n=document.getElementById('notif');n.style.background=color||'var(--green)';n.innerHTML=msg;n.classList.add('show');setTimeout(()=>n.classList.remove('show'),2800);}
-
-function updateBadges(){
-  const vs=viagensDB[currentDate]||[];
-  document.getElementById('badge-pend').textContent=vs.filter(v=>v.cte==='PENDENTE'&&cteApto(v)).length;
-  document.getElementById('badge-ava').textContent=vs.filter(v=>avaSt(v)==='PENDENTE'||avaSt(v)==='PARCIAL').length;
-  const urg=vs.reduce((a,v)=>(a+(v.paradas||[]).filter(p=>{const s=janelaStatus(p);return s.urgente;}).length),0);
-  document.getElementById('badge-alertas').textContent=urg;
+  const rel = v.paradas.filter(p=>p.pedido && p.pedido!=='—');
+  if(!rel.length) return 'N/A'; const imp = rel.filter(p=>p.importado).length;
+  return imp===0 ? 'PENDENTE' : imp<rel.length ? 'PARCIAL' : 'IMPORTADO';
 }
 
 function renderDateNav(){
-  const c=document.getElementById('date-nav');
-  c.innerHTML=`
-    <button class="dnav-btn" onclick="mudaData(-1)">◀</button>
-    ${availableDates.map(d=>`<div class="date-tab ${currentDate===d?'active':''}" onclick="setDate('${d}')">${d} <span class="dtag">${(viagensDB[d]||[]).length}</span></div>`).join('')}
-    <button class="dnav-btn" onclick="mudaData(1)">▶</button>
-    <button class="btn btn-ghost btn-hoje" onclick="irHoje()">Hoje</button>
-    <button class="btn btn-ghost btn-novo-dia" onclick="abrirModal('novo-dia')">+ Dia</button>
-  `;
+  const c=document.getElementById('date-nav'); if(!c) return;
+  c.innerHTML = availableDates.map(d=>`<div class="date-tab ${currentDate===d?'active':''}" onclick="setDate('${d}')">${d} <span class="dtag">${(viagensDB[d]||[]).length}</span></div>`).join('');
 }
-function setDate(d){
-  currentDate=d;expanded=null;
-  document.getElementById('prog-date-subtitle').textContent = `Rotas, AVACORP e CTE — Dia Ativo: ${currentDate}`;
-  renderDateNav();renderTable();renderStats();updateBadges();
-}
-function mudaData(delta){const i=availableDates.indexOf(currentDate),ni=i+delta;if(ni>=0&&ni<availableDates.length)setDate(availableDates[ni]);}
-function irHoje(){const h=new Date().toLocaleDateString('pt-BR').slice(0,5);if(availableDates.includes(h))setDate(h);else if(availableDates.length)setDate(availableDates[availableDates.length-1]);}
-
-function criarNovoDia(){
-  const d=document.getElementById('nd-data').value.trim();
-  if(!d.match(/^\d{2}\/\d{2}$/)){notify('Formato inválido. Use DD/MM','var(--red)');return;}
-  if(viagensDB[d]){notify('Dia já existe','var(--amber)');return;}
-  viagensDB[d]=[];availableDates=[...new Set([...availableDates,d])].sort();
-  fecharModal('novo-dia');
-  setDate(d);
-  agendarSalvamento();
-  notify(`Dia ${d} criado!`);
-}
+function setDate(d){ currentDate=d; expanded=null; updateDashboard(); }
 
 function renderStats(){
   const vs=viagensDB[currentDate]||[];
-  const trucks=vs.filter(v=>v.tipo==='TRUCK').length;
-  const conj=vs.filter(v=>v.tipo==='CONJUNTO').length;
-  const pux=vs.filter(v=>v.tipo==='PUXADA').length;
-  const avaPend=vs.filter(v=>avaSt(v)==='PENDENTE').length;
-  const ctePend=vs.filter(v=>v.cte==='PENDENTE').length;
   document.getElementById('stats-row').innerHTML=`
-    <div class="stat"><div class="stl">Viagens</div><div class="stv">${vs.length}</div><div class="sts">${currentDate}</div></div>
-    <div class="stat"><div class="stl">Trucks</div><div class="stv" style="color:var(--accent)">${trucks}</div></div>
-    <div class="stat"><div class="stl">Conjuntos</div><div class="stv" style="color:var(--purple)">${conj}</div></div>
-    <div class="stat"><div class="stl">Puxadas</div><div class="stv" style="color:var(--amber)">${pux}</div></div>
-    <div class="stat"><div class="stl">AVACORP pend.</div><div class="stv" style="color:${avaPend>0?'var(--orange)':'var(--green)'}">${avaPend}</div></div>
-    <div class="stat"><div class="stl">CTE pend.</div><div class="stv" style="color:${ctePend>0?'var(--red)':'var(--green)'}">${ctePend}</div></div>
+    <div class="stat"><div class="stl">Total Viagens</div><div class="stv">${vs.length}</div></div>
+    <div class="stat"><div class="stl">Trucks</div><div class="stv" style="color:var(--accent)">${vs.filter(v=>v.tipo==='TRUCK').length}</div></div>
+    <div class="stat"><div class="stl">Conjuntos</div><div class="stv" style="color:var(--purple)">${vs.filter(v=>v.tipo==='CONJUNTO').length}</div></div>
+    <div class="stat"><div class="stl">Prontos p/ CTE</div><div class="stv" style="color:var(--green)">${vs.filter(v=>avaSt(v)==='IMPORTADO' || avaSt(v)==='N/A').length}/${vs.length}</div></div>
   `;
 }
 
-function getFiltered(){
-  return (viagensDB[currentDate]||[]).filter(v=>{
-    const s=fSearch.toLowerCase();
-    const peds=pedidosUniq(v).join(' ');
-    const mS=!s||[v.frota,v.placa||'',v.motorista,v.rota,v.carreta||'',v.origem,v.destino,peds].some(x=>x.toLowerCase().includes(s));
-    const mT=!fTipo||v.tipo===fTipo;
-    const mC=!fCTE||v.cte===fCTE;
-    const mA=!fAva||avaSt(v)===fAva;
-    return mS&&mT&&mC&&mA;
-  });
-}
-function setSearch(v){fSearch=v;expanded=null;renderTable();}
-function setTipo(v){fTipo=v;expanded=null;renderTable();}
-function setCTE(v){fCTE=v;expanded=null;renderTable();}
-function setAva(v){fAva=v;expanded=null;renderTable();}
-
 function renderTable(){
-  const filtered=getFiltered();
-  document.getElementById('rcount').textContent=filtered.length+' viagem'+(filtered.length!==1?'s':'');
-  const tbody=document.getElementById('main-tbody');tbody.innerHTML='';
+  const filtered = (viagensDB[currentDate]||[]).filter(v=>{
+    const s=fSearch.toLowerCase(); return !s || v.frota.toLowerCase().includes(s) || v.motorista.toLowerCase().includes(s) || v.rota.toLowerCase().includes(s);
+  });
+  const tbody=document.getElementById('main-tbody'); if(!tbody) return; tbody.innerHTML='';
+  
   filtered.forEach(v=>{
-    const ava=avaSt(v);const apto=cteApto(v);
-    const peds=pedidosUniq(v);const prog=getProgresso(v);
-    const rowWarning=(v.paradas||[]).some(p=>janelaStatus(p).urgente);
-    const rowDanger=(v.paradas||[]).some(p=>janelaStatus(p).atrasado);
+    const ava=avaSt(v); const prog=v.paradas.length ? Math.round(v.paradas.filter(p=>p.importado).length/v.paradas.length*100) : 100;
     const tr=document.createElement('tr');
-    if(rowDanger) tr.style.background='rgba(224,92,92,.04)';
-    else if(rowWarning) tr.style.background='rgba(251,146,60,.04)';
     tr.innerHTML=`
-      <td><span style="color:var(--text3);font-size:12px;cursor:pointer;user-select:none" onclick="toggleExp(${v.id})">${expanded===v.id?'▼':'▶'}</span></td>
-      <td><div class="mn">${v.frota}</div><div style="font-size:10px;color:var(--text3);font-family:var(--mono)">${v.placa||'—'}</div></td>
-      <td style="font-family:var(--mono);font-size:11px;color:${v.carreta?'var(--purple)':'var(--text3)'}">${v.carreta||'—'}</td>
-      <td style="max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)">${v.motorista}</td>
-      <td style="font-weight:500;color:var(--text)">${v.rota}</td>
-      <td>${tipoTag(v.tipo)}</td>
-      <td style="font-family:var(--mono);font-size:11px;color:var(--text)">${v.saida}</td>
-      <td style="font-size:11px"><span style="color:var(--text2)">${v.origem}</span><span style="color:var(--text3);margin:0 3px">→</span><span style="color:var(--text)">${v.destino}</span></td>
-      <td>${peds.length?peds.map(p=>pb(p)).join(''):'<span style="color:var(--text3);font-size:10px">—</span>'}</td>
-      <td>${avaBadge(ava)}</td>
+      <td><span style="cursor:pointer; user-select:none;" onclick="toggleExp(${v.id})">${expanded===v.id?'▼':'▶'}</span></td>
+      <td><strong class="mn">${v.frota}</strong><br><small style="color:var(--text3); font-size:10px">Antigo: ${v.frotaAntiga||'—'}</small></td>
+      <td><strong style="color:var(--text2); font-family:var(--mono); font-size:11.5px">${v.placa}</strong></td>
+      <td><small style="color:var(--purple); font-size:11px">${v.carreta}</small></td>
+      <td>${v.motorista}</td> <td><strong>${v.rota}</strong></td>
+      <td><span class="${v.tipo==='TRUCK'?'tipo-truck':'tipo-conj'}">${v.tipo}</span></td> <td>${v.saida}</td>
+      <td><small style="color:var(--text2)">${v.origem} → ${v.destino}</small></td>
+      <td>${v.paradas.map(p=>`<span class="pb p52">${p.pedido}</span>`).join(' ')}</td>
+      <td><span class="${ava==='IMPORTADO'?'ava-ok':'ava-pend'}">${ava}</span></td>
+      <td><div class="prog-track"><div class="prog-fill" style="width:${prog}%; background:var(--green)"></div></div></td>
       <td>
-        <div style="display:flex;align-items:center;gap:6px">
-          <span class="prog-track"><span class="prog-fill" style="width:${prog.pct}%;background:${prog.pct===100?'var(--green)':prog.pct>0?'var(--orange)':'var(--text3)'}"></span></span>
-          <span style="font-family:var(--mono);font-size:10px;color:var(--text3)">${prog.imp}/${prog.total}</span>
-          ${rowDanger?'<span style="font-size:11px">🔴</span>':rowWarning?'<span style="font-size:11px">🟡</span>':''}
-        </div>
+        <select class="ctesel" onchange="updateCTE(${v.id},this.value)">
+          <option value="PENDENTE" ${v.cte==='PENDENTE'?'selected':''}>PENDENTE</option>
+          <option value="IMPRESSO" ${v.cte==='IMPRESSO'?'selected':''}>IMPRESSO</option>
+          <option value="NULA" ${v.cte==='NULA'?'selected':''}>NULA</option>
+        </select>
       </td>
-      <td>
-        ${!apto&&v.cte==='PENDENTE'
-          ? `<span class="ctelocked" title="Aguardando importação AVACORP">🔒 Bloqueado</span>`
-          : `<select class="ctesel" onchange="updateCTE(${v.id},this.value)" onclick="event.stopPropagation()">
-              ${['PENDENTE','IMPRESSO','ENVIADO','FRUSTRADA','NULA'].map(s=>`<option value="${s}" ${v.cte===s?'selected':''}>${s}</option>`).join('')}
-            </select>`
-        }
-      </td>
-      <td style="font-size:11px;color:var(--text3);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${v.obs||'—'}</td>
+      <td><small style="color:var(--text3)">${v.obs||'—'}</small></td>
     `;
     tbody.appendChild(tr);
 
     if(expanded===v.id){
-      const exp=document.createElement('tr');exp.className='erow';
-      const avaAll=ava==='IMPORTADO',avaPar=ava==='PARCIAL';
+      const exp=document.createElement('tr'); exp.className='erow';
       exp.innerHTML=`<td colspan="13"><div class="econtent">
-        <div class="esec">Coletas & importação AVACORP · ${v.frota} / ${v.motorista}</div>
-        <table class="atbl" style="margin-bottom:10px">
-          <thead><tr><th>#</th><th>Fornecedor</th><th>Janela</th><th>Cidade</th><th>Pedido</th><th>Janela status</th><th>AVACORP</th></tr></thead>
-          <tbody>${(v.paradas||[]).map((p,i)=>{
+        <table class="atbl">
+          <thead><tr><th>Fornecedor</th><th>Cidade</th><th>Janela</th><th>Pedido / Solicitação</th><th>Status Janela</th><th>Ação</th></tr></thead>
+          <tbody>${v.paradas.map(p=>{
             const js=janelaStatus(p);
-            return `<tr style="${js.atrasado?'background:rgba(224,92,92,.06)':js.urgente?'background:rgba(251,146,60,.06)':''}">
-              <td style="color:var(--text3)">${i+1}</td>
-              <td style="color:var(--text);font-weight:500">${p.fornecedor}</td>
-              <td style="font-family:var(--mono);font-size:11px">${p.janela}</td>
-              <td style="color:var(--text2)">${p.cidade||'—'}</td>
-              <td>${p.pedido&&p.pedido!=='—'&&p.pedido!=='NULA'?pb(p.pedido):'<span style="color:var(--text3);font-size:10px">—</span>'}</td>
-              <td><span class="${js.cls}">${js.txt}</span></td>
-              <td>${p.pedido&&p.pedido!=='—'&&p.pedido!=='NULA'
-                ? `<button class="imp-btn ${p.importado?'imp-yes':'imp-no'}" onclick="toggleImp('${p.id}',${v.id})">
-                    ${p.importado
-                      ? 'Importado ✓'
-                      : '+ Marcar importado'}
-                  </button>`
-                : '<span style="color:var(--text3);font-size:10px">N/A</span>'
-              }</td>
+            return `<tr>
+              <td><strong>${p.fornecedor}</strong></td> <td>${p.cidade||'—'}</td> <td>${p.janela}</td>
+              <td><span class="pb p52">${p.pedido}</span></td> <td><span class="${js.cls}">${js.txt}</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'Desfazer Baixa':'✓ Baixar AVACORP'}</button></td>
             </tr>`;
           }).join('')}</tbody>
         </table>
-        ${avaAll?`<div style="padding:7px 10px;background:var(--green-bg);border-radius:5px;font-size:12px;color:var(--green);display:flex;align-items:center;gap:6px;margin-bottom:8px">✓ Notas importadas — CTE Liberado</div>`:
-          avaPar?`<div style="padding:7px 10px;background:var(--orange-bg);border-radius:5px;font-size:12px;color:var(--orange);margin-bottom:8px">⏳ Aguardando notas parciais</div>`:
-          `<div style="padding:7px 10px;background:var(--bg4);border-radius:5px;font-size:12px;color:var(--text3);margin-bottom:8px">⏳ Notas Pendentes</div>`}
-        <button class="btn btn-danger btn-sm" onclick="delViagem(${v.id})">Remover viagem</button>
       </div></td>`;
       tbody.appendChild(exp);
     }
   });
 }
 
-function toggleExp(id){expanded=expanded===id?null:id;renderTable();}
-
-function toggleImp(pid,vid){
+function toggleExp(id){ expanded=expanded===id?null:id; renderTable(); }
+function updateCTE(id,val){ const v=(viagensDB[currentDate]||[]).find(x=>x.id===id); if(v){v.cte=val; agendarSalvamento(); notify('CTE atualizado');} }
+function marcarParadaImportada(vid,pid){
+  const v=(viagensDB[currentDate]||[]).find(x=>x.id===vid);
+  if(v){ const p=v.paradas.find(x=>x.id===pid); if(p){p.importado=!p.importado; agendarSalvamento(); updateDashboard(); } }
+}
+function updateBadges(){
   const vs=viagensDB[currentDate]||[];
-  for(const v of vs){const p=(v.paradas||[]).find(x=>x.id===pid);if(p){p.importado=!p.importado;break;}}
-  const vAtual=vs.find(x=>x.id===vid);
-  salvarViagem(vAtual);
-  renderTable();renderStats();updateBadges();
-  if(vAtual&&cteApto(vAtual)&&vAtual.cte==='PENDENTE') notify(`✓ Notas completas! CTE liberado para ${vAtual.frota}`);
+  document.getElementById('badge-pend').textContent=vs.filter(v=>v.cte==='PENDENTE').length;
+  document.getElementById('badge-ava').textContent=vs.filter(v=>avaSt(v)==='PENDENTE').length;
 }
-
-function updateCTE(id,val){
-  const vs=viagensDB[currentDate]||[];const v=vs.find(x=>x.id===id);
-  if(!cteApto(v)&&val!=='PENDENTE'&&val!=='NULA'&&val!=='FRUSTRADA'){
-    notify('🔒 Bloqueado — Libere a AVACORP primeiro','var(--red)');return;
-  }
-  v.cte=val;salvarViagem(v);renderTable();renderStats();updateBadges();notify('CTE → '+val);
+function salvarConfiguracoesGitHub() {
+  localStorage.setItem('mwm_gh_token', document.getElementById('cfg-token').value.trim());
+  localStorage.setItem('mwm_gh_repo', document.getElementById('cfg-repo').value.trim());
+  localStorage.setItem('mwm_gh_branch', document.getElementById('cfg-branch').value.trim());
+  notify('✓ Conexão configurada!', 'var(--green)'); carregarTodos();
 }
+function setSyncOk(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-ok'; }
+function setSyncErr(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-err'; }
+function setSyncPending(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-pend'; }
+function setLoadingState(on, msg=''){ document.getElementById('loading-bar').style.display=on?'block':'none'; const l=document.getElementById('loading-label'); l.style.display=on?'block':'none'; l.textContent=msg; }
+function notify(m,c){ const n=document.getElementById('notif'); n.style.background=c||'var(--green)'; n.innerHTML=m; n.classList.add('show'); setTimeout(()=>n.classList.remove('show'), 2500); }
+function toggleSidebar(){ document.getElementById('app').classList.toggle('collapsed'); }
+function abrirModal(id){ document.getElementById('modal-'+id).classList.add('open'); }
+function fecharModal(id){ document.getElementById('modal-'+id).classList.remove('open'); }
+function navTo(id,el){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('page-'+id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active'); }
+function setSearch(v){ fSearch=v; renderTable(); }
+function setTipo(v){ fTipo=v; renderTable(); }
+function setCTE(v){ fCTE=v; renderTable(); }
 
-function delViagem(id){
-  if(!confirm('Remover esta viagem permanentemente?')) return;
-  deletarViagem(id).then(()=>{expanded=null;renderTable();renderStats();updateBadges();notify('Viagem deletada','var(--amber)');});
-}
-
-function renderAlertas(){
-  const vs=viagensDB[currentDate]||[];
-  const urgentes=[],atrasados=[];
-  vs.forEach(v=>(v.paradas||[]).forEach(p=>{
-    const s=janelaStatus(p);
-    if(s.urgente) urgentes.push({v,p,s});
-    else if(s.atrasado) atrasados.push({v,p,s});
-  }));
-  document.getElementById('alerta-stats').innerHTML=`
-    <div class="stat"><div class="stl">⚠ Fechando</div><div class="stv" style="color:var(--orange)">${urgentes.length}</div></div>
-    <div class="stat"><div class="stl">❌ Atrasadas</div><div class="stv" style="color:var(--red)">${atrasados.length}</div></div>
-    <div class="stat"><div class="stl">Total Coletas</div><div class="stv">${vs.reduce((a,v)=>a+(v.paradas||[]).length,0)}</div></div>
-  `;
-  const mkCard=(a,cls)=>`<div class="alerta-card ${cls}">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-      <strong>${a.v.frota} · ${a.v.motorista}</strong>
-      <span style="font-family:var(--mono);font-size:11px;color:var(--text3)">${a.v.rota}</span>
-    </div>
-    <div style="font-size:12px;color:var(--text2)">${a.p.fornecedor}</div>
-    <div style="font-size:11px;margin-top:4px"><span class="${a.s.cls}">${a.s.txt}</span> ${pb(a.p.pedido)}</div>
-    <button class="imp-btn imp-no btn-sm" style="margin-top:8px" onclick="toggleImp('${a.p.id}',${a.v.id});renderAlertas()">+ Marcar Importado</button>
-  </div>`;
-  document.getElementById('alerta-urgente-wrap').innerHTML=urgentes.length?urgentes.map(a=>mkCard(a,'urgente')).join(''):'';
-  document.getElementById('alerta-atrasado-wrap').innerHTML=atrasados.length?atrasados.map(a=>mkCard(a,'atrasado')).join(''):'';
-  document.getElementById('alerta-ok-wrap').innerHTML=(!urgentes.length&&!atrasados.length)?`<div class="alerta-card" style="border-color:var(--green);text-align:center;color:var(--green)">✓ Tudo regularizado!</div>`:'';
-}
-
-function renderPedidos(){
-  const vs=viagensDB[currentDate]||[];
-  const mapa={};
-  vs.forEach(v=>(v.paradas||[]).forEach(p=>{
-    if(!p.pedido||p.pedido==='—'||p.pedido==='NULA') return;
-    if(!mapa[p.pedido]) mapa[p.pedido]=[];
-    mapa[p.pedido].push({v,p});
-  }));
-  let html='';
-  Object.keys(mapa).forEach(ped=>{
-    const itens=mapa[ped];const total=itens.length,imp=itens.filter(x=>x.p.importado).length;
-    const pct=total?Math.round(imp/total*100):100;
-    const st=imp===0?'PENDENTE':imp<total?'PARCIAL':'IMPORTADO';
-    html+=`<div class="ped-card">
-      <div class="ped-hdr">
-        <span>${pb(ped)}</span>
-        <div class="ped-prog">
-          <div class="ped-track"><div class="ped-fill" style="width:${pct}%;background:var(--accent)"></div></div>
-        </div>
-        ${avaBadge(st)}
-        ${st!=='IMPORTADO'?`<button class="btn btn-ghost btn-sm" onclick="importarTodos('${ped}')">Marcar Tudo</button>`:''}
-      </div>
-    </div>`;
-  });
-  document.getElementById('pedidos-list').innerHTML=html||'<div style="color:var(--text3);padding:12px">Nenhum pedido hoje.</div>';
-}
-
-function importarTodos(ped){
-  (viagensDB[currentDate]||[]).forEach(v=>{
-    let mod=false;
-    (v.paradas||[]).forEach(p=>{if(p.pedido===ped){p.importado=true;mod=true;}});
-    if(mod) salvarViagem(v);
-  });
-  renderPedidos();renderTable();renderStats();updateBadges();
-}
-
-function renderPend(){
-  const vs=viagensDB[currentDate]||[];
-  const aptos=vs.filter(v=>v.cte==='PENDENTE'&&cteApto(v));
-  const ava=vs.filter(v=>v.cte==='PENDENTE'&&!cteApto(v));
-  const mk=(v,btn)=>`<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border)">
-    <div style="flex:1"><strong style="color:var(--text)">${v.frota} — ${v.rota}</strong></div>${btn}</div>`;
-  document.getElementById('pend-apto').innerHTML=aptos.length?aptos.map(v=>mk(v,`<button class="btn btn-success btn-sm" onclick="updateCTE(${v.id},'IMPRESSO');renderPend()">Emitir</button>`)).join(''):'—';
-  document.getElementById('pend-ava').innerHTML=ava.length?ava.map(v=>mk(v,'⏳ AVACORP')).join(''):'—';
-}
-
-function filtFrota(v){frotaS=v;renderFrota();}
-function filtFrotaTipo(v){frotaT=v;renderFrota();}
-function renderFrota(){
-  const list=FROTA_DATA.filter(f=>{
-    const s=(fSearch||'').toLowerCase();
-    return !s || f.novo.toLowerCase().includes(s)||f.placa.toLowerCase().includes(s);
-  });
-  document.getElementById('frota-grid').innerHTML=list.map(f=>`<div class="fcard"><strong>${f.novo}</strong><br><small>${f.placa}</small></div>`).join('');
-}
-
-function renderMot(){
-  const vs=viagensDB[currentDate]||[];
-  document.getElementById('mot-tbody').innerHTML=MOTORISTAS.map((m,i)=>`<tr><td>${i+1}</td><td>${m}</td><td>—</td><td>Ativo</td></tr>`).join('');
-}
-
-function renderDash(){
-  const vs=viagensDB[currentDate]||[];
-  document.getElementById('dash-stats-row').innerHTML=`<div class="stat"><div class="stl">Monitoramento</div><div class="stv">${vs.length}</div></div>`;
-  document.getElementById('bar-frota-dash').innerHTML=vs.map(v=>`<div>· ${v.frota} (${v.tipo})</div>`).join('');
-}
-
-// ──────────────────────────────────────────────────────────────────────
-//  CLONAGEM SEGURO DE DIA
-// ──────────────────────────────────────────────────────────────────────
-let _diaBaseClone = null;
-function abrirModalClonar() {
-  _diaBaseClone = null;
-  document.getElementById('clone-destino').textContent = currentDate;
-  document.getElementById('clone-preview').classList.remove('show');
-  const btn = document.getElementById('clone-confirm-btn');
-  btn.disabled = true; btn.style.opacity = '.4';
-  const todosDias = availableDates.filter(d => d !== currentDate);
-  const lista = document.getElementById('clone-day-list');
-  if (!todosDias.length) {
-    lista.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:10px 0">Nenhum histórico disponível.</div>';
-  } else {
-    lista.innerHTML = [...todosDias].reverse().map(d => `
-      <div class="clone-day-item" id="cdi-${d.replace('/','_')}" onclick="selecionarDiaBase('${d}')">
-        <div class="cdi-date">${d}</div>
-        <span class="cdi-badge">${(viagensDB[d]||[]).length} rotas</span>
-      </div>
-    `).join('');
-  }
-  document.getElementById('modal-clonar').classList.add('open');
-}
-
-function selecionarDiaBase(dia) {
-  _diaBaseClone = dia;
-  document.querySelectorAll('.clone-day-item').forEach(el => el.classList.remove('selected'));
-  document.getElementById('cdi-' + dia.replace('/','_')).classList.add('selected');
-  const btn = document.getElementById('clone-confirm-btn');
-  btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer';
-  const viagens = viagensDB[dia] || [];
-  const preview = document.getElementById('clone-preview');
-  preview.classList.add('show');
-  document.getElementById('clone-preview-title').textContent = `${viagens.length} viagens detectadas:`;
-  document.getElementById('clone-preview-rotas').innerHTML = viagens.map(v=>`<div>· ${v.frota} → ${v.rota}</div>`).join('');
-}
-
-async function confirmarClonagem() {
-  if (!_diaBaseClone) return;
-  fecharModal('clonar');
-  setLoadingState(true, 'Clonando...');
-  const base = viagensDB[_diaBaseClone] || [];
-  const agora = Date.now();
-  const clones = base.map((v,i) => ({
-    ...JSON.parse(JSON.stringify(v)), id: agora+i, cte: 'PENDENTE',
-    paradas: (v.paradas||[]).map((p,j) => ({...p, id:`${agora+i}-${j}`, importado:false}))
-  }));
-  viagensDB[currentDate] = [...(viagensDB[currentDate]||[]), ...clones];
-  await gravarTudo();
-  setLoadingState(false);
-  setDate(currentDate);
-}
-
-// ──────────────────────────────────────────────────────────────────────
-//  MODAIS DE FORMULÁRIO DE CADASTRO
-// ──────────────────────────────────────────────────────────────────────
-function abrirModal(id){
-  if(id==='nova-viagem'){
-    document.getElementById('nv-frota').innerHTML=FROTA_DATA.map(f=>`<option value="${f.novo}">${f.novo}</option>`).join('');
-    document.getElementById('nv-carreta').innerHTML='<option value="">Nenhuma</option>'+FROTA_DATA.map(f=>`<option value="${f.novo}">${f.novo}</option>`).join('');
-    document.getElementById('nv-motorista').innerHTML=MOTORISTAS.map(m=>`<option value="${m}">${m}</option>`).join('');
-    document.getElementById('paradas-wrap').innerHTML=''; addParada();
-  }
-  document.getElementById('modal-'+id).classList.add('open');
-}
-function fecharModal(id){document.getElementById('modal-'+id).classList.remove('open');}
-function onTipoChange(){document.getElementById('grp-carreta').style.display=document.getElementById('nv-tipo').value==='TRUCK'?'none':'block';}
-function addParada(){
-  const w=document.getElementById('paradas-wrap');const d=document.createElement('div');d.className='parada-row';
-  d.innerHTML=`<button class="pdel" onclick="this.parentElement.remove()">×</button>
-    <div class="fg fg4">
-      <div><label class="fg-label">Fornecedor</label><input type="text" class="p-forn"></div>
-      <div><label class="fg-label">Início Janela</label><input type="time" class="p-ji" value="08:00"></div>
-      <div><label class="fg-label">Fim Janela</label><input type="time" class="p-jf" value="12:00"></div>
-      <div><label class="fg-label">Pedido</label><input type="text" class="p-ped"></div>
-    </div>`;
-  w.appendChild(d);
-}
-
-function salvarNovaViagemForm(){
-  const vid=Date.now();
-  const paradas=[...document.querySelectorAll('.parada-row')].map((r,i)=>({
-    id:`${vid}-${i}`,fornecedor:r.querySelector('.p-forn').value,
-    ji:r.querySelector('.p-ji').value,jf:r.querySelector('.p-jf').value,
-    janela:`${r.querySelector('.p-ji').value}-${r.querySelector('.p-jf').value}`,
-    pedido:r.querySelector('.p-ped').value||'—',importado:false
-  })).filter(p=>p.fornecedor);
-
-  const nv = {
-    id:vid,tipo:document.getElementById('nv-tipo').value,frota:document.getElementById('nv-frota').value,
-    carreta:document.getElementById('nv-carreta').value,motorista:document.getElementById('nv-motorista').value,
-    rota:document.getElementById('nv-rota').value||'—',saida:document.getElementById('nv-hora').value||'—',
-    origem:document.getElementById('nv-origem').value,destino:document.getElementById('nv-destino').value,
-    cte:document.getElementById('nv-cte').value,obs:document.getElementById('nv-obs').value,paradas
-  };
-  fecharModal('nova-viagem');
-  salvarViagem(nv).then(()=>{setDate(currentDate);});
-}
-
-function exportXLSX(){
-  const vs=viagensDB[currentDate]||[];
-  let csv='Frota;Motorista;Rota;Tipo;Saída;Origem;Destino;AVACORP;CTE;Obs\n';
-  vs.forEach(v=>{ csv+=`${v.frota};${v.motorista};${v.rota};${v.tipo};${v.saida};${v.origem};${v.destino};${avaSt(v)};${v.cte};${v.obs||''}\n`; });
-  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');
-  a.href=url;a.download=`MWM_${currentDate.replace('/','.')}.csv`;a.click();
-}
-
-function updateClock(){document.getElementById('tclock').textContent=new Date().toLocaleTimeString('pt-BR');}
-
-// ──────────────────────────────────────────────────────────────────────
-//  INICIALIZADOR DE STARTUP
-// ──────────────────────────────────────────────────────────────────────
-async function initApp() {
-  carregarCache();
-  carregarCamposConfig();
-  await carregarTodos();
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  initApp();
-  setInterval(updateClock, 1000);
-  setInterval(async () => {
-    updateBadges();
-    if (document.getElementById('page-alertas').classList.contains('active')) renderAlertas();
-    if (document.getElementById('page-prog').classList.contains('active')) renderStats();
-  }, 30000);
-});
+document.addEventListener('DOMContentLoaded', () => { carregarCache(); carregarTodos(); setInterval(()=>document.getElementById('tclock').textContent=new Date().toLocaleTimeString('pt-BR'),1000); });
 </script>
 </body>
 </html>
