@@ -621,7 +621,7 @@ function renderAlertas() {
             </div>
             <div style="text-align:right">
               <span class="${js.cls}" style="font-weight:600; font-family:var(--mono)">${js.txt}</span><br>
-              <button class="btn btn-ghost btn-sm" style="margin-top:5px; padding:2px 6px;" onclick="marcarParadaImportada(${v.id}, '${p.id}')">✓ Baixar AVACORP</button>
+              <button class="btn btn-ghost btn-sm" style="margin-top:5px; padding:2px 6px;" onclick="marcarParadaImportada(${v.id}, '${p.id}')">✓ Coleta Realizada</button>
             </div>
           </div>`;
       }
@@ -652,7 +652,7 @@ function renderPedidos() {
           <div style="display:flex; gap:8px; align-items:center;">
             ${statusAva}
             <button class="btn btn-ghost btn-sm" onclick="digitarPedidoPrompt(${v.id}, '${p.id}', '${p.pedido}')">✏️ Editar Pedido</button>
-            <button class="btn btn-primary btn-sm" onclick="marcarParadaImportada(${v.id}, '${p.id}')">${p.importado?'Estornar':'✓ Baixar'}</button>
+            <button class="btn btn-primary btn-sm" onclick="marcarParadaImportada(${v.id}, '${p.id}')">${p.importado?'Estornar':'✓ NF Importada'}</button>
           </div>
         </div>`;
     });
