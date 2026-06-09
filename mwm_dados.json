@@ -507,6 +507,33 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781047285990,
+        "tipo": "TRUCK",
+        "frota": "B10021",
+        "frotaAntiga": "â",
+        "placa": "OWN8B50",
+        "carreta": "—",
+        "motorista": "LUCIANO LEMES DA SILVA",
+        "rota": "ROTA 2B",
+        "saida": "19:00",
+        "origem": "MGK",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781047285990-0",
+            "fornecedor": "MGK",
+            "cidade": "SÃO PAULO",
+            "ji": "00:00",
+            "jf": "03:00",
+            "janela": "00:00-03:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ],
     "09/06": []
