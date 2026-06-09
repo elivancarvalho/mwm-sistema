@@ -586,7 +586,7 @@
             "ji": "10:00",
             "jf": "11:00",
             "janela": "10:00-11:00",
-            "pedido": "—",
+            "pedido": "52615",
             "importado": false
           },
           {
@@ -596,7 +596,7 @@
             "ji": "14:40",
             "jf": "17:00",
             "janela": "14:40-17:00",
-            "pedido": "—",
+            "pedido": "52615",
             "importado": false
           },
           {
@@ -606,7 +606,7 @@
             "ji": "15:00",
             "jf": "17:00",
             "janela": "15:00-17:00",
-            "pedido": "—",
+            "pedido": "52615",
             "importado": false
           }
         ]
