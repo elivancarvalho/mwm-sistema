@@ -132,17 +132,17 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 .mbody{padding:18px 22px;}
 .mftr{padding:12px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;}
 
-.msec { margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
-.msec:last-child { border: none; }
-.msec-t { font-size: 10px; font-weight: 600; color: var(--accent); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
-.fg { display: grid; gap: 8px; grid-template-columns: 1fr 1fr; }
-.fg3 { grid-template-columns: 1fr 1fr 1fr; }
+.msec{margin-bottom:15px;border-bottom:1px solid var(--border);padding-bottom:12px;}
+.msec:last-child{border:none;}
+.msec-t{font-size:10px;font-weight:600;color:var(--accent);text-transform:uppercase;margin-bottom:8px;letter-spacing:0.5px;}
+.fg{display:grid;gap:8px;grid-template-columns:1fr 1fr;}
+.fg3{grid-template-columns:1fr 1fr 1fr;}
 .fg-label{display:block;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
 .fg-label+input,.fg-label+select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:6px 8px;outline:none;font-family:var(--sans);font-size:12px;}
 
-.clone-list-item { display: flex; align-items: center; justify-content: space-between; padding: 10px; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 5px; cursor: pointer; transition: all 0.15s; }
-.clone-list-item:hover { border-color: var(--accent); background: var(--bg4); }
-.clone-list-item.selected { border-color: var(--green); background: rgba(46, 204, 113, 0.08); }
+.clone-list-item{display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;margin-bottom:5px;cursor:pointer;transition:all 0.15s;}
+.clone-list-item:hover{border-color:var(--accent);background:var(--bg4);}
+.clone-list-item.selected{border-color:var(--green);background:rgba(46,204,113,0.08);}
 
 .notif{position:fixed;bottom:22px;right:22px;padding:10px 16px;border-radius:8px;font-size:12px;font-weight:500;transform:translateY(70px);opacity:0;transition:all .28s;z-index:300;color:#fff;}
 .notif.show{transform:translateY(0);opacity:1;}
@@ -154,15 +154,17 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 .sync-off{width:7px;height:7px;border-radius:50%;background:var(--text3);display:inline-block;margin-left:6px;}
 .sync-pend{width:7px;height:7px;border-radius:50%;background:#60a5fa;display:inline-block;margin-left:6px;}
 
-.btn-add-parada { background: var(--bg4); border: 1px dashed var(--border2); color: var(--text2); padding: 5px; text-align: center; border-radius: 4px; cursor: pointer; font-size: 11px; margin-top: 5px; }
-.btn-add-parada:hover { border-color: var(--accent); color: var(--text); }
-.parada-box { background: var(--bg4); border: 1px solid var(--border); padding: 8px; border-radius: 5px; margin-bottom: 5px; position: relative; }
-.btn-del-parada { position: absolute; top: 4px; right: 6px; color: var(--red); cursor: pointer; font-weight: bold; border: none; background: none; }
+.btn-add-parada{background:var(--bg4);border:1px dashed var(--border2);color:var(--text2);padding:5px;text-align:center;border-radius:4px;cursor:pointer;font-size:11px;margin-top:5px;}
+.btn-add-parada:hover{border-color:var(--accent);color:var(--text);}
+.parada-box{background:var(--bg4);border:1px solid var(--border);padding:8px;border-radius:5px;margin-bottom:5px;position:relative;}
+.btn-del-parada{position:absolute;top:4px;right:6px;color:var(--red);cursor:pointer;font-weight:bold;border:none;background:none;}
 
-.disp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px 26px 28px; }
-.disp-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
-.disp-title { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text3); margin-bottom: 10px; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
-.disp-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; background: var(--bg3); border: 1px solid var(--border); border-radius: 5px; margin-bottom: 4px; font-family: var(--mono); }
+.disp-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;padding:15px 26px 28px;}
+.disp-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;}
+.disp-title{font-size:11px;font-weight:600;text-transform:uppercase;color:var(--text3);margin-bottom:10px;letter-spacing:0.5px;border-bottom:1px solid var(--border);padding-bottom:5px;}
+.disp-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;margin-bottom:4px;font-family:var(--mono);}
+
+.config-container{padding:20px 26px;}
 </style>
 </head>
 <body>
@@ -176,13 +178,13 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
   <div class="topbar-right">
     <span class="tclock" id="tclock">--:--:--</span>
     <div class="avatar">PS</div>
-    <span style="font-size:12px;color:var(--text2)">Painel Operacional</span><span class="sync-off" id="sync-indicator"></span>
+    <span style="font-size:12px;color:var(--text2)">Painel Operacional</span>
+    <span class="sync-off" id="sync-indicator"></span>
   </div>
 </header>
 
 <nav class="sidebar" id="sidebar">
   <button class="toggle-btn" id="toggle-btn" onclick="toggleSidebar()">◀</button>
-
   <div class="sb-section">
     <div class="sb-label">Operação</div>
     <button class="nav-item active" onclick="navTo('prog',this)">
@@ -190,7 +192,7 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
       <span class="nav-txt">Programação</span>
     </button>
     <button class="nav-item" onclick="navTo('disp',this)">
-      <span style="color:var(--teal); font-weight:600; margin-right:5px;">🚚</span>
+      <span style="color:var(--teal);font-weight:600;margin-right:5px;">🚚</span>
       <span class="nav-txt">Disponibilidade Frota</span>
       <span class="nav-badge bc-green" id="badge-disp">0</span>
     </button>
@@ -221,84 +223,122 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 
 <main class="main">
 
-<div class="page active" id="page-prog">
-  <div class="ph">
-    <div><div class="pt">Programação Operacional</div><div class="ps" id="prog-date-subtitle">Aguardando nuvem...</div></div>
-    <div class="pact">
-      <button class="btn btn-ghost" style="color:var(--orange)" onclick="abrirModalClonagemSemanal()">⎘ Clonar de Outro Dia</button>
-      <button class="btn btn-ghost" onclick="abrirModalCalendario()">📅 Mudar/Criar Data</button>
-      <button class="btn btn-primary" onclick="abrirModalCadastroViagem()">+ Nova Viagem</button>
-    </div>
-  </div>
-  <div class="date-nav" id="date-nav"></div>
-  <div class="stats-row" id="stats-row"></div>
-  <div class="twrap">
-    <div class="ttoolbar">
-      <div class="swrap">
-        <svg class="sico" width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"/></svg>
-        <input type="text" placeholder="Buscar frota, motorista, rota..." oninput="setSearch(this.value)">
+  <div class="page active" id="page-prog">
+    <div class="ph">
+      <div>
+        <div class="pt">Programação Operacional</div>
+        <div class="ps" id="prog-date-subtitle">Aguardando nuvem...</div>
       </div>
-      <select class="fsel" onchange="setTipo(this.value)"><option value="">Todos os tipos</option><option value="TRUCK">Truck</option><option value="CONJUNTO">Conjunto</option></select>
-      <select class="fsel" onchange="setCTE(this.value)"><option value="">Todos CTE</option><option value="PENDENTE">Pendente</option><option value="IMPRESSO">Impresso</option></select>
-      <span class="rcount" id="rcount"></span>
+      <div class="pact">
+        <button class="btn btn-ghost" style="color:var(--orange)" onclick="abrirModalClonagemSemanal()">⎘ Clonar de Outro Dia</button>
+        <button class="btn btn-ghost" onclick="abrirModalCalendario()">📅 Mudar/Criar Data</button>
+        <button class="btn btn-primary" onclick="abrirModalCadastroViagem()">+ Nova Viagem</button>
+      </div>
     </div>
-    <table>
-      <thead><tr>
-        <th style="width:20px"></th>
-        <th>Frota (Nova / Antiga)</th><th>Placa do Veículo</th><th>Carreta (Nova / Placa / Antiga)</th><th>Motorista</th><th>Rota</th><th>Tipo</th>
-        <th>Saída CD</th><th>Origem → Destino</th><th>Pedido(s)</th>
-        <th>AVACORP</th><th>Coletas</th><th>CTE</th><th>Obs</th>
-      </tr></thead>
-      <tbody id="main-tbody"></tbody>
-    </table>
+    <div class="date-nav" id="date-nav"></div>
+    <div class="stats-row" id="stats-row"></div>
+    <div class="twrap">
+      <div class="ttoolbar">
+        <div class="swrap">
+          <svg class="sico" width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"/></svg>
+          <input type="text" placeholder="Buscar frota, motorista, rota..." oninput="setSearch(this.value)">
+        </div>
+        <select class="fsel" onchange="setTipo(this.value)">
+          <option value="">Todos os tipos</option>
+          <option value="TRUCK">Truck</option>
+          <option value="CONJUNTO">Conjunto</option>
+        </select>
+        <select class="fsel" onchange="setCTE(this.value)">
+          <option value="">Todos CTE</option>
+          <option value="PENDENTE">Pendente</option>
+          <option value="IMPRESSO">Impresso</option>
+        </select>
+        <span class="rcount" id="rcount"></span>
+      </div>
+      <table>
+        <thead><tr>
+          <th style="width:20px"></th>
+          <th>Frota (Nova / Antiga)</th>
+          <th>Placa do Veículo</th>
+          <th>Carreta (Nova / Placa / Antiga)</th>
+          <th>Motorista</th>
+          <th>Rota</th>
+          <th>Tipo</th>
+          <th>Saída CD</th>
+          <th>Origem → Destino</th>
+          <th>Pedido(s)</th>
+          <th>AVACORP</th>
+          <th>Coletas</th>
+          <th>CTE</th>
+          <th>Obs</th>
+        </tr></thead>
+        <tbody id="main-tbody"></tbody>
+      </table>
+    </div>
   </div>
-</div>
 
-<div class="page" id="page-disp">
-  <div class="ph">
-    <div><div class="pt">Painel de Disponibilidade da Frota</div><div class="ps" id="disp-date-subtitle">Cruzamento em tempo real...</div></div>
-  </div>
-  <div class="disp-grid">
-    <div class="disp-card">
-      <div class="disp-title" style="color:var(--green)">✓ Veículos Livres / Disponíveis</div>
-      <div id="disp-livres-container"></div>
+  <div class="page" id="page-disp">
+    <div class="ph">
+      <div>
+        <div class="pt">Painel de Disponibilidade da Frota</div>
+        <div class="ps" id="disp-date-subtitle">Cruzamento em tempo real...</div>
+      </div>
     </div>
-    <div class="disp-card">
-      <div class="disp-title" style="color:var(--red)">🔒 Veículos Ocupados em Rota</div>
-      <div id="disp-ocupados-container"></div>
+    <div class="disp-grid">
+      <div class="disp-card">
+        <div class="disp-title" style="color:var(--green)">✓ Veículos Livres / Disponíveis</div>
+        <div id="disp-livres-container"></div>
+      </div>
+      <div class="disp-card">
+        <div class="disp-title" style="color:var(--red)">🔒 Veículos Ocupados em Rota</div>
+        <div id="disp-ocupados-container"></div>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="page" id="page-alertas"><div class="ph"><div><div class="pt">Alertas de Janela</div><div class="ps">Prazos de Fechamento de Coleta</div></div></div><div style="padding:16px 26px" id="alerta-wrap"></div></div>
-<div class="page" id="page-pedidos"><div class="ph"><div><div class="pt">Pedidos — AVACORP</div><div class="ps">Gerenciamento por Número de Pedido</div></div></div><div style="padding:14px 26px" id="pedidos-list"></div></div>
-<div class="page" id="page-pend"><div class="ph"><div><div class="pt">Pendentes de CTE</div><div class="ps">Liberações Finais para Emissão</div></div></div><div style="padding:14px 26px" id="pend-apto"></div></div>
+  <div class="page" id="page-alertas">
+    <div class="ph"><div><div class="pt">Alertas de Janela</div><div class="ps">Prazos de Fechamento de Coleta</div></div></div>
+    <div style="padding:16px 26px" id="alerta-wrap"></div>
+  </div>
 
-<div class="page" id="page-config">
-  <div class="ph"><div><div class="pt">Configurações GitHub</div><div class="ps">Gerencie suas chaves</div></div></div>
-  <div class="config-container">
-    <div class="fg">
-      <div><label class="fg-label">GitHub Token (PAT)</label><input type="password" id="cfg-token"></div>
-      <div style="margin-top:10px;"><label class="fg-label">Repositório</label><input type="text" id="cfg-repo" value="elivancarvalho/mwm-sistema"></div>
-      <div style="margin-top:10px;"><label class="fg-label">Branch</label><input type="text" id="cfg-branch" value="main"></div>
-      <div style="margin-top:15px;"><button class="btn btn-primary" onclick="salvarConfiguracoesGitHub()">Salvar Configurações</button></div>
+  <div class="page" id="page-pedidos">
+    <div class="ph"><div><div class="pt">Pedidos — AVACORP</div><div class="ps">Gerenciamento por Número de Pedido</div></div></div>
+    <div style="padding:14px 26px" id="pedidos-list"></div>
+  </div>
+
+  <div class="page" id="page-pend">
+    <div class="ph"><div><div class="pt">Pendentes de CTE</div><div class="ps">Liberações Finais para Emissão</div></div></div>
+    <div style="padding:14px 26px" id="pend-apto"></div>
+  </div>
+
+  <div class="page" id="page-config">
+    <div class="ph"><div><div class="pt">Configurações GitHub</div><div class="ps">Gerencie suas chaves de acesso</div></div></div>
+    <div class="config-container">
+      <div class="fg">
+        <div><label class="fg-label">GitHub Token (PAT)</label><input type="password" id="cfg-token"></div>
+        <div><label class="fg-label">Repositório</label><input type="text" id="cfg-repo" value="elivancarvalho/mwm-sistema"></div>
+        <div style="margin-top:8px;"><label class="fg-label">Branch</label><input type="text" id="cfg-branch" value="main"></div>
+        <div style="margin-top:8px;"><button class="btn btn-primary" onclick="salvarConfiguracoesGitHub()">Salvar Configurações</button></div>
+      </div>
     </div>
   </div>
-</div>
 
 </main>
 </div>
 
+<!-- MODAL: CADASTRO DE VIAGEM -->
 <div class="overlay" id="modal-cadastro">
 <div class="modal">
-  <div class="mhdr"><div class="mtitle" id="cadastro-mtitle">Cadastrar Viagem</div><button class="mx" onclick="fecharModal('cadastro')">×</button></div>
+  <div class="mhdr">
+    <div class="mtitle" id="cadastro-mtitle">Cadastrar Viagem</div>
+    <button class="mx" onclick="fecharModal('cadastro')">×</button>
+  </div>
   <div class="mbody">
-    <div class="msec" style="background: rgba(79, 142, 247, 0.03); border: 1px dashed var(--accent); padding: 12px; border-radius: 6px;">
+    <div class="msec" style="background:rgba(79,142,247,0.03);border:1px dashed var(--accent);padding:12px;border-radius:6px;">
       <div class="msec-t" id="lbl-info-dia-semana">Dia da semana ativo: ...</div>
-      
-      <div style="margin-bottom: 8px;">
+      <div style="margin-bottom:8px;">
         <label class="fg-label" style="color:var(--teal)">Filtrar Rotas Padrão por Dia da Semana:</label>
-        <select id="form-filtro-dia-semana" onchange="recalculasRotasDisponiveisNoDropdown()" style="border: 1px solid var(--teal); background: var(--bg2); font-weight: 500;">
+        <select id="form-filtro-dia-semana" onchange="recalculasRotasDisponiveisNoDropdown()" style="width:100%;background:var(--bg3);border:1px solid var(--teal);border-radius:5px;color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:12px;font-weight:500;">
           <option value="Segunda-feira">Segunda-feira</option>
           <option value="Terça-feira">Terça-feira</option>
           <option value="Quarta-feira">Quarta-feira</option>
@@ -306,10 +346,9 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
           <option value="Sexta-feira">Sexta-feira</option>
         </select>
       </div>
-
       <div>
         <label class="fg-label" style="color:var(--accent)">Selecione o Itinerário da Rota Padrão:</label>
-        <select id="form-macro-rota" onchange="verificarEAutoPreencherCamposRota()" style="border: 1px solid var(--accent); background: var(--bg2);">
+        <select id="form-macro-rota" onchange="verificarEAutoPreencherCamposRota()" style="width:100%;background:var(--bg3);border:1px solid var(--accent);border-radius:5px;color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:12px;">
           <option value="">-- Escolha uma rota padrão ou digite manual --</option>
         </select>
       </div>
@@ -317,17 +356,25 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
     <div class="msec">
       <div class="msec-t">Dados do Veículo</div>
       <div class="fg">
-        <div><label class="fg-label">Tipo Operação</label><select id="form-tipo" onchange="toggleFormCarreta()"><option value="TRUCK">Truck</option><option value="CONJUNTO">Conjunto (Cavalo+Carreta)</option></select></div>
+        <div>
+          <label class="fg-label">Tipo Operação</label>
+          <select id="form-tipo" onchange="toggleFormCarreta()">
+            <option value="TRUCK">Truck</option>
+            <option value="CONJUNTO">Conjunto (Cavalo+Carreta)</option>
+          </select>
+        </div>
         <div>
           <label class="fg-label">Frota Cavalo / Truck</label>
           <select id="form-frota" onchange="verificarSeFrotaEManual()"></select>
         </div>
-        <div id="form-carreta-block" style="display:none"><label class="fg-label">Carreta Vinculada</label><select id="form-carreta"></select></div>
+        <div id="form-carreta-block" style="display:none">
+          <label class="fg-label">Carreta Vinculada</label>
+          <select id="form-carreta"></select>
+        </div>
       </div>
-      
-      <div id="form-frota-manual-block" style="display:none; margin-top:8px;">
+      <div id="form-frota-manual-block" style="display:none;margin-top:8px;">
         <label class="fg-label" style="color:var(--orange)">Identificação / Placa do Agregado:</label>
-        <input type="text" id="form-frota-manual-input" placeholder="Ex: Placa ABC1D23 ou Nome do Dono">
+        <input type="text" id="form-frota-manual-input" placeholder="Ex: Placa ABC1D23 ou Nome do Dono" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:12px;">
       </div>
     </div>
     <div class="msec">
@@ -346,34 +393,58 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
     <div class="msec">
       <div class="msec-t">Informações Finais</div>
       <div class="fg">
-        <div><label class="fg-label">Status Inicial CTE</label><select id="form-cte"><option value="PENDENTE">PENDENTE</option><option value="IMPRESSO">IMPRESSO</option><option value="NULA">NULA</option></select></div>
+        <div>
+          <label class="fg-label">Status Inicial CTE</label>
+          <select id="form-cte">
+            <option value="PENDENTE">PENDENTE</option>
+            <option value="IMPRESSO">IMPRESSO</option>
+            <option value="NULA">NULA</option>
+          </select>
+        </div>
         <div><label class="fg-label">Observações Gerais</label><input type="text" id="form-obs" placeholder="Livre..."></div>
       </div>
     </div>
   </div>
-  <div class="mftr"><button class="btn btn-ghost" onclick="fecharModal('cadastro')">Cancelar</button><button class="btn btn-primary" onclick="salvarFormViagem()">Salvar no Banco</button></div>
+  <div class="mftr">
+    <button class="btn btn-ghost" onclick="fecharModal('cadastro')">Cancelar</button>
+    <button class="btn btn-primary" onclick="salvarFormViagem()">Salvar no Banco</button>
+  </div>
 </div>
 </div>
 
+<!-- MODAL: CLONAGEM -->
 <div class="overlay" id="modal-clonagem">
 <div class="modal" style="width:450px;">
-  <div class="mhdr"><div class="mtitle">Copiar & Colar Programação</div><button class="mx" onclick="fecharModal('clonagem')">×</button></div>
-  <div class="mbody">
-    <p style="color:var(--text2); font-size:12px; margin-bottom:12px;">Escolha qual dia usar como base para o dia ativo (<strong style="color:var(--accent)" id="lbl-data-destino"></strong>):</p>
-    <div id="clonagem-lista-dias" style="max-height:250px; overflow-y:auto; margin-bottom:10px;"></div>
+  <div class="mhdr">
+    <div class="mtitle">Copiar & Colar Programação</div>
+    <button class="mx" onclick="fecharModal('clonagem')">×</button>
   </div>
-  <div class="mftr"><button class="btn btn-ghost" onclick="fecharModal('clonagem')">Cancelar</button><button class="btn btn-primary" id="btn-confirmar-clone" disabled onclick="executarClonagemDiaCompleto()">Colar Programação</button></div>
+  <div class="mbody">
+    <p style="color:var(--text2);font-size:12px;margin-bottom:12px;">Escolha qual dia usar como base para o dia ativo (<strong style="color:var(--accent)" id="lbl-data-destino"></strong>):</p>
+    <div id="clonagem-lista-dias" style="max-height:250px;overflow-y:auto;margin-bottom:10px;"></div>
+  </div>
+  <div class="mftr">
+    <button class="btn btn-ghost" onclick="fecharModal('clonagem')">Cancelar</button>
+    <button class="btn btn-primary" id="btn-confirmar-clone" disabled onclick="executarClonagemDiaCompleto()">Colar Programação</button>
+  </div>
 </div>
 </div>
 
+<!-- MODAL: CALENDÁRIO -->
 <div class="overlay" id="modal-data">
 <div class="modal" style="width:320px;">
-  <div class="mhdr"><div class="mtitle">Gerenciar Calendário</div><button class="mx" onclick="fecharModal('data')">×</button></div>
+  <div class="mhdr">
+    <div class="mtitle">Gerenciar Calendário</div>
+    <button class="mx" onclick="fecharModal('data')">×</button>
+  </div>
   <div class="mbody">
     <label class="fg-label">Digitar Data (Formato DD/MM)</label>
-    <input type="text" id="form-nova-data" placeholder="Ex: 15/06" maxlength="5" style="width:100%; background:var(--bg3); border:1px solid var(--border); padding:8px; color:var(--text); border-radius:5px; font-family:var(--mono);">
+    <input type="text" id="form-nova-data" placeholder="Ex: 15/06" maxlength="5" style="width:100%;background:var(--bg3);border:1px solid var(--border);padding:8px;color:var(--text);border-radius:5px;font-family:var(--mono);">
   </div>
-  <div class="mftr"><button class="btn btn-ghost" onclick="fecharModal('data')">Cancelar</button><button class="btn btn-primary" onclick="criarOuMudarDataAtiva()">Confirmar</button></div>
+  <div class="mftr">
+    <button class="btn btn-ghost" onclick="fecharModal('data')">Cancelar</button>
+    <button class="btn btn-primary" onclick="criarOuMudarDataAtiva()">Confirmar</button>
+  </div>
 </div>
 </div>
 
@@ -381,394 +452,725 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 
 <script>
 // ──────────────────────────────────────────────────────────────────────
-//  BLOCO 1: AUXILIARES OPERACIONAIS DE INTERFACE E TRATAMENTO VISUAL
+//  BLOCO 0: VARIÁVEIS GLOBAIS
 // ──────────────────────────────────────────────────────────────────────
-function setSyncOk(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-ok'; }
-function setSyncErr(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-err'; }
-function setSyncPending(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-pend'; }
+let viagensDB = {};
+let availableDates = [];
+let currentDate = '';
+let fSearch = '';
+let fTipo = '';
+let fCTE = '';
+let expanded = null;
+let _saveTimeout = null;
+let _fileSha = null;
+let diaSelecionadoParaClonar = null;
 
-function setLoadingState(on, msg=''){ 
-  const bar = document.getElementById('loading-bar'); const lbl = document.getElementById('loading-label');
-  if(bar) bar.style.display=on?'block':'none'; if(lbl) { lbl.style.display=on?'block':'none'; lbl.textContent=msg; }
+let CONJUNTURA_VEICULOS = {};
+let MAPA_REVERSO_PLACAS = {};
+let ROTAS_MACRO_DATABASE = {};
+
+// ──────────────────────────────────────────────────────────────────────
+//  BLOCO 1: AUXILIARES DE INTERFACE
+// ──────────────────────────────────────────────────────────────────────
+function obterGHCredenciais() {
+  return {
+    ownerRepo: localStorage.getItem('mwm_gh_repo')   || 'elivancarvalho/mwm-sistema',
+    branch:    localStorage.getItem('mwm_gh_branch') || 'main',
+    token:     localStorage.getItem('mwm_gh_token')  || '',
+    file:      'mwm_dados.json',
+    fleetFile: 'frota.json',
+    routesFile:'rotas_padrao.json'
+  };
 }
 
-function notify(m,c){ const n=document.getElementById('notif'); if(!n) return; n.style.background=c||'var(--green)'; n.innerHTML=m; n.classList.add('show'); setTimeout(()=>n.classList.remove('show'), 2500); }
-function toggleSidebar(){ document.getElementById('app').classList.toggle('collapsed'); }
-function abrirModal(id){ document.getElementById('modal-'+id).classList.add('open'); }
-function fecharModal(id){ document.getElementById('modal-'+id).classList.remove('open'); }
+function setSyncOk()      { const s=document.getElementById('sync-indicator'); if(s) s.className='sync-ok'; }
+function setSyncErr()     { const s=document.getElementById('sync-indicator'); if(s) s.className='sync-err'; }
+function setSyncPending() { const s=document.getElementById('sync-indicator'); if(s) s.className='sync-pend'; }
 
-function setSearch(v){ fSearch=v; renderTable(); }
-function setTipo(v){ fTipo=v; renderTable(); }
-function setCTE(v){ fCTE=v; renderTable(); }
+function setLoadingState(on, msg='') {
+  const bar=document.getElementById('loading-bar');
+  const lbl=document.getElementById('loading-label');
+  if(bar) bar.style.display = on ? 'block' : 'none';
+  if(lbl) { lbl.style.display = on ? 'block' : 'none'; lbl.textContent = msg; }
+}
 
-function h2m(s){const[h,m]=(s||'00:00').split(':').map(Number);return h*60+m;}
-function now(){const d=new Date();return d.getHours()*60+d.getMinutes();}
+function notify(m, c) {
+  const n=document.getElementById('notif');
+  if(!n) return;
+  n.style.background = c || 'var(--green)';
+  n.innerHTML = m;
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 2500);
+}
 
-function avaSt(v){
+function toggleSidebar() { document.getElementById('app').classList.toggle('collapsed'); }
+function abrirModal(id)  { document.getElementById('modal-'+id).classList.add('open'); }
+function fecharModal(id) { document.getElementById('modal-'+id).classList.remove('open'); }
+
+function setSearch(v) { fSearch=v; renderTable(); }
+function setTipo(v)   { fTipo=v;   renderTable(); }
+function setCTE(v)    { fCTE=v;    renderTable(); }
+
+function h2m(s) { const[h,m]=(s||'00:00').split(':').map(Number); return h*60+m; }
+function now()  { const d=new Date(); return d.getHours()*60+d.getMinutes(); }
+
+function avaSt(v) {
   if(!v.paradas || !v.paradas.length) return 'N/A';
-  const rel = v.paradas.filter(p=>p.pedido && p.pedido!=='—');
-  if(!rel.length) return 'N/A'; 
-  const imp = rel.filter(p=>p.importado).length;
+  const rel = v.paradas.filter(p => p.pedido && p.pedido !== '—');
+  if(!rel.length) return 'N/A';
+  const imp = rel.filter(p => p.importado).length;
   return imp===0 ? 'PENDENTE' : imp<rel.length ? 'PARCIAL' : 'IMPORTADO';
 }
 
-function janelaStatus(p){
-  if(p.importado) return {cls:'jimported',txt:'✓ Importado',urgente:false};
+function janelaStatus(p) {
+  if(p.importado) return { cls:'jimported', txt:'✓ Importado', urgente:false };
   const n=now(), fim=h2m(p.jf), restam=fim-n;
-  if(n>fim) return {cls:'jdanger',txt:`ATRASADO`,urgente:false};
-  if(restam<=30) return {cls:'jwarn',txt:`Fecha em ${restam}m!`,urgente:true};
-  return {cls:'jok',txt:`No prazo`,urgente:false};
+  if(n>fim)      return { cls:'jdanger', txt:'ATRASADO', urgente:false };
+  if(restam<=30) return { cls:'jwarn',   txt:`Fecha em ${restam}m!`, urgente:true };
+  return { cls:'jok', txt:'No prazo', urgente:false };
 }
 
 function obterNomeDiaSemana(dataTexto) {
   try {
-    const [dia, mes] = dataTexto.split('/').map(Number);
+    const [dia,mes] = dataTexto.split('/').map(Number);
     const ano = new Date().getFullYear();
-    const dataObjeto = new Date(ano, mes - 1, dia);
-    const dias = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
-    return dias[dataObjeto.getDay()];
+    const obj = new Date(ano, mes-1, dia);
+    const dias = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+    return dias[obj.getDay()];
   } catch(e) { return 'Segunda-feira'; }
 }
 
 // ──────────────────────────────────────────────────────────────────────
-//  BLOCO 2: INTERFACE DE ATUALIZAÇÃO REVOLUCIONÁRIA (DASHBOARD ENGINE)
-// ──────────────────────────────────────────────────────────────────────
-function updateDashboard() {
-  if(!currentDate && availableDates.length) currentDate = availableDates[0];
-  if(!currentDate) currentDate = new Date().toLocaleDateString('pt-BR').slice(0,5);
-  if(!availableDates.includes(currentDate)) { availableDates.push(currentDate); availableDates.sort(); }
-  
-  renderDateNav(); renderTable(); renderStats(); updateBadges();
-  if (document.getElementById('page-disp').classList.contains('active')) renderDisponibilidade();
-  if (document.getElementById('page-alertas').classList.contains('active')) renderAlertas();
-  if (document.getElementById('page-pedidos').classList.contains('active')) renderPedidos();
-  if (document.getElementById('page-pend').classList.contains('active')) renderPend();
-}
-
-function renderDateNav(){ const c=document.getElementById('date-nav'); if(!c) return; c.innerHTML = availableDates.map(d=>`<div class="date-tab ${currentDate===d?'active':''}" onclick="setDate('${d}')">${d} <span class="dtag">${(viagensDB[d]||[]).length}</span></div>`).join(''); }
-function setDate(d){ currentDate=d; expanded=null; updateDashboard(); }
-
-function renderStats(){
-  const vs=viagensDB[currentDate]||[];
-  document.getElementById('stats-row').innerHTML=`<div class="stat"><div class="stl">Total Viagens</div><div class="stv">${vs.length}</div></div><div class="stat"><div class="stl">Trucks</div><div class="stv" style="color:var(--accent)">${vs.filter(v=>v.tipo==='TRUCK').length}</div></div><div class="stat"><div class="stl">Conjuntos</div><div class="stv" style="color:var(--purple)">${vs.filter(v=>v.tipo==='CONJUNTO').length}</div></div><div class="stat"><div class="stl">Prontos p/ CTE</div><div class="stv" style="color:var(--green)">${vs.filter(v=>avaSt(v)==='IMPORTADO' || avaSt(v)==='N/A').length}/${vs.length}</div></div>`;
-}
-
-function renderTable(){
-  const filtered = (viagensDB[currentDate]||[]).filter(v=>{ const s=fSearch.toLowerCase(); return !s || v.frota.toLowerCase().includes(s) || v.motorista.toLowerCase().includes(s) || v.rota.toLowerCase().includes(s); });
-  const tbody=document.getElementById('main-tbody'); if(!tbody) return; tbody.innerHTML='';
-  filtered.forEach(v=>{
-    const ava=avaSt(v); const prog=v.paradas.length ? Math.round(v.paradas.filter(p=>p.importado).length/v.paradas.length*100) : 100; const tr=document.createElement('tr');
-    tr.innerHTML=`<td><span style="cursor:pointer; user-select:none;" onclick="toggleExp(${v.id})">${expanded===v.id?'▼':'▶'}</span></td><td><strong class="mn">${v.frota}</strong><br><small style="color:var(--text3); font-size:10px">Antigo: ${v.frotaAntiga||'—'}</small></td><td><strong style="color:var(--text2); font-family:var(--mono); font-size:11.5px">${v.placa}</strong></td><td><small style="color:var(--purple); font-size:11px">${v.carreta}</small></td><td>${v.motorista}</td><td><strong>${v.rota}</strong></td><td><span class="${v.tipo==='TRUCK'?'tipo-truck':'tipo-conj'}">${v.tipo}</span></td><td>${v.saida}</td><td><small style="color:var(--text2)">${v.origem} → ${v.destino}</small></td><td>${v.paradas.map(p=>`<span class="pb p52" onclick="digitarPedidoPrompt(${v.id}, '${p.id}', '${p.pedido}')" style="cursor:pointer">${p.pedido}</span>`).join(' ')}</td><td><span class="${ava==='IMPORTADO'?'ava-ok':ava==='PARCIAL'?'ava-par':'ava-pend'}">${ava}</span></td><td><div class="prog-track"><div class="prog-fill" style="width:${prog}%; background:var(--green)"></div></div></td><td><select class="ctesel" onchange="updateCTE(${v.id},this.value)"><option value="PENDENTE" ${v.cte==='PENDENTE'?'selected':''}>PENDENTE</option><option value="IMPRESSO" ${v.cte==='IMPRESSO'?'selected':''}>IMPRESSO</option><option value="NULA" ${v.cte==='NULA'?'selected':''}>NULA</option></select></td><td><small style="color:var(--text3)">${v.obs||'—'}</small></td>`;
-    tbody.appendChild(tr);
-    if(expanded===v.id){
-      const exp=document.createElement('tr'); exp.className='erow';
-      exp.innerHTML=`<td colspan="13"><div class="econtent"><table class="atbl"><thead><tr><th>Fornecedor</th><th>Janela</th><th>Pedido / Solicitação</th><th>Status Janela</th><th>Ação</th></tr></thead><tbody>${v.paradas.map(p=>{ const js=janelaStatus(p); return `<tr><td><strong>${p.fornecedor}</strong></td><td>${p.janela}</td><td><button class="btn btn-ghost btn-sm" onclick="digitarPedidoPrompt(${v.id},'${p.id}','${p.pedido}')">${p.pedido==='—'?'+ Vincular Pedido':p.pedido}</button></td><td><span class="${js.cls}">${js.txt}</span></td><td><button class="btn btn-ghost btn-sm" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'Desfazer Baixa':'✓ Baixar AVACORP'}</button></td></tr>`; }).join('')}</tbody></table><div style="margin-top:10px;"><button class="btn btn-sm" style="background:var(--red-bg); color:var(--red);" onclick="removerViagemMesa(${v.id})">Remover Rota do Dia</button></div></div></td>`;
-      tbody.appendChild(exp);
-    }
-  });
-}
-
-function updateBadges(){
-  const vs = viagensDB[currentDate] || []; const badgAlertas = document.getElementById('badge-alertas'); const badgAva = document.getElementById('badge-ava'); const badgPend = document.getElementById('badge-pend');
-  if(badgPend) badgPend.textContent=vs.filter(v=>v.cte==='PENDENTE').length; if(badgAva) badgAva.textContent=vs.filter(v=>avaSt(v)==='PENDENTE' || avaSt(v)==='PARCIAL').length;
-  let urgentes = 0; vs.forEach(v => (v.paradas||[]).forEach(p => { if(!p.importado && janelaStatus(p).urgente) urgentes++; }));
-  if(badgAlertas) badgAlertas.textContent = urgentes;
-}
-
-// ──────────────────────────────────────────────────────────────────────
-//  BLOCO 3: COMUNICAÇÃO REMOTA VIA API GITHUB
+//  BLOCO 2: COMUNICAÇÃO GITHUB API
 // ──────────────────────────────────────────────────────────────────────
 async function carregarDicionariosRemotosGitHub() {
-  const creds = obterGHCredenciais(); if(!creds.token) return false;
+  const creds = obterGHCredenciais();
+  if(!creds.token) return false;
+
   try {
     const urlF = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.fleetFile}?ref=${creds.branch}&t=${Date.now()}`;
-    const respF = await fetch(urlF, { headers: { Authorization: `token ${creds.token}`, Accept: 'application/vnd.github.v3+json' } });
+    const respF = await fetch(urlF, { headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' } });
     if(respF.ok) {
       const dataF = await respF.json();
       CONJUNTURA_VEICULOS = JSON.parse(atob(dataF.content.split('\n').join('')));
       MAPA_REVERSO_PLACAS = {};
       Object.keys(CONJUNTURA_VEICULOS).forEach(key => {
-        if(CONJUNTURA_VEICULOS[key].placa) MAPA_REVERSO_PLACAS[CONJUNTURA_VEICULOS[key].placa] = { ...CONJUNTURA_VEICULOS[key], frotaNova: key };
+        if(CONJUNTURA_VEICULOS[key].placa)
+          MAPA_REVERSO_PLACAS[CONJUNTURA_VEICULOS[key].placa] = { ...CONJUNTURA_VEICULOS[key], frotaNova:key };
       });
     }
-  } catch(e) { console.error(e); }
+  } catch(e) { console.error('Erro ao carregar frota:', e); }
 
   try {
     const urlR = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.routesFile}?ref=${creds.branch}&t=${Date.now()}`;
-    const respR = await fetch(urlR, { headers: { Authorization: `token ${creds.token}`, Accept: 'application/vnd.github.v3+json' } });
+    const respR = await fetch(urlR, { headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' } });
     if(respR.ok) {
       const dataR = await respR.json();
       ROTAS_MACRO_DATABASE = JSON.parse(atob(dataR.content.split('\n').join('')));
     }
-  } catch(e) { console.error(e); }
+  } catch(e) { console.error('Erro ao carregar rotas:', e); }
+
   return true;
 }
 
 async function carregarTodos() {
-  const creds = obterGHCredenciais(); if(!creds.token) { carregarCache(); setSyncErr(); updateDashboard(); return; }
+  const creds = obterGHCredenciais();
+  if(!creds.token) { carregarCache(); setSyncErr(); updateDashboard(); return; }
+
   await carregarDicionariosRemotosGitHub();
+
   try {
     const apiURL = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.file}?ref=${creds.branch}&t=${Date.now()}`;
-    const resp = await fetch(apiURL, { headers: { Authorization: `token ${creds.token}`, Accept: 'application/vnd.github.v3+json' } });
-    if(resp.status===200){
-      const meta = await resp.json(); _fileSha = meta.sha;
+    const resp = await fetch(apiURL, { headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' } });
+    if(resp.status === 200) {
+      const meta = await resp.json();
+      _fileSha = meta.sha;
       const d = JSON.parse(atob(meta.content.split('\n').join('')));
-      viagensDB = d.viagens || {}; availableDates = d.dates || Object.keys(viagensDB).sort();
-      salvarCache(); setSyncOk();
+      viagensDB = d.viagens || {};
+      availableDates = d.dates || Object.keys(viagensDB).sort();
+      salvarCache();
+      setSyncOk();
     } else { setSyncErr(); carregarCache(); }
   } catch(e) { setSyncErr(); carregarCache(); }
+
   updateDashboard();
 }
 
-function agendarSalvamento() { clearTimeout(_saveTimeout); setSyncPending(); salvarCache(); _saveTimeout = setTimeout(() => gravarTudo(), 2500); }
+function agendarSalvamento() {
+  clearTimeout(_saveTimeout);
+  setSyncPending();
+  salvarCache();
+  _saveTimeout = setTimeout(() => gravarTudo(), 2500);
+}
 
 async function gravarTudo() {
-  const creds = obterGHCredenciais(); if(!creds.token) return;
+  const creds = obterGHCredenciais();
+  if(!creds.token) return;
   try {
     const apiURL = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.file}`;
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify({ viagens: viagensDB, dates: availableDates }, null, 2))));
-    const body = { message: 'Sincronismo mestre MWM estável', content, branch: creds.branch };
-    if (_fileSha) body.sha = _fileSha;
-    const resp = await fetch(apiURL, { method: 'PUT', headers: { Authorization: `token ${creds.token}`, Accept: 'application/vnd.github.v3+json' }, body: JSON.stringify(body) });
-    if(resp.ok) { const r = await resp.json(); _fileSha = r.content.sha; setSyncOk(); notify('✓ Alterações guardadas na Nuvem'); }
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify({ viagens:viagensDB, dates:availableDates }, null, 2))));
+    const body = { message:'Sincronismo mestre MWM estável', content, branch:creds.branch };
+    if(_fileSha) body.sha = _fileSha;
+    const resp = await fetch(apiURL, { method:'PUT', headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' }, body:JSON.stringify(body) });
+    if(resp.ok) { const r=await resp.json(); _fileSha=r.content.sha; setSyncOk(); notify('✓ Alterações guardadas na Nuvem'); }
     else { setSyncErr(); }
   } catch(e) { setSyncErr(); }
 }
 
 // ──────────────────────────────────────────────────────────────────────
-//  BLOCO 4: EVENTOS OPERACIONAIS E FORMULARIOS (MESA DO USUARIO)
+//  BLOCO 3: DASHBOARD ENGINE
+// ──────────────────────────────────────────────────────────────────────
+function updateDashboard() {
+  if(!currentDate && availableDates.length) currentDate = availableDates[0];
+  if(!currentDate) currentDate = new Date().toLocaleDateString('pt-BR').slice(0,5);
+  if(!availableDates.includes(currentDate)) { availableDates.push(currentDate); availableDates.sort(); }
+
+  const sub = document.getElementById('prog-date-subtitle');
+  if(sub) sub.textContent = `Emissões CTE e Janelas AVACORP — Dia Ativo: ${currentDate} (${obterNomeDiaSemana(currentDate)})`;
+
+  renderDateNav();
+  renderTable();
+  renderStats();
+  updateBadges();
+
+  if(document.getElementById('page-disp').classList.contains('active'))    renderDisponibilidade();
+  if(document.getElementById('page-alertas').classList.contains('active')) renderAlertas();
+  if(document.getElementById('page-pedidos').classList.contains('active')) renderPedidos();
+  if(document.getElementById('page-pend').classList.contains('active'))    renderPend();
+}
+
+function renderDateNav() {
+  const c = document.getElementById('date-nav');
+  if(!c) return;
+  c.innerHTML = availableDates.map(d =>
+    `<div class="date-tab ${currentDate===d?'active':''}" onclick="setDate('${d}')">${d} <span class="dtag">${(viagensDB[d]||[]).length}</span></div>`
+  ).join('');
+}
+
+function setDate(d) { currentDate=d; expanded=null; updateDashboard(); }
+
+function renderStats() {
+  const vs = viagensDB[currentDate] || [];
+  document.getElementById('stats-row').innerHTML =
+    `<div class="stat"><div class="stl">Total Viagens</div><div class="stv">${vs.length}</div></div>` +
+    `<div class="stat"><div class="stl">Trucks</div><div class="stv" style="color:var(--accent)">${vs.filter(v=>v.tipo==='TRUCK').length}</div></div>` +
+    `<div class="stat"><div class="stl">Conjuntos</div><div class="stv" style="color:var(--purple)">${vs.filter(v=>v.tipo==='CONJUNTO').length}</div></div>` +
+    `<div class="stat"><div class="stl">Prontos p/ CTE</div><div class="stv" style="color:var(--green)">${vs.filter(v=>avaSt(v)==='IMPORTADO'||avaSt(v)==='N/A').length}/${vs.length}</div></div>`;
+}
+
+function renderTable() {
+  const s = fSearch.toLowerCase();
+  const filtered = (viagensDB[currentDate]||[]).filter(v => {
+    if(s && !v.frota.toLowerCase().includes(s) && !v.motorista.toLowerCase().includes(s) && !v.rota.toLowerCase().includes(s)) return false;
+    if(fTipo && v.tipo !== fTipo) return false;
+    if(fCTE  && v.cte  !== fCTE)  return false;
+    return true;
+  });
+
+  const rc = document.getElementById('rcount');
+  if(rc) rc.textContent = `${filtered.length} registro(s)`;
+
+  const tbody = document.getElementById('main-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = '';
+
+  filtered.forEach(v => {
+    const ava  = avaSt(v);
+    const prog = v.paradas.length ? Math.round(v.paradas.filter(p=>p.importado).length/v.paradas.length*100) : 100;
+    const tr   = document.createElement('tr');
+
+    tr.innerHTML =
+      `<td><span style="cursor:pointer;user-select:none;" onclick="toggleExp(${v.id})">${expanded===v.id?'▼':'▶'}</span></td>` +
+      `<td><strong>${v.frota}</strong><br><small style="color:var(--text3);font-size:10px">Antigo: ${v.frotaAntiga||'—'}</small></td>` +
+      `<td><strong style="color:var(--text2);font-family:var(--mono);font-size:11.5px">${v.placa}</strong></td>` +
+      `<td><small style="color:var(--purple);font-size:11px">${v.carreta}</small></td>` +
+      `<td>${v.motorista}</td>` +
+      `<td><strong>${v.rota}</strong></td>` +
+      `<td><span class="${v.tipo==='TRUCK'?'tipo-truck':'tipo-conj'}">${v.tipo}</span></td>` +
+      `<td>${v.saida}</td>` +
+      `<td><small style="color:var(--text2)">${v.origem} → ${v.destino}</small></td>` +
+      `<td>${v.paradas.map(p=>`<span class="pb p52" onclick="digitarPedidoPrompt(${v.id},'${p.id}','${p.pedido}')" style="cursor:pointer">${p.pedido}</span>`).join(' ')}</td>` +
+      `<td><span class="${ava==='IMPORTADO'?'ava-ok':ava==='PARCIAL'?'ava-par':'ava-pend'}">${ava}</span></td>` +
+      `<td><div class="prog-track"><div class="prog-fill" style="width:${prog}%;background:var(--green)"></div></div></td>` +
+      `<td><select class="ctesel" onchange="updateCTE(${v.id},this.value)"><option value="PENDENTE" ${v.cte==='PENDENTE'?'selected':''}>PENDENTE</option><option value="IMPRESSO" ${v.cte==='IMPRESSO'?'selected':''}>IMPRESSO</option><option value="NULA" ${v.cte==='NULA'?'selected':''}>NULA</option></select></td>` +
+      `<td><small style="color:var(--text3)">${v.obs||'—'}</small></td>`;
+
+    tbody.appendChild(tr);
+
+    if(expanded === v.id) {
+      const exp = document.createElement('tr');
+      exp.className = 'erow';
+      exp.innerHTML = `<td colspan="14"><div class="econtent">
+        <table class="atbl">
+          <thead><tr><th>Fornecedor</th><th>Janela</th><th>Pedido / Solicitação</th><th>Status Janela</th><th>Ação</th></tr></thead>
+          <tbody>${v.paradas.map(p => {
+            const js = janelaStatus(p);
+            return `<tr>
+              <td><strong>${p.fornecedor}</strong></td>
+              <td>${p.janela}</td>
+              <td><button class="btn btn-ghost btn-sm" onclick="digitarPedidoPrompt(${v.id},'${p.id}','${p.pedido}')">${p.pedido==='—'?'+ Vincular Pedido':p.pedido}</button></td>
+              <td><span class="${js.cls}">${js.txt}</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'Desfazer Baixa':'✓ Baixar AVACORP'}</button></td>
+            </tr>`;
+          }).join('')}</tbody>
+        </table>
+        <div style="margin-top:10px;">
+          <button class="btn btn-sm" style="background:var(--red-bg);color:var(--red);" onclick="removerViagemMesa(${v.id})">Remover Rota do Dia</button>
+        </div>
+      </div></td>`;
+      tbody.appendChild(exp);
+    }
+  });
+}
+
+function toggleExp(id) {
+  expanded = (expanded === id) ? null : id;
+  renderTable();
+}
+
+function updateBadges() {
+  const vs = viagensDB[currentDate] || [];
+  const badgPend    = document.getElementById('badge-pend');
+  const badgAva     = document.getElementById('badge-ava');
+  const badgAlertas = document.getElementById('badge-alertas');
+  if(badgPend)    badgPend.textContent    = vs.filter(v => v.cte === 'PENDENTE').length;
+  if(badgAva)     badgAva.textContent     = vs.filter(v => avaSt(v)==='PENDENTE' || avaSt(v)==='PARCIAL').length;
+  let urgentes = 0;
+  vs.forEach(v => (v.paradas||[]).forEach(p => { if(!p.importado && janelaStatus(p).urgente) urgentes++; }));
+  if(badgAlertas) badgAlertas.textContent = urgentes;
+}
+
+// ──────────────────────────────────────────────────────────────────────
+//  BLOCO 4: PÁGINAS SECUNDÁRIAS
 // ──────────────────────────────────────────────────────────────────────
 function renderDisponibilidade() {
   const vs = viagensDB[currentDate] || [];
   const lblSub = document.getElementById('disp-date-subtitle');
-  if(lblSub) lblSub.textContent = `Frota ativa calculada para a data: ${currentDate} (${obterNomeDiaSemana(currentDate)})`;
+  if(lblSub) lblSub.textContent = `Frota ativa calculada para: ${currentDate} (${obterNomeDiaSemana(currentDate)})`;
 
   const frotasOcupadas = {};
   vs.forEach(v => {
-    if(v.frota) frotasOcupadas[v.frota] = { rota: v.rota, motorista: v.motorista };
+    if(v.frota) frotasOcupadas[v.frota] = { rota:v.rota, motorista:v.motorista };
     if(v.carreta && v.carreta !== '—') {
-      const prefixoCarreta = v.carreta.split(' ')[0]; frotasOcupadas[prefixoCarreta] = { rota: v.rota, motorista: v.motorista };
+      const pref = v.carreta.split(' ')[0];
+      frotasOcupadas[pref] = { rota:v.rota, motorista:v.motorista };
     }
   });
 
-  const cLivres = document.getElementById('disp-livres-container');
-  const cOcupados = document.getElementById('disp-ocupados-container');
-  if(!cLivres || !cOcupados) return;
-  
-  let htmlLivres = ''; let htmlOcupados = ''; let countLivres = 0;
+  const cL = document.getElementById('disp-livres-container');
+  const cO = document.getElementById('disp-ocupados-container');
+  if(!cL || !cO) return;
+
+  let htmlL='', htmlO='', countL=0;
 
   Object.keys(CONJUNTURA_VEICULOS).forEach(prefixo => {
-    const v = CONJUNTURA_VEICULOS[prefixo]; const ocupado = frotasOcupadas[prefixo];
-    if(v.tipo === 'CARRETA') return; 
+    const v = CONJUNTURA_VEICULOS[prefixo];
+    if(v.tipo === 'CARRETA') return;
+    const ocupado = frotasOcupadas[prefixo];
     if(ocupado) {
-      htmlOcupados += `<div class="disp-item" style="border-left: 3px solid var(--red);"><div><strong>${prefixo}</strong> — <span style="font-size:11px; color:var(--text2)">${v.placa}</span> [${v.tipo||'CARRETA'}]</div><div style="font-size:11px; text-align:right; color:var(--red);">🔒 ${ocupado.rota}</div></div>`;
+      htmlO += `<div class="disp-item" style="border-left:3px solid var(--red);">
+        <div><strong>${prefixo}</strong> — <span style="font-size:11px;color:var(--text2)">${v.placa}</span> [${v.tipo||'?'}]</div>
+        <div style="font-size:11px;text-align:right;color:var(--red);">🔒 ${ocupado.rota}</div>
+      </div>`;
     } else {
-      countLivres++;
-      htmlLivres += `<div class="disp-item" style="border-left: 3px solid var(--green);"><div><strong>${prefixo}</strong> — <span style="font-size:11px; color:var(--text2)">${v.placa}</span> [${v.tipo||'CARRETA'}]</div><div style="font-size:11px; color:var(--green);">✅ LIVRE</div></div>`;
+      countL++;
+      htmlL += `<div class="disp-item" style="border-left:3px solid var(--green);">
+        <div><strong>${prefixo}</strong> — <span style="font-size:11px;color:var(--text2)">${v.placa}</span> [${v.tipo||'?'}]</div>
+        <div style="font-size:11px;color:var(--green);">✅ LIVRE</div>
+      </div>`;
     }
   });
-  cLivres.innerHTML = htmlLivres; cOcupados.innerHTML = htmlOcupados;
-  const bDisp = document.getElementById('badge-disp'); if(bDisp) bDisp.textContent = countLivres;
+
+  cL.innerHTML = htmlL || '<div style="color:var(--text3);font-size:11px;padding:8px;">Nenhum veículo livre cadastrado.</div>';
+  cO.innerHTML = htmlO || '<div style="color:var(--text3);font-size:11px;padding:8px;">Nenhum veículo em rota.</div>';
+  const bDisp = document.getElementById('badge-disp');
+  if(bDisp) bDisp.textContent = countL;
 }
-
-function recalculasRotasDisponiveisNoDropdown() {
-  const diaSelecionado = document.getElementById('form-filtro-dia-semana').value;
-  const macroSel = document.getElementById('form-macro-rota');
-  macroSel.innerHTML = '<option value="">-- Escolha uma rota padrão ou digite manual --</option>';
-  const rotasDoDiaEspecifico = ROTAS_MACRO_DATABASE[diaSelecionado] || {};
-  Object.keys(rotasDoDiaEspecifico).forEach(rName => { macroSel.innerHTML += `<option value="${rName}">${rName}</option>`; });
-}
-
-function verificarEAutoPreencherCamposRota() {
-  const diaSelecionado = document.getElementById('form-filtro-dia-semana').value;
-  const rotaEscolhida = document.getElementById('form-macro-rota').value; if(!rotaEscolhida) return;
-  const rotasDoDia = ROTAS_MACRO_DATABASE[diaSelecionado] || {}; const dadosRota = rotasDoDia[rotaEscolhida]; if(!dadosRota) return;
-
-  document.getElementById('form-tipo').value = dadosRota.tipo;
-  document.getElementById('form-rota').value = rotaEscolhida;
-  document.getElementById('form-saida').value = dadosRota.saida;
-  toggleFormCarreta();
-
-  const container = document.getElementById('form-paradas-container'); container.innerHTML = '';
-  dadosRota.paradas.forEach(p => { adicionarCamposParadaForm(p.fornecedor, p.ji, p.jf); });
-  notify(`✓ Estrutura padrão aplicada!`);
-}
-
-function verificarSeFrotaEManual() {
-  const frotaValor = document.getElementById('form-frota').value;
-  const blocoManual = document.getElementById('form-frota-manual-block');
-  if(frotaValor === "MANUAL_AGREGADO") { blocoManual.style.display = "block"; } 
-  else { blocoManual.style.display = "none"; }
-}
-
-function abrirModalCadastroViagem() {
-  document.getElementById('cadastro-mtitle').textContent = 'Cadastrar Viagem';
-  const diaSemanaAtual = obterNomeDiaSemana(currentDate);
-  document.getElementById('lbl-info-dia-semana').textContent = `Calendário Ativo detectou: ${diaSemanaAtual} (${currentDate})`;
-  document.getElementById('form-filtro-dia-semana').value = diaSemanaAtual;
-  recalculasRotasDisponiveisNoDropdown();
-
-  const selFrota = document.getElementById('form-frota');
-  const selCarreta = document.getElementById('form-carreta');
-  
-  selFrota.innerHTML = '<option value="">-- Escolha o Veículo --</option>';
-  selFrota.innerHTML += '<option value="MANUAL_AGREGADO" style="color:var(--orange); font-weight:600;">--- DIGITAR MANUAL (AGREGADO EX) ---</option>';
-  selCarreta.innerHTML = '<option value="">-- Nenhuma Carreta --</option>';
-  
-  Object.keys(CONJUNTURA_VEICULOS).forEach(key => {
-    const v = CONJUNTURA_VEICULOS[key];
-    if(v.tipo === 'TRUCK' || v.tipo === 'CONJUNTO') { selFrota.innerHTML += `<option value="${key}">${key} [${v.placa}] (${v.tipo})</option>`; }
-    else { selCarreta.innerHTML += `<option value="${key}">${key} [${v.placa}]</option>`; }
-  });
-
-  document.getElementById('form-rota').value = '';
-  document.getElementById('form-motorista').value = '';
-  document.getElementById('form-obs').value = '';
-  document.getElementById('form-frota-manual-block').style.display = "none";
-  document.getElementById('form-frota-manual-input').value = "";
-  document.getElementById('form-paradas-container').innerHTML = '';
-  
-  adicionarCamposParadaForm(); abrirModal('cadastro');
-}
-
-function salvarFormViagem() {
-  const tipo = document.getElementById('form-tipo').value;
-  let frota = document.getElementById('form-frota').value;
-  const carreta = document.getElementById('form-carreta').value;
-  const rota = document.getElementById('form-rota').value.trim();
-  const motorista = document.getElementById('form-motorista').value.trim();
-  const saida = document.getElementById('form-saida').value;
-  const cte = document.getElementById('form-cte').value;
-  const obs = document.getElementById('form-obs').value.trim();
-
-  if(!frota || !rota) { alert('Frota e Rota são obrigatórios.'); return; }
-
-  let placaFinal = ''; let antigoFinal = '—';
-
-  if(frota === "MANUAL_AGREGADO") {
-    const textoDigitado = document.getElementById('form-frota-manual-input').value.trim();
-    frota = textoDigitado ? textoDigitado.toUpperCase() : "AGREGADO EXT";
-    placaFinal = "Caminhão Próprio Terceiro"; antigoFinal = "Agregado Extra";
-  } else {
-    const dbVeiculo = CONJUNTURA_VEICULOS[frota] || { placa: 'MANUAL', antigo: '—' };
-    placaFinal = dbVeiculo.placa; antigoFinal = dbVeiculo.antigo;
-  }
-  
-  let carretaInfo = '—';
-  if(tipo === 'CONJUNTO') {
-    if(carreta) {
-      const dbCarreta = CONJUNTURA_VEICULOS[carreta] || { placa: '—', antigo: '—' };
-      carretaInfo = `${carreta} / Placa: ${dbCarreta.placa} (Antigo: ${dbCarreta.antigo})`;
-    } else { carretaInfo = 'Faltando Carreta'; }
-  }
-
-  const vid = Date.now(); const paradas = [];
-  document.querySelectorAll('.parada-box').forEach((box, idx) => {
-    const forn = box.querySelector('.f-p-forn').value.trim(); const ji = box.querySelector('.f-p-ji').value; const jf = box.querySelector('.f-p-jf').value;
-    if(forn) paradas.push({ id: `${vid}-${idx}`, fornecedor: forn, cidade: 'SÃO PAULO', ji, jf, janela: `${ji}-${jf}`, pedido: '—', importado: false });
-  });
-
-  const novaViagem = {
-    id: vid, tipo, frota, frotaAntiga: antigoFinal, placa: placaFinal, carreta: carretaInfo,
-    motorista: motorista || 'MOTORISTA PADRÃO', rota, saida, origem: paradas[0] ? paradas[0].fornecedor : 'CD SBC', destino: 'MWM STO AMARO', cte, obs, paradas
-  };
-
-  if(!viagensDB[currentDate]) viagensDB[currentDate] = [];
-  viagensDB[currentDate].push(novaViagem);
-  fecharModal('cadastro'); notify('✓ Viagem salva!'); agendarSalvamento(); updateDashboard();
-}
-
-function abrirModalClonagemSemanal() {
-  diaSelecionadoParaClonar = null; document.getElementById('lbl-data-destino').textContent = currentDate; document.getElementById('btn-confirmar-clone').disabled = true;
-  const container = document.getElementById('clonagem-lista-dias'); container.innerHTML = '';
-  const diasComDados = availableDates.filter(d => d !== currentDate && (viagensDB[d] || []).length > 0);
-  if(diasComDados.length === 0) {
-    container.innerHTML = `<p style="font-size:11px; padding:10px; text-align:center;">Nenhum dia de histórico encontrado no sistema para copiar.</p>`;
-  } else {
-    diasComDados.reverse().forEach(d => {
-      const div = document.createElement('div'); div.className = 'clone-list-item'; div.id = `item-clone-${d.replace('/', '-')}`;
-      div.innerHTML = `<strong>Dia ${d} (${obterNomeDiaSemana(d)})</strong> <span style="font-size:11px; color:var(--text3)">${viagensDB[d].length} rotas</span>`;
-      div.onclick = () => selecionarDiaParaCopiar(d); container.appendChild(div);
-    });
-  }
-  abrirModal('clonagem');
-}
-function selecionarDiaParaCopiar(dataOrigem) {
-  diaSelecionadoParaClonar = dataOrigem; document.querySelectorAll('.clone-list-item').forEach(el => el.classList.remove('selected'));
-  const selecionado = document.getElementById(`item-clone-${dataOrigem.replace('/', '-')}`); if(selecionado) selecionado.classList.add('selected');
-  document.getElementById('btn-confirmar-clone').disabled = false;
-}
-function executarClonagemDiaCompleto() {
-  if(!diaSelecionadoParaClonar) return; const baseOrigem = viagensDB[diaSelecionadoParaClonar] || [];
-  const clonesLimpos = baseOrigem.map((v, index) => {
-    const novoVid = Date.now() + index + Math.floor(Math.random()*1000);
-    return {
-      id: novoVid, tipo: v.tipo, frota: v.frota, frotaAntiga: v.frotaAntiga, placa: v.placa, carreta: v.carreta, motorista: v.motorista, rota: v.rota, saida: v.saida, origem: v.origem, destino: v.destino, cte: 'PENDENTE', obs: v.obs || '',
-      paradas: (v.paradas || []).map((p, idxIdx) => ({ id: `${novoVid}-${idxIdx}`, fornecedor: p.fornecedor, cidade: p.cidade || 'SÃO PAULO', ji: p.ji || '08:00', jf: p.jf || '18:00', janela: p.janela || '08:00-18:00', pedido: '—', importado: false }))
-    };
-  });
-  if(!viagensDB[currentDate]) viagensDB[currentDate] = []; viagensDB[currentDate] = [...viagensDB[currentDate], ...clonesLimpos];
-  fecharModal('clonagem'); notify(`✓ Sucesso! Copiado ${clonesLimpos.length} rotas!`); agendarSalvamento(); updateDashboard();
-}
-
-function toggleFormCarreta() { const tipo = document.getElementById('form-tipo').value; document.getElementById('form-carreta-block').style.display = tipo === 'CONJUNTO' ? 'block' : 'none'; }
-function adicionarCamposParadaForm(forn='', ji='08:00', jf='16:00') {
-  const container = document.getElementById('form-paradas-container'); const div = document.createElement('div'); div.className = 'parada-box';
-  div.innerHTML = `<button class="btn-del-parada" onclick="this.parentElement.remove()">×</button><div class="fg" style="grid-template-columns: 2fr 1fr 1fr"><div><label class="fg-label">Local Coleta (Fornecedor)</label><input type="text" class="f-p-forn" value="${forn}" placeholder="Ex: SEG AUTOMOTIVE"></div><div><label class="fg-label">Início Janela</label><input type="time" class="f-p-ji" value="${ji}"></div><div><label class="fg-label">Fim Janela</label><input type="time" class="f-p-jf" value="${jf}"></div></div>`;
-  container.appendChild(div);
-}
-function abrirModalCalendario() { abrirModal('data'); }
-function criarOuMudarDataAtiva() { const d = document.getElementById('form-nova-data').value.trim(); if(!d.match(/^\d{2}\/\d{2}$/)) { alert('Use o formato DD/MM. Ex: 15/06'); return; } currentDate = d; fecharModal('data'); updateDashboard(); }
 
 function renderAlertas() {
-  const vs = viagensDB[currentDate] || []; const container = document.getElementById('alerta-wrap'); let html = '';
+  const vs = viagensDB[currentDate] || [];
+  const container = document.getElementById('alerta-wrap');
+  let html = '';
   vs.forEach(v => {
-    (v.paradas || []).forEach(p => {
-      const js = janelaStatus(p);
+    (v.paradas||[]).forEach(p => {
       if(!p.importado) {
-        html += `<div style="background:var(--bg2); padding:12px; border-radius:6px; border-left:4px solid ${js.urgente?'var(--orange)':'var(--red)'}; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;"><div><strong>${v.frota} [${v.rota}]</strong> — Fornecedor: <span style="color:var(--text)">${p.fornecedor}</span><br><small style="color:var(--text3)">Motorista: ${v.motorista} | Horário Limite Janela: ${p.jf}</small></div><div style="text-align:right"><span class="${js.cls}" style="font-weight:600; font-family:var(--mono)">${js.txt}</span><br><button class="btn btn-ghost btn-sm" style="margin-top:5px; padding:2px 6px;" onclick="marcarParadaImportada(${v.id}, '${p.id}')">✓ Baixar AVACORP</button></div></div>`;
+        const js = janelaStatus(p);
+        html += `<div style="background:var(--bg2);padding:12px;border-radius:6px;border-left:4px solid ${js.urgente?'var(--orange)':'var(--red)'};margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <strong>${v.frota} [${v.rota}]</strong> — Fornecedor: <span style="color:var(--text)">${p.fornecedor}</span><br>
+            <small style="color:var(--text3)">Motorista: ${v.motorista} | Limite: ${p.jf}</small>
+          </div>
+          <div style="text-align:right">
+            <span class="${js.cls}" style="font-weight:600;font-family:var(--mono)">${js.txt}</span><br>
+            <button class="btn btn-ghost btn-sm" style="margin-top:5px;" onclick="marcarParadaImportada(${v.id},'${p.id}')">✓ Baixar AVACORP</button>
+          </div>
+        </div>`;
       }
     });
   });
-  container.innerHTML = html || '<div style="color:var(--text3); padding:10px; text-align:center;">✓ Nenhuma coleta pendente ou próxima do vencimento para hoje.</div>';
+  container.innerHTML = html || '<div style="color:var(--text3);padding:10px;text-align:center;">✓ Nenhuma coleta pendente para hoje.</div>';
 }
 
 function renderPedidos() {
-  const vs = viagensDB[currentDate] || []; const container = document.getElementById('pedidos-list'); let html = '';
-  if(vs.length === 0) { container.innerHTML = '<div style="color:var(--text3); padding:10px; text-align:center;">Nenhuma rota cadastrada para listar pedidos.</div>'; return; }
+  const vs = viagensDB[currentDate] || [];
+  const container = document.getElementById('pedidos-list');
+  if(!vs.length) { container.innerHTML='<div style="color:var(--text3);padding:10px;text-align:center;">Nenhuma rota cadastrada.</div>'; return; }
+  let html = '';
   vs.forEach(v => {
-    (v.paradas || []).forEach(p => {
-      const statusAva = p.importado ? '<span class="ava-ok">IMPORTADO</span>' : '<span class="ava-pend">PENDENTE</span>';
-      html += `<div style="background:var(--bg2); padding:10px; border-radius:6px; margin-bottom:6px; border:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;"><div><strong style="color:var(--accent)">Pedido: ${p.pedido}</strong> — Fornecedor: ${p.fornecedor}<br><small style="color:var(--text3)">Rota: ${v.rota} | Veículo: ${v.frota} | Motorista: ${v.motorista}</small></div><div style="display:flex; gap:8px; align-items:center;">${statusAva}<button class="btn btn-ghost btn-sm" onclick="digitarPedidoPrompt(${v.id}, '${p.id}', '${p.pedido}')">✏️ Editar Pedido</button><button class="btn btn-primary btn-sm" onclick="marcarParadaImportada(${v.id}, '${p.id}')">${p.importado?'Estornar':'✓ Baixar'}</button></div></div>`;
+    (v.paradas||[]).forEach(p => {
+      const stAva = p.importado ? '<span class="ava-ok">IMPORTADO</span>' : '<span class="ava-pend">PENDENTE</span>';
+      html += `<div style="background:var(--bg2);padding:10px;border-radius:6px;margin-bottom:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <strong style="color:var(--accent)">Pedido: ${p.pedido}</strong> — Fornecedor: ${p.fornecedor}<br>
+          <small style="color:var(--text3)">Rota: ${v.rota} | Veículo: ${v.frota} | Motorista: ${v.motorista}</small>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          ${stAva}
+          <button class="btn btn-ghost btn-sm" onclick="digitarPedidoPrompt(${v.id},'${p.id}','${p.pedido}')">✏️ Editar</button>
+          <button class="btn btn-primary btn-sm" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'Estornar':'✓ Baixar'}</button>
+        </div>
+      </div>`;
     });
   });
   container.innerHTML = html;
 }
 
 function renderPend() {
-  const vs = viagensDB[currentDate] || []; const container = document.getElementById('pend-apto'); let html = '';
+  const vs = viagensDB[currentDate] || [];
+  const container = document.getElementById('pend-apto');
   const pendentes = vs.filter(v => v.cte === 'PENDENTE');
-  if(pendentes.length === 0) { container.innerHTML = '<div style="color:var(--text3); padding:10px; text-align:center;">✓ Todos os CTEs do dia ativo já foram emitidos ou cancelados.</div>'; return; }
+  if(!pendentes.length) { container.innerHTML='<div style="color:var(--text3);padding:10px;text-align:center;">✓ Todos os CTEs do dia já foram emitidos.</div>'; return; }
+  let html = '';
   pendentes.forEach(v => {
-    const statusFaturamento = avaSt(v); const liberadoParaEmitir = statusFaturamento === 'IMPORTADO' || statusFaturamento === 'N/A';
-    html += `<div style="background:var(--bg2); padding:12px; border-radius:6px; border:1px solid var(--border); margin-bottom:6px; display:flex; align-items:center; justify-content:space-between;"><div><strong>${v.frota} — [${v.rota}]</strong> — Motorista: ${v.motorista}<br><small style="color:var(--text3)">Origem/Destino: ${v.origem} → ${v.destino} | Status AVACORP: ${statusFaturamento}</small></div><div>${liberadoParaEmitir ? `<button class="btn btn-success btn-sm" onclick="updateCTE(${v.id}, 'IMPRESSO')">⚙ Emitir CTE (Notas OK)</button>` : `<span style="color:var(--red); font-weight:600; font-size:11px; padding:4px 8px; background:var(--red-bg); border-radius:4px;">🔒 Bloqueado (Falta AVACORP)</span>`}</div></div>`;
+    const stFat = avaSt(v);
+    const liberado = stFat === 'IMPORTADO' || stFat === 'N/A';
+    html += `<div style="background:var(--bg2);padding:12px;border-radius:6px;border:1px solid var(--border);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <strong>${v.frota} — [${v.rota}]</strong> — Motorista: ${v.motorista}<br>
+        <small style="color:var(--text3)">${v.origem} → ${v.destino} | AVACORP: ${stFat}</small>
+      </div>
+      <div>
+        ${liberado
+          ? `<button class="btn btn-success btn-sm" onclick="updateCTE(${v.id},'IMPRESSO')">⚙ Emitir CTE</button>`
+          : `<span style="color:var(--red);font-weight:600;font-size:11px;padding:4px 8px;background:var(--red-bg);border-radius:4px;">🔒 Bloqueado (Falta AVACORP)</span>`
+        }
+      </div>
+    </div>`;
   });
   container.innerHTML = html;
 }
 
-function navTo(id,el){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('page-'+id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active'); updateDashboard(); }
-function renderDateNav(){ const c=document.getElementById('date-nav'); if(!c) return; c.innerHTML = availableDates.map(d=>`<div class="date-tab ${currentDate===d?'active':''}" onclick="setDate('${d}')">${d} <span class="dtag">${(viagensDB[d]||[]).length}</span></div>`).join(''); }
-function setDate(d){ currentDate=d; expanded=null; updateDashboard(); }
+// ──────────────────────────────────────────────────────────────────────
+//  BLOCO 5: AÇÕES OPERACIONAIS
+// ──────────────────────────────────────────────────────────────────────
+function marcarParadaImportada(vid, pid) {
+  const vs = viagensDB[currentDate] || [];
+  const v  = vs.find(x => x.id === vid);
+  if(v) {
+    const p = v.paradas.find(x => x.id === pid);
+    if(p) {
+      p.importado = !p.importado;
+      notify(p.importado ? '✓ Baixa realizada!' : 'Baixa desfeita.', p.importado ? 'var(--green)' : 'var(--amber)');
+      agendarSalvamento();
+      updateDashboard();
+    }
+  }
+}
 
-function salvarCache(){ localStorage.setItem('mwm_v5_cache', JSON.stringify({viagens:viagensDB,dates:availableDates})); }
-function carregarCache(){ const s=localStorage.getItem('mwm_v5_cache'); if(s){const d=JSON.parse(s);viagensDB=d.viagens||{};availableDates=d.dates||[];} }
+function digitarPedidoPrompt(vid, pid, valAtual) {
+  const num = prompt('Digite o número do Pedido/Solicitação AVACORP:', valAtual === '—' ? '' : valAtual);
+  if(num === null) return;
+  const v = (viagensDB[currentDate]||[]).find(x => x.id === vid);
+  if(v) {
+    const p = v.paradas.find(x => x.id === pid);
+    if(p) { p.pedido = num.trim() || '—'; agendarSalvamento(); updateDashboard(); }
+  }
+}
+
+function removerViagemMesa(vid) {
+  if(!confirm('Deseja excluir esta rota permanentemente?')) return;
+  viagensDB[currentDate] = (viagensDB[currentDate]||[]).filter(v => v.id !== vid);
+  notify('Viagem excluída.', 'var(--red)');
+  agendarSalvamento();
+  updateDashboard();
+}
+
+function updateCTE(id, val) {
+  const v = (viagensDB[currentDate]||[]).find(x => x.id === id);
+  if(v) { v.cte = val; agendarSalvamento(); notify('CTE atualizado!'); updateDashboard(); }
+}
+
+// ──────────────────────────────────────────────────────────────────────
+//  BLOCO 6: FORMULÁRIO DE CADASTRO DE VIAGEM
+// ──────────────────────────────────────────────────────────────────────
+function recalculasRotasDisponiveisNoDropdown() {
+  const dia = document.getElementById('form-filtro-dia-semana').value;
+  const sel = document.getElementById('form-macro-rota');
+  sel.innerHTML = '<option value="">-- Escolha uma rota padrão ou digite manual --</option>';
+  const rotasDia = ROTAS_MACRO_DATABASE[dia] || {};
+  Object.keys(rotasDia).forEach(rName => { sel.innerHTML += `<option value="${rName}">${rName}</option>`; });
+}
+
+function verificarEAutoPreencherCamposRota() {
+  const dia  = document.getElementById('form-filtro-dia-semana').value;
+  const nome = document.getElementById('form-macro-rota').value;
+  if(!nome) return;
+  const dados = (ROTAS_MACRO_DATABASE[dia]||{})[nome];
+  if(!dados) return;
+
+  document.getElementById('form-tipo').value  = dados.tipo;
+  document.getElementById('form-rota').value  = nome;
+  document.getElementById('form-saida').value = dados.saida;
+  toggleFormCarreta();
+
+  const container = document.getElementById('form-paradas-container');
+  container.innerHTML = '';
+  dados.paradas.forEach(p => adicionarCamposParadaForm(p.fornecedor, p.ji, p.jf));
+  notify('✓ Estrutura padrão aplicada!');
+}
+
+function verificarSeFrotaEManual() {
+  const val  = document.getElementById('form-frota').value;
+  const bloco = document.getElementById('form-frota-manual-block');
+  bloco.style.display = val === 'MANUAL_AGREGADO' ? 'block' : 'none';
+}
+
+function toggleFormCarreta() {
+  const tipo = document.getElementById('form-tipo').value;
+  document.getElementById('form-carreta-block').style.display = tipo === 'CONJUNTO' ? 'block' : 'none';
+}
+
+function adicionarCamposParadaForm(forn='', ji='08:00', jf='16:00') {
+  const container = document.getElementById('form-paradas-container');
+  const div = document.createElement('div');
+  div.className = 'parada-box';
+  div.innerHTML =
+    `<button class="btn-del-parada" onclick="this.parentElement.remove()">×</button>` +
+    `<div class="fg" style="grid-template-columns:2fr 1fr 1fr">` +
+      `<div><label class="fg-label">Local de Coleta (Fornecedor)</label><input type="text" class="f-p-forn" value="${forn}" placeholder="Ex: SEG AUTOMOTIVE" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:12px;"></div>` +
+      `<div><label class="fg-label">Início Janela</label><input type="time" class="f-p-ji" value="${ji}" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:12px;"></div>` +
+      `<div><label class="fg-label">Fim Janela</label><input type="time" class="f-p-jf" value="${jf}" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:12px;"></div>` +
+    `</div>`;
+  container.appendChild(div);
+}
+
+function abrirModalCadastroViagem() {
+  document.getElementById('cadastro-mtitle').textContent = 'Cadastrar Viagem';
+  const diaSemana = obterNomeDiaSemana(currentDate);
+  document.getElementById('lbl-info-dia-semana').textContent = `Calendário Ativo: ${diaSemana} (${currentDate})`;
+  document.getElementById('form-filtro-dia-semana').value = diaSemana;
+  recalculasRotasDisponiveisNoDropdown();
+
+  const selFrota   = document.getElementById('form-frota');
+  const selCarreta = document.getElementById('form-carreta');
+
+  selFrota.innerHTML   = '<option value="">-- Escolha o Veículo --</option><option value="MANUAL_AGREGADO" style="color:var(--orange);font-weight:600;">--- DIGITAR MANUAL (AGREGADO) ---</option>';
+  selCarreta.innerHTML = '<option value="">-- Nenhuma Carreta --</option>';
+
+  Object.keys(CONJUNTURA_VEICULOS).forEach(key => {
+    const v = CONJUNTURA_VEICULOS[key];
+    if(v.tipo === 'TRUCK' || v.tipo === 'CONJUNTO')
+      selFrota.innerHTML += `<option value="${key}">${key} [${v.placa}] (${v.tipo})</option>`;
+    else
+      selCarreta.innerHTML += `<option value="${key}">${key} [${v.placa}]</option>`;
+  });
+
+  document.getElementById('form-rota').value              = '';
+  document.getElementById('form-motorista').value         = '';
+  document.getElementById('form-obs').value               = '';
+  document.getElementById('form-frota-manual-block').style.display = 'none';
+  document.getElementById('form-frota-manual-input').value = '';
+  document.getElementById('form-paradas-container').innerHTML = '';
+  adicionarCamposParadaForm();
+  abrirModal('cadastro');
+}
+
+function salvarFormViagem() {
+  const tipo = document.getElementById('form-tipo').value;
+  let frota  = document.getElementById('form-frota').value;
+  const carreta   = document.getElementById('form-carreta').value;
+  const rota      = document.getElementById('form-rota').value.trim();
+  const motorista = document.getElementById('form-motorista').value.trim();
+  const saida     = document.getElementById('form-saida').value;
+  const cte       = document.getElementById('form-cte').value;
+  const obs       = document.getElementById('form-obs').value.trim();
+
+  if(!frota || !rota) { alert('Frota e Rota são obrigatórios.'); return; }
+
+  let placaFinal='', antigoFinal='—';
+
+  if(frota === 'MANUAL_AGREGADO') {
+    const texto = document.getElementById('form-frota-manual-input').value.trim();
+    frota       = texto ? texto.toUpperCase() : 'AGREGADO EXT';
+    placaFinal  = 'Caminhão Terceiro';
+    antigoFinal = 'Agregado Extra';
+  } else {
+    const db   = CONJUNTURA_VEICULOS[frota] || { placa:'MANUAL', antigo:'—' };
+    placaFinal  = db.placa;
+    antigoFinal = db.antigo;
+  }
+
+  let carretaInfo = '—';
+  if(tipo === 'CONJUNTO') {
+    if(carreta) {
+      const dbC = CONJUNTURA_VEICULOS[carreta] || { placa:'—', antigo:'—' };
+      carretaInfo = `${carreta} / Placa: ${dbC.placa} (Antigo: ${dbC.antigo})`;
+    } else { carretaInfo = 'Faltando Carreta'; }
+  }
+
+  const vid     = Date.now();
+  const paradas = [];
+  document.querySelectorAll('.parada-box').forEach((box, idx) => {
+    const forn = box.querySelector('.f-p-forn').value.trim();
+    const ji   = box.querySelector('.f-p-ji').value;
+    const jf   = box.querySelector('.f-p-jf').value;
+    if(forn) paradas.push({ id:`${vid}-${idx}`, fornecedor:forn, cidade:'SÃO PAULO', ji, jf, janela:`${ji}-${jf}`, pedido:'—', importado:false });
+  });
+
+  const novaViagem = {
+    id:vid, tipo, frota, frotaAntiga:antigoFinal, placa:placaFinal, carreta:carretaInfo,
+    motorista: motorista || 'MOTORISTA PADRÃO', rota, saida,
+    origem: paradas[0] ? paradas[0].fornecedor : 'CD SBC',
+    destino: 'MWM STO AMARO', cte, obs, paradas
+  };
+
+  if(!viagensDB[currentDate]) viagensDB[currentDate] = [];
+  viagensDB[currentDate].push(novaViagem);
+  fecharModal('cadastro');
+  notify('✓ Viagem salva!');
+  agendarSalvamento();
+  updateDashboard();
+}
+
+// ──────────────────────────────────────────────────────────────────────
+//  BLOCO 7: CLONAGEM E CALENDÁRIO
+// ──────────────────────────────────────────────────────────────────────
+function abrirModalClonagemSemanal() {
+  diaSelecionadoParaClonar = null;
+  document.getElementById('lbl-data-destino').textContent = currentDate;
+  document.getElementById('btn-confirmar-clone').disabled = true;
+
+  const container  = document.getElementById('clonagem-lista-dias');
+  container.innerHTML = '';
+  const diasComDados = availableDates.filter(d => d !== currentDate && (viagensDB[d]||[]).length > 0);
+
+  if(!diasComDados.length) {
+    container.innerHTML = '<p style="font-size:11px;padding:10px;text-align:center;">Nenhum histórico encontrado para copiar.</p>';
+  } else {
+    [...diasComDados].reverse().forEach(d => {
+      const div = document.createElement('div');
+      div.className = 'clone-list-item';
+      div.id = `item-clone-${d.replace('/','_')}`;
+      div.innerHTML = `<strong>Dia ${d} (${obterNomeDiaSemana(d)})</strong> <span style="font-size:11px;color:var(--text3)">${viagensDB[d].length} rotas</span>`;
+      div.onclick = () => selecionarDiaParaCopiar(d);
+      container.appendChild(div);
+    });
+  }
+  abrirModal('clonagem');
+}
+
+function selecionarDiaParaCopiar(dataOrigem) {
+  diaSelecionadoParaClonar = dataOrigem;
+  document.querySelectorAll('.clone-list-item').forEach(el => el.classList.remove('selected'));
+  const sel = document.getElementById(`item-clone-${dataOrigem.replace('/','_')}`);
+  if(sel) sel.classList.add('selected');
+  document.getElementById('btn-confirmar-clone').disabled = false;
+}
+
+function executarClonagemDiaCompleto() {
+  if(!diaSelecionadoParaClonar) return;
+  const baseOrigem = viagensDB[diaSelecionadoParaClonar] || [];
+  const clonesLimpos = baseOrigem.map((v, index) => {
+    const novoVid = Date.now() + index + Math.floor(Math.random()*1000);
+    return {
+      id:novoVid, tipo:v.tipo, frota:v.frota, frotaAntiga:v.frotaAntiga, placa:v.placa,
+      carreta:v.carreta, motorista:v.motorista, rota:v.rota, saida:v.saida,
+      origem:v.origem, destino:v.destino, cte:'PENDENTE', obs:v.obs||'',
+      paradas:(v.paradas||[]).map((p, i) => ({
+        id:`${novoVid}-${i}`, fornecedor:p.fornecedor, cidade:p.cidade||'SÃO PAULO',
+        ji:p.ji||'08:00', jf:p.jf||'18:00', janela:p.janela||'08:00-18:00',
+        pedido:'—', importado:false
+      }))
+    };
+  });
+
+  if(!viagensDB[currentDate]) viagensDB[currentDate] = [];
+  viagensDB[currentDate] = [...viagensDB[currentDate], ...clonesLimpos];
+  fecharModal('clonagem');
+  notify(`✓ ${clonesLimpos.length} rotas copiadas!`);
+  agendarSalvamento();
+  updateDashboard();
+}
+
+function abrirModalCalendario() { abrirModal('data'); }
+
+function criarOuMudarDataAtiva() {
+  const d = document.getElementById('form-nova-data').value.trim();
+  if(!d.match(/^\d{2}\/\d{2}$/)) { alert('Use o formato DD/MM. Ex: 15/06'); return; }
+  currentDate = d;
+  fecharModal('data');
+  updateDashboard();
+}
+
+// ──────────────────────────────────────────────────────────────────────
+//  BLOCO 8: NAVEGAÇÃO E PERSISTÊNCIA
+// ──────────────────────────────────────────────────────────────────────
+function navTo(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  updateDashboard();
+}
+
+function salvarCache() {
+  localStorage.setItem('mwm_v5_cache', JSON.stringify({ viagens:viagensDB, dates:availableDates }));
+}
+
+function carregarCache() {
+  const s = localStorage.getItem('mwm_v5_cache');
+  if(s) { const d=JSON.parse(s); viagensDB=d.viagens||{}; availableDates=d.dates||[]; }
+}
 
 function salvarConfiguracoesGitHub() {
-  localStorage.setItem('mwm_gh_token', document.getElementById('cfg-token').value.trim());
-  localStorage.setItem('mwm_gh_repo', document.getElementById('cfg-repo').value.trim());
+  localStorage.setItem('mwm_gh_token',  document.getElementById('cfg-token').value.trim());
+  localStorage.setItem('mwm_gh_repo',   document.getElementById('cfg-repo').value.trim());
   localStorage.setItem('mwm_gh_branch', document.getElementById('cfg-branch').value.trim());
-  notify('✓ Conexão configurada!', 'var(--green)'); carregarTodos();
+  notify('✓ Conexão configurada!', 'var(--green)');
+  carregarTodos();
 }
+
+// ──────────────────────────────────────────────────────────────────────
+//  BLOCO 9: INICIALIZAÇÃO (boot da aplicação)
+// ──────────────────────────────────────────────────────────────────────
+function updateClock() {
+  const el = document.getElementById('tclock');
+  if(el) el.textContent = new Date().toLocaleTimeString('pt-BR');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Relógio em tempo real
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // Preenche campos de config com valores salvos
+  const cfgToken  = document.getElementById('cfg-token');
+  const cfgRepo   = document.getElementById('cfg-repo');
+  const cfgBranch = document.getElementById('cfg-branch');
+  if(cfgToken)  cfgToken.value  = localStorage.getItem('mwm_gh_token')   || '';
+  if(cfgRepo)   cfgRepo.value   = localStorage.getItem('mwm_gh_repo')    || 'elivancarvalho/mwm-sistema';
+  if(cfgBranch) cfgBranch.value = localStorage.getItem('mwm_gh_branch')  || 'main';
+
+  // Carrega dados (nuvem ou cache)
+  carregarCache();
+  carregarTodos();
+
+  // Re-checagem periódica de badges e alertas a cada 30 segundos
+  setInterval(() => {
+    updateBadges();
+    if(document.getElementById('page-alertas').classList.contains('active')) renderAlertas();
+  }, 30000);
+});
 </script>
 </body>
 </html>
