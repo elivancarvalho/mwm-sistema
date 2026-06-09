@@ -282,6 +282,53 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781046610630,
+        "tipo": "TRUCK",
+        "frota": "DPC1D11",
+        "frotaAntiga": "Agregado Extra",
+        "placa": "Caminhão Terceiro",
+        "carreta": "—",
+        "motorista": "ROBERTO",
+        "rota": "ROTA 11",
+        "saida": "10:00",
+        "origem": "VOSS",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781046610630-0",
+            "fornecedor": "VOSS",
+            "cidade": "SÃO PAULO",
+            "ji": "12:00",
+            "jf": "13:00",
+            "janela": "12:00-13:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781046610630-1",
+            "fornecedor": "MAHLE BRONZINAS",
+            "cidade": "SÃO PAULO",
+            "ji": "13:30",
+            "jf": "14:30",
+            "janela": "13:30-14:30",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781046610630-2",
+            "fornecedor": "IRBAS",
+            "cidade": "SÃO PAULO",
+            "ji": "15:00",
+            "jf": "16:00",
+            "janela": "15:00-16:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ],
     "09/06": []
