@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>MWM · Sistema de Programação</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght=400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <style>
@@ -266,11 +266,23 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 <div class="modal">
   <div class="mhdr"><div class="mtitle" id="cadastro-mtitle">Cadastrar Viagem</div><button class="mx" onclick="fecharModal('cadastro')">×</button></div>
   <div class="mbody">
-    <div class="msec" style="background: rgba(245, 166, 35, 0.03); border: 1px dashed var(--amber); padding: 10px; border-radius: 6px;">
-      <div class="msec-t" style="color:var(--amber)" id="lbl-info-dia-semana">Carregando dia da semana...</div>
+    <div class="msec" style="background: rgba(79, 142, 247, 0.03); border: 1px dashed var(--accent); padding: 12px; border-radius: 6px;">
+      <div class="msec-t" id="lbl-info-dia-semana">Dia da semana ativo: ...</div>
+      
+      <div style="margin-bottom: 8px;">
+        <label class="fg-label" style="color:var(--teal)">Filtrar Rotas Padrão por Dia da Semana:</label>
+        <select id="form-filtro-dia-semana" onchange="recalculasRotasDisponiveisNoDropdown()" style="border: 1px solid var(--teal); background: var(--bg2); font-weight: 500;">
+          <option value="Segunda-feira">Segunda-feira</option>
+          <option value="Terça-feira">Terça-feira</option>
+          <option value="Quarta-feira">Quarta-feira</option>
+          <option value="Quinta-feira">Quinta-feira</option>
+          <option value="Sexta-feira">Sexta-feira</option>
+        </select>
+      </div>
+
       <div>
-        <label class="fg-label">Selecione uma Rota Padrão deste dia para Auto-Preencher</label>
-        <select id="form-macro-rota" onchange="verificarEAutoPreencherCamposRota()" style="border: 1px solid var(--amber); background: var(--bg2);">
+        <label class="fg-label" style="color:var(--accent)">Selecione o Itinerário da Rota Padrão:</label>
+        <select id="form-macro-rota" onchange="verificarEAutoPreencherCamposRota()" style="border: 1px solid var(--accent); background: var(--bg2);">
           <option value="">-- Escolha uma rota padrão ou digite manual --</option>
         </select>
       </div>
@@ -472,14 +484,25 @@ async function gravarTudo() {
 }
 
 // ──────────────────────────────────────────────────────────────────────
-//  AUTO-PREENCHIMENTO DINÂMICO
+//  RECALCULO DE ROTAS PADRÃO POR DIA DA SEMANA SELECIONADO
 // ──────────────────────────────────────────────────────────────────────
+function recalculasRotasDisponiveisNoDropdown() {
+  const diaSelecionado = document.getElementById('form-filtro-dia-semana').value;
+  const macroSel = document.getElementById('form-macro-rota');
+  macroSel.innerHTML = '<option value="">-- Escolha uma rota padrão ou digite manual --</option>';
+  
+  const rotasDoDiaEspecifico = ROTAS_MACRO_DATABASE[diaSelecionado] || {};
+  Object.keys(rotasDoDiaEspecifico).forEach(rName => {
+    macroSel.innerHTML += `<option value="${rName}">${rName}</option>`;
+  });
+}
+
 function verificarEAutoPreencherCamposRota() {
-  const diaSemana = obterNomeDiaSemana(currentDate);
+  const diaSelecionado = document.getElementById('form-filtro-dia-semana').value;
   const rotaEscolhida = document.getElementById('form-macro-rota').value;
   if(!rotaEscolhida) return;
 
-  const rotasDoDia = ROTAS_MACRO_DATABASE[diaSemana] || {};
+  const rotasDoDia = ROTAS_MACRO_DATABASE[diaSelecionado] || {};
   const dadosRota = rotasDoDia[rotaEscolhida];
   if(!dadosRota) return;
 
@@ -494,7 +517,7 @@ function verificarEAutoPreencherCamposRota() {
   dadosRota.paradas.forEach(p => {
     adicionarCamposParadaForm(p.fornecedor, p.ji, p.jf);
   });
-  notify(`✓ Estrutura padrão de ${diaSemana} aplicada!`);
+  notify(`✓ Estrutura padrão de ${diaSelecionado} aplicada!`);
 }
 
 // ──────────────────────────────────────────────────────────────────────
@@ -553,21 +576,19 @@ function executarClonagemDiaCompleto() {
 }
 
 // ──────────────────────────────────────────────────────────────────────
-//  CADASTRO MANUAL
+//  CADASTRO MANUAL CORRIGIDO
 // ──────────────────────────────────────────────────────────────────────
 function abrirModalCadastroViagem() {
   document.getElementById('cadastro-mtitle').textContent = 'Cadastrar Viagem';
   
   const diaSemanaAtual = obterNomeDiaSemana(currentDate);
-  document.getElementById('lbl-info-dia-semana').textContent = `Dia da semana ativo: ${diaSemanaAtual} (${currentDate})`;
+  document.getElementById('lbl-info-dia-semana').textContent = `Calendário Ativo detectou: ${diaSemanaAtual} (${currentDate})`;
 
-  const macroSel = document.getElementById('form-macro-rota');
-  macroSel.innerHTML = '<option value="">-- Escolha uma rota padrão ou digite manual --</option>';
-  
-  const rotasDoDiaEspecifico = ROTAS_MACRO_DATABASE[diaSemanaAtual] || {};
-  Object.keys(rotasDoDiaEspecifico).forEach(rName => {
-    macroSel.innerHTML += `<option value="${rName}">${rName}</option>`;
-  });
+  // Seta o seletor padrão com base no dia real do calendário ativo
+  document.getElementById('form-filtro-dia-semana').value = diaSemanaAtual;
+
+  // Renderiza as opções de rotas baseadas nesse dia padrão inicialmente
+  recalculasRotasDisponiveisNoDropdown();
 
   const selFrota = document.getElementById('form-frota');
   const selCarreta = document.getElementById('form-carreta');
@@ -791,17 +812,17 @@ function removerViagemMesa(vid) {
 
 function updateCTE(id,val){ const v=(viagensDB[currentDate]||[]).find(x=>x.id===id); if(v){v.cte=val; agendarSalvamento(); notify('CTE atualizado!'); updateDashboard();} }
 
+// Utilitários estruturais nativos
 function toggleExp(id){ expanded=expanded===id?null:id; renderTable(); }
 function setSyncOk(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-ok'; }
 function setSyncErr(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-err'; }
 function setSyncPending(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-pend'; }
 function setLoadingState(on, msg=''){ 
-  const bar = document.getElementById('loading-bar');
-  const lbl = document.getElementById('loading-label');
-  if(bar) bar.style.display=on?'block':'none'; 
-  if(lbl) { lbl.style.display=on?'block':'none'; lbl.textContent=msg; }
+  const bar = document.getElementById('loading-bar'); const lbl = document.getElementById('loading-label');
+  if(bar) bar.style.display=on?'block':'none'; if(lbl) { lbl.style.display=on?'block':'none'; lbl.textContent=msg; }
 }
 function notify(m,c){ const n=document.getElementById('notif'); n.style.background=c||'var(--green)'; n.innerHTML=m; n.classList.add('show'); setTimeout(()=>n.classList.remove('show'), 2500); }
+// Correção mestre das diretivas de navegação do App Shell
 function toggleSidebar(){ document.getElementById('app').classList.toggle('collapsed'); }
 function abrirModal(id){ document.getElementById('modal-'+id).classList.add('open'); }
 function fecharModal(id){ document.getElementById('modal-'+id).classList.remove('open'); }
