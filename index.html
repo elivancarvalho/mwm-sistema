@@ -381,7 +381,7 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 
 <script>
 // ──────────────────────────────────────────────────────────────────────
-//  BLOCO 1: AUXILIARES OPERACIONAIS DE INTERFACE (GARANTE REGISTRO PREVIO)
+//  BLOCO 1: AUXILIARES OPERACIONAIS DE INTERFACE E TRATAMENTO VISUAL
 // ──────────────────────────────────────────────────────────────────────
 function setSyncOk(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-ok'; }
 function setSyncErr(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-err'; }
@@ -431,11 +431,55 @@ function obterNomeDiaSemana(dataTexto) {
 }
 
 // ──────────────────────────────────────────────────────────────────────
-//  BLOCO 2: CONTROLE DE FLUXO DE REDE REQUISITADA
+//  BLOCO 2: INTERFACE DE ATUALIZAÇÃO REVOLUCIONÁRIA (DASHBOARD ENGINE)
+// ──────────────────────────────────────────────────────────────────────
+function updateDashboard() {
+  if(!currentDate && availableDates.length) currentDate = availableDates[0];
+  if(!currentDate) currentDate = new Date().toLocaleDateString('pt-BR').slice(0,5);
+  if(!availableDates.includes(currentDate)) { availableDates.push(currentDate); availableDates.sort(); }
+  
+  renderDateNav(); renderTable(); renderStats(); updateBadges();
+  if (document.getElementById('page-disp').classList.contains('active')) renderDisponibilidade();
+  if (document.getElementById('page-alertas').classList.contains('active')) renderAlertas();
+  if (document.getElementById('page-pedidos').classList.contains('active')) renderPedidos();
+  if (document.getElementById('page-pend').classList.contains('active')) renderPend();
+}
+
+function renderDateNav(){ const c=document.getElementById('date-nav'); if(!c) return; c.innerHTML = availableDates.map(d=>`<div class="date-tab ${currentDate===d?'active':''}" onclick="setDate('${d}')">${d} <span class="dtag">${(viagensDB[d]||[]).length}</span></div>`).join(''); }
+function setDate(d){ currentDate=d; expanded=null; updateDashboard(); }
+
+function renderStats(){
+  const vs=viagensDB[currentDate]||[];
+  document.getElementById('stats-row').innerHTML=`<div class="stat"><div class="stl">Total Viagens</div><div class="stv">${vs.length}</div></div><div class="stat"><div class="stl">Trucks</div><div class="stv" style="color:var(--accent)">${vs.filter(v=>v.tipo==='TRUCK').length}</div></div><div class="stat"><div class="stl">Conjuntos</div><div class="stv" style="color:var(--purple)">${vs.filter(v=>v.tipo==='CONJUNTO').length}</div></div><div class="stat"><div class="stl">Prontos p/ CTE</div><div class="stv" style="color:var(--green)">${vs.filter(v=>avaSt(v)==='IMPORTADO' || avaSt(v)==='N/A').length}/${vs.length}</div></div>`;
+}
+
+function renderTable(){
+  const filtered = (viagensDB[currentDate]||[]).filter(v=>{ const s=fSearch.toLowerCase(); return !s || v.frota.toLowerCase().includes(s) || v.motorista.toLowerCase().includes(s) || v.rota.toLowerCase().includes(s); });
+  const tbody=document.getElementById('main-tbody'); if(!tbody) return; tbody.innerHTML='';
+  filtered.forEach(v=>{
+    const ava=avaSt(v); const prog=v.paradas.length ? Math.round(v.paradas.filter(p=>p.importado).length/v.paradas.length*100) : 100; const tr=document.createElement('tr');
+    tr.innerHTML=`<td><span style="cursor:pointer; user-select:none;" onclick="toggleExp(${v.id})">${expanded===v.id?'▼':'▶'}</span></td><td><strong class="mn">${v.frota}</strong><br><small style="color:var(--text3); font-size:10px">Antigo: ${v.frotaAntiga||'—'}</small></td><td><strong style="color:var(--text2); font-family:var(--mono); font-size:11.5px">${v.placa}</strong></td><td><small style="color:var(--purple); font-size:11px">${v.carreta}</small></td><td>${v.motorista}</td><td><strong>${v.rota}</strong></td><td><span class="${v.tipo==='TRUCK'?'tipo-truck':'tipo-conj'}">${v.tipo}</span></td><td>${v.saida}</td><td><small style="color:var(--text2)">${v.origem} → ${v.destino}</small></td><td>${v.paradas.map(p=>`<span class="pb p52" onclick="digitarPedidoPrompt(${v.id}, '${p.id}', '${p.pedido}')" style="cursor:pointer">${p.pedido}</span>`).join(' ')}</td><td><span class="${ava==='IMPORTADO'?'ava-ok':ava==='PARCIAL'?'ava-par':'ava-pend'}">${ava}</span></td><td><div class="prog-track"><div class="prog-fill" style="width:${prog}%; background:var(--green)"></div></div></td><td><select class="ctesel" onchange="updateCTE(${v.id},this.value)"><option value="PENDENTE" ${v.cte==='PENDENTE'?'selected':''}>PENDENTE</option><option value="IMPRESSO" ${v.cte==='IMPRESSO'?'selected':''}>IMPRESSO</option><option value="NULA" ${v.cte==='NULA'?'selected':''}>NULA</option></select></td><td><small style="color:var(--text3)">${v.obs||'—'}</small></td>`;
+    tbody.appendChild(tr);
+    if(expanded===v.id){
+      const exp=document.createElement('tr'); exp.className='erow';
+      exp.innerHTML=`<td colspan="13"><div class="econtent"><table class="atbl"><thead><tr><th>Fornecedor</th><th>Janela</th><th>Pedido / Solicitação</th><th>Status Janela</th><th>Ação</th></tr></thead><tbody>${v.paradas.map(p=>{ const js=janelaStatus(p); return `<tr><td><strong>${p.fornecedor}</strong></td><td>${p.janela}</td><td><button class="btn btn-ghost btn-sm" onclick="digitarPedidoPrompt(${v.id},'${p.id}','${p.pedido}')">${p.pedido==='—'?'+ Vincular Pedido':p.pedido}</button></td><td><span class="${js.cls}">${js.txt}</span></td><td><button class="btn btn-ghost btn-sm" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'Desfazer Baixa':'✓ Baixar AVACORP'}</button></td></tr>`; }).join('')}</tbody></table><div style="margin-top:10px;"><button class="btn btn-sm" style="background:var(--red-bg); color:var(--red);" onclick="removerViagemMesa(${v.id})">Remover Rota do Dia</button></div></div></td>`;
+      tbody.appendChild(exp);
+    }
+  });
+}
+
+function updateBadges(){
+  const vs = viagensDB[currentDate] || []; const badgAlertas = document.getElementById('badge-alertas'); const badgAva = document.getElementById('badge-ava'); const badgPend = document.getElementById('badge-pend');
+  if(badgPend) badgPend.textContent=vs.filter(v=>v.cte==='PENDENTE').length; if(badgAva) badgAva.textContent=vs.filter(v=>avaSt(v)==='PENDENTE' || avaSt(v)==='PARCIAL').length;
+  let urgentes = 0; vs.forEach(v => (v.paradas||[]).forEach(p => { if(!p.importado && janelaStatus(p).urgente) urgentes++; }));
+  if(badgAlertas) badgAlertas.textContent = urgentes;
+}
+
+// ──────────────────────────────────────────────────────────────────────
+//  BLOCO 3: COMUNICAÇÃO REMOTA VIA API GITHUB
 // ──────────────────────────────────────────────────────────────────────
 async function carregarDicionariosRemotosGitHub() {
   const creds = obterGHCredenciais(); if(!creds.token) return false;
-  
   try {
     const urlF = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.fleetFile}?ref=${creds.branch}&t=${Date.now()}`;
     const respF = await fetch(urlF, { headers: { Authorization: `token ${creds.token}`, Accept: 'application/vnd.github.v3+json' } });
@@ -461,8 +505,7 @@ async function carregarDicionariosRemotosGitHub() {
 }
 
 async function carregarTodos() {
-  setLoadingState(true, 'Buscando dados...');
-  const creds = obterGHCredenciais(); if(!creds.token) { carregarCache(); setSyncErr(); setLoadingState(false); updateDashboard(); return; }
+  const creds = obterGHCredenciais(); if(!creds.token) { carregarCache(); setSyncErr(); updateDashboard(); return; }
   await carregarDicionariosRemotosGitHub();
   try {
     const apiURL = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.file}?ref=${creds.branch}&t=${Date.now()}`;
@@ -474,7 +517,7 @@ async function carregarTodos() {
       salvarCache(); setSyncOk();
     } else { setSyncErr(); carregarCache(); }
   } catch(e) { setSyncErr(); carregarCache(); }
-  setLoadingState(false); updateDashboard();
+  updateDashboard();
 }
 
 function agendarSalvamento() { clearTimeout(_saveTimeout); setSyncPending(); salvarCache(); _saveTimeout = setTimeout(() => gravarTudo(), 2500); }
@@ -484,7 +527,7 @@ async function gravarTudo() {
   try {
     const apiURL = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.file}`;
     const content = btoa(unescape(encodeURIComponent(JSON.stringify({ viagens: viagensDB, dates: availableDates }, null, 2))));
-    const body = { message: 'Sincronismo mestre MWM estavel', content, branch: creds.branch };
+    const body = { message: 'Sincronismo mestre MWM estável', content, branch: creds.branch };
     if (_fileSha) body.sha = _fileSha;
     const resp = await fetch(apiURL, { method: 'PUT', headers: { Authorization: `token ${creds.token}`, Accept: 'application/vnd.github.v3+json' }, body: JSON.stringify(body) });
     if(resp.ok) { const r = await resp.json(); _fileSha = r.content.sha; setSyncOk(); notify('✓ Alterações guardadas na Nuvem'); }
@@ -493,7 +536,7 @@ async function gravarTudo() {
 }
 
 // ──────────────────────────────────────────────────────────────────────
-//  BLOCO 3: CORE OPERACIONAL E FORMULARIOS
+//  BLOCO 4: EVENTOS OPERACIONAIS E FORMULARIOS (MESA DO USUARIO)
 // ──────────────────────────────────────────────────────────────────────
 function renderDisponibilidade() {
   const vs = viagensDB[currentDate] || [];
@@ -716,33 +759,6 @@ function renderPend() {
 function navTo(id,el){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('page-'+id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active'); updateDashboard(); }
 function renderDateNav(){ const c=document.getElementById('date-nav'); if(!c) return; c.innerHTML = availableDates.map(d=>`<div class="date-tab ${currentDate===d?'active':''}" onclick="setDate('${d}')">${d} <span class="dtag">${(viagensDB[d]||[]).length}</span></div>`).join(''); }
 function setDate(d){ currentDate=d; expanded=null; updateDashboard(); }
-
-function renderStats(){
-  const vs=viagensDB[currentDate]||[];
-  document.getElementById('stats-row').innerHTML=`<div class="stat"><div class="stl">Total Viagens</div><div class="stv">${vs.length}</div></div><div class="stat"><div class="stl">Trucks</div><div class="stv" style="color:var(--accent)">${vs.filter(v=>v.tipo==='TRUCK').length}</div></div><div class="stat"><div class="stl">Conjuntos</div><div class="stv" style="color:var(--purple)">${vs.filter(v=>v.tipo==='CONJUNTO').length}</div></div><div class="stat"><div class="stl">Prontos p/ CTE</div><div class="stv" style="color:var(--green)">${vs.filter(v=>avaSt(v)==='IMPORTADO' || avaSt(v)==='N/A').length}/${vs.length}</div></div>`;
-}
-
-function renderTable(){
-  const filtered = (viagensDB[currentDate]||[]).filter(v=>{ const s=fSearch.toLowerCase(); return !s || v.frota.toLowerCase().includes(s) || v.motorista.toLowerCase().includes(s) || v.rota.toLowerCase().includes(s); });
-  const tbody=document.getElementById('main-tbody'); if(!tbody) return; tbody.innerHTML='';
-  filtered.forEach(v=>{
-    const ava=avaSt(v); const prog=v.paradas.length ? Math.round(v.paradas.filter(p=>p.importado).length/v.paradas.length*100) : 100; const tr=document.createElement('tr');
-    tr.innerHTML=`<td><span style="cursor:pointer; user-select:none;" onclick="toggleExp(${v.id})">${expanded===v.id?'▼':'▶'}</span></td><td><strong class="mn">${v.frota}</strong><br><small style="color:var(--text3); font-size:10px">Antigo: ${v.frotaAntiga||'—'}</small></td><td><strong style="color:var(--text2); font-family:var(--mono); font-size:11.5px">${v.placa}</strong></td><td><small style="color:var(--purple); font-size:11px">${v.carreta}</small></td><td>${v.motorista}</td><td><strong>${v.rota}</strong></td><td><span class="${v.tipo==='TRUCK'?'tipo-truck':'tipo-conj'}">${v.tipo}</span></td><td>${v.saida}</td><td><small style="color:var(--text2)">${v.origem} → ${v.destino}</small></td><td>${v.paradas.map(p=>`<span class="pb p52" onclick="digitarPedidoPrompt(${v.id}, '${p.id}', '${p.pedido}')" style="cursor:pointer">${p.pedido}</span>`).join(' ')}</td><td><span class="${ava==='IMPORTADO'?'ava-ok':ava==='PARCIAL'?'ava-par':'ava-pend'}">${ava}</span></td><td><div class="prog-track"><div class="prog-fill" style="width:${prog}%; background:var(--green)"></div></div></td><td><select class="ctesel" onchange="updateCTE(${v.id},this.value)"><option value="PENDENTE" ${v.cte==='PENDENTE'?'selected':''}>PENDENTE</option><option value="IMPRESSO" ${v.cte==='IMPRESSO'?'selected':''}>IMPRESSO</option><option value="NULA" ${v.cte==='NULA'?'selected':''}>NULA</option></select></td><td><small style="color:var(--text3)">${v.obs||'—'}</small></td>`;
-    tbody.appendChild(tr);
-    if(expanded===v.id){
-      const exp=document.createElement('tr'); exp.className='erow';
-      exp.innerHTML=`<td colspan="13"><div class="econtent"><table class="atbl"><thead><tr><th>Fornecedor</th><th>Janela</th><th>Pedido / Solicitação</th><th>Status Janela</th><th>Ação</th></tr></thead><tbody>${v.paradas.map(p=>{ const js=janelaStatus(p); return `<tr><td><strong>${p.fornecedor}</strong></td><td>${p.janela}</td><td><button class="btn btn-ghost btn-sm" onclick="digitarPedidoPrompt(${v.id},'${p.id}','${p.pedido}')">${p.pedido==='—'?'+ Vincular Pedido':p.pedido}</button></td><td><span class="${js.cls}">${js.txt}</span></td><td><button class="btn btn-ghost btn-sm" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'Desfazer Baixa':'✓ Baixar AVACORP'}</button></td></tr>`; }).join('')}</tbody></table><div style="margin-top:10px;"><button class="btn btn-sm" style="background:var(--red-bg); color:var(--red);" onclick="removerViagemMesa(${v.id})">Remover Rota do Dia</button></div></div></td>`;
-      tbody.appendChild(exp);
-    }
-  });
-}
-
-function updateBadges(){
-  const vs = viagensDB[currentDate] || []; const badgAlertas = document.getElementById('badge-alertas'); const badgAva = document.getElementById('badge-ava'); const badgPend = document.getElementById('badge-pend');
-  if(badgPend) badgPend.textContent=vs.filter(v=>v.cte==='PENDENTE').length; if(badgAva) badgAva.textContent=vs.filter(v=>avaSt(v)==='PENDENTE' || avaSt(v)==='PARCIAL').length;
-  let urgentes = 0; vs.forEach(v => (v.paradas||[]).forEach(p => { if(!p.importado && janelaStatus(p).urgente) urgentes++; }));
-  if(badgAlertas) badgAlertas.textContent = urgentes;
-}
 
 function salvarCache(){ localStorage.setItem('mwm_v5_cache', JSON.stringify({viagens:viagensDB,dates:availableDates})); }
 function carregarCache(){ const s=localStorage.getItem('mwm_v5_cache'); if(s){const d=JSON.parse(s);viagensDB=d.viagens||{};availableDates=d.dates||[];} }
