@@ -380,33 +380,27 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 <div class="notif" id="notif"></div>
 
 <script>
-// Declarações corretas de estado global unificado
-let viagensDB = {};
-let availableDates = [];
-let currentDate = '';
-let fSearch='', fTipo='', fCTE='', expanded=null;
-let _saveTimeout = null;
-let _fileSha = null;
+// ──────────────────────────────────────────────────────────────────────
+//  BLOCO 1: AUXILIARES OPERACIONAIS DE INTERFACE (GARANTE REGISTRO PREVIO)
+// ──────────────────────────────────────────────────────────────────────
+function setSyncOk(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-ok'; }
+function setSyncErr(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-err'; }
+function setSyncPending(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-pend'; }
 
-let CONJUNTURA_VEICULOS = {};
-let MAPA_REVERSO_PLACAS = {};
-let ROTAS_MACRO_DATABASE = {};
-let diaSelecionadoParaClonar = null;
-
-function obterGHCredenciais() {
-  return {
-    ownerRepo: localStorage.getItem('mwm_gh_repo') || 'elivancarvalho/mwm-sistema',
-    branch: localStorage.getItem('mwm_gh_branch') || 'main',
-    token: localStorage.getItem('mwm_gh_token') || '',
-    file: 'mwm_dados.json',
-    fleetFile: 'frota.json',
-    routesFile: 'rotas_padrao.json'
-  };
+function setLoadingState(on, msg=''){ 
+  const bar = document.getElementById('loading-bar'); const lbl = document.getElementById('loading-label');
+  if(bar) bar.style.display=on?'block':'none'; if(lbl) { lbl.style.display=on?'block':'none'; lbl.textContent=msg; }
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  FUNÇÕES AUXILIARES OPERACIONAIS DE CÁLCULO
-// ──────────────────────────────────────────────────────────────────────
+function notify(m,c){ const n=document.getElementById('notif'); if(!n) return; n.style.background=c||'var(--green)'; n.innerHTML=m; n.classList.add('show'); setTimeout(()=>n.classList.remove('show'), 2500); }
+function toggleSidebar(){ document.getElementById('app').classList.toggle('collapsed'); }
+function abrirModal(id){ document.getElementById('modal-'+id).classList.add('open'); }
+function fecharModal(id){ document.getElementById('modal-'+id).classList.remove('open'); }
+
+function setSearch(v){ fSearch=v; renderTable(); }
+function setTipo(v){ fTipo=v; renderTable(); }
+function setCTE(v){ fCTE=v; renderTable(); }
+
 function h2m(s){const[h,m]=(s||'00:00').split(':').map(Number);return h*60+m;}
 function now(){const d=new Date();return d.getHours()*60+d.getMinutes();}
 
@@ -437,7 +431,7 @@ function obterNomeDiaSemana(dataTexto) {
 }
 
 // ──────────────────────────────────────────────────────────────────────
-//  REQUISIÇÕES DE REDE CLOUD
+//  BLOCO 2: CONTROLE DE FLUXO DE REDE REQUISITADA
 // ──────────────────────────────────────────────────────────────────────
 async function carregarDicionariosRemotosGitHub() {
   const creds = obterGHCredenciais(); if(!creds.token) return false;
@@ -453,7 +447,7 @@ async function carregarDicionariosRemotosGitHub() {
         if(CONJUNTURA_VEICULOS[key].placa) MAPA_REVERSO_PLACAS[CONJUNTURA_VEICULOS[key].placa] = { ...CONJUNTURA_VEICULOS[key], frotaNova: key };
       });
     }
-  } catch(e) { console.error('Erro frotas:', e); }
+  } catch(e) { console.error(e); }
 
   try {
     const urlR = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.routesFile}?ref=${creds.branch}&t=${Date.now()}`;
@@ -462,7 +456,7 @@ async function carregarDicionariosRemotosGitHub() {
       const dataR = await respR.json();
       ROTAS_MACRO_DATABASE = JSON.parse(atob(dataR.content.split('\n').join('')));
     }
-  } catch(e) { console.error('Erro rotas:', e); }
+  } catch(e) { console.error(e); }
   return true;
 }
 
@@ -483,17 +477,6 @@ async function carregarTodos() {
   setLoadingState(false); updateDashboard();
 }
 
-function updateDashboard() {
-  if(!currentDate && availableDates.length) currentDate = availableDates[0];
-  if(!currentDate) currentDate = new Date().toLocaleDateString('pt-BR').slice(0,5);
-  if(!availableDates.includes(currentDate)) { availableDates.push(currentDate); availableDates.sort(); }
-  renderDateNav(); renderTable(); renderStats(); updateBadges();
-  if (document.getElementById('page-disp').classList.contains('active')) renderDisponibilidade();
-  if (document.getElementById('page-alertas').classList.contains('active')) renderAlertas();
-  if (document.getElementById('page-pedidos').classList.contains('active')) renderPedidos();
-  if (document.getElementById('page-pend').classList.contains('active')) renderPend();
-}
-
 function agendarSalvamento() { clearTimeout(_saveTimeout); setSyncPending(); salvarCache(); _saveTimeout = setTimeout(() => gravarTudo(), 2500); }
 
 async function gravarTudo() {
@@ -501,7 +484,7 @@ async function gravarTudo() {
   try {
     const apiURL = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.file}`;
     const content = btoa(unescape(encodeURIComponent(JSON.stringify({ viagens: viagensDB, dates: availableDates }, null, 2))));
-    const body = { message: 'Sincronismo mestre MWM estável', content, branch: creds.branch };
+    const body = { message: 'Sincronismo mestre MWM estavel', content, branch: creds.branch };
     if (_fileSha) body.sha = _fileSha;
     const resp = await fetch(apiURL, { method: 'PUT', headers: { Authorization: `token ${creds.token}`, Accept: 'application/vnd.github.v3+json' }, body: JSON.stringify(body) });
     if(resp.ok) { const r = await resp.json(); _fileSha = r.content.sha; setSyncOk(); notify('✓ Alterações guardadas na Nuvem'); }
@@ -510,7 +493,7 @@ async function gravarTudo() {
 }
 
 // ──────────────────────────────────────────────────────────────────────
-//  MOTOR DO PAINEL DE DISPONIBILIDADE
+//  BLOCO 3: CORE OPERACIONAL E FORMULARIOS
 // ──────────────────────────────────────────────────────────────────────
 function renderDisponibilidade() {
   const vs = viagensDB[currentDate] || [];
@@ -533,6 +516,7 @@ function renderDisponibilidade() {
 
   Object.keys(CONJUNTURA_VEICULOS).forEach(prefixo => {
     const v = CONJUNTURA_VEICULOS[prefixo]; const ocupado = frotasOcupadas[prefixo];
+    if(v.tipo === 'CARRETA') return; 
     if(ocupado) {
       htmlOcupados += `<div class="disp-item" style="border-left: 3px solid var(--red);"><div><strong>${prefixo}</strong> — <span style="font-size:11px; color:var(--text2)">${v.placa}</span> [${v.tipo||'CARRETA'}]</div><div style="font-size:11px; text-align:right; color:var(--red);">🔒 ${ocupado.rota}</div></div>`;
     } else {
@@ -544,9 +528,6 @@ function renderDisponibilidade() {
   const bDisp = document.getElementById('badge-disp'); if(bDisp) bDisp.textContent = countLivres;
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  MANIPULADORES DE FORMULÁRIO INTERNO
-// ──────────────────────────────────────────────────────────────────────
 function recalculasRotasDisponiveisNoDropdown() {
   const diaSelecionado = document.getElementById('form-filtro-dia-semana').value;
   const macroSel = document.getElementById('form-macro-rota');
@@ -654,9 +635,6 @@ function salvarFormViagem() {
   fecharModal('cadastro'); notify('✓ Viagem salva!'); agendarSalvamento(); updateDashboard();
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  CLONAGEM OPERACIONAL DE BASE DE HISTÓRICOS
-// ──────────────────────────────────────────────────────────────────────
 function abrirModalClonagemSemanal() {
   diaSelecionadoParaClonar = null; document.getElementById('lbl-data-destino').textContent = currentDate; document.getElementById('btn-confirmar-clone').disabled = true;
   const container = document.getElementById('clonagem-lista-dias'); container.innerHTML = '';
@@ -677,7 +655,7 @@ function selecionarDiaParaCopiar(dataOrigem) {
   const selecionado = document.getElementById(`item-clone-${dataOrigem.replace('/', '-')}`); if(selecionado) selecionado.classList.add('selected');
   document.getElementById('btn-confirmar-clone').disabled = false;
 }
-function ejecutarClonagemDiaCompleto() {
+function executarClonagemDiaCompleto() {
   if(!diaSelecionadoParaClonar) return; const baseOrigem = viagensDB[diaSelecionadoParaClonar] || [];
   const clonesLimpos = baseOrigem.map((v, index) => {
     const novoVid = Date.now() + index + Math.floor(Math.random()*1000);
@@ -699,9 +677,6 @@ function adicionarCamposParadaForm(forn='', ji='08:00', jf='16:00') {
 function abrirModalCalendario() { abrirModal('data'); }
 function criarOuMudarDataAtiva() { const d = document.getElementById('form-nova-data').value.trim(); if(!d.match(/^\d{2}\/\d{2}$/)) { alert('Use o formato DD/MM. Ex: 15/06'); return; } currentDate = d; fecharModal('data'); updateDashboard(); }
 
-// ──────────────────────────────────────────────────────────────────────
-//  RENDERIZAÇÃO DAS TELAS OPERACIONAIS
-// ──────────────────────────────────────────────────────────────────────
 function renderAlertas() {
   const vs = viagensDB[currentDate] || []; const container = document.getElementById('alerta-wrap'); let html = '';
   vs.forEach(v => {
@@ -739,9 +714,6 @@ function renderPend() {
 }
 
 function navTo(id,el){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('page-'+id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active'); updateDashboard(); }
-function setSearch(v){ fSearch=v; renderTable(); }
-function setTipo(v){ fTipo=v; renderTable(); }
-function setCTE(v){ fCTE=v; renderTable(); }
 function renderDateNav(){ const c=document.getElementById('date-nav'); if(!c) return; c.innerHTML = availableDates.map(d=>`<div class="date-tab ${currentDate===d?'active':''}" onclick="setDate('${d}')">${d} <span class="dtag">${(viagensDB[d]||[]).length}</span></div>`).join(''); }
 function setDate(d){ currentDate=d; expanded=null; updateDashboard(); }
 
@@ -772,9 +744,6 @@ function updateBadges(){
   if(badgAlertas) badgAlertas.textContent = urgentes;
 }
 
-function toggleSidebar(){ document.getElementById('app').classList.toggle('collapsed'); }
-function abrirModal(id){ document.getElementById('modal-'+id).classList.add('open'); }
-function fecharModal(id){ document.getElementById('modal-'+id).classList.remove('open'); }
 function salvarCache(){ localStorage.setItem('mwm_v5_cache', JSON.stringify({viagens:viagensDB,dates:availableDates})); }
 function carregarCache(){ const s=localStorage.getItem('mwm_v5_cache'); if(s){const d=JSON.parse(s);viagensDB=d.viagens||{};availableDates=d.dates||[];} }
 
@@ -784,13 +753,6 @@ function salvarConfiguracoesGitHub() {
   localStorage.setItem('mwm_gh_branch', document.getElementById('cfg-branch').value.trim());
   notify('✓ Conexão configurada!', 'var(--green)'); carregarTodos();
 }
-
-function setLoadingState(on, msg=''){ 
-  const bar = document.getElementById('loading-bar'); const lbl = document.getElementById('loading-label');
-  if(bar) bar.style.display=on?'block':'none'; if(lbl) { lbl.style.display=on?'block':'none'; lbl.textContent=msg; }
-}
-
-document.addEventListener('DOMContentLoaded', () => { carregarCache(); carregarTodos(); setInterval(()=>document.getElementById('tclock').textContent=new Date().toLocaleTimeString('pt-BR'),1000); });
 </script>
 </body>
 </html>
