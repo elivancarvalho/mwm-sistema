@@ -563,7 +563,55 @@
         ]
       }
     ],
-    "09/06": []
+    "09/06": [
+      {
+        "id": 1781047832225,
+        "tipo": "CONJUNTO",
+        "frota": "TL2015",
+        "frotaAntiga": "3242",
+        "placa": "FPK9I21",
+        "carreta": "S3079 / Placa: EKU7A68 (Antigo: 2532)",
+        "motorista": "FERNANDO DE OLIVEIRA",
+        "rota": "ROTA 02",
+        "saida": "05:00",
+        "origem": "METAL 2",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781047832225-0",
+            "fornecedor": "METAL 2",
+            "cidade": "SÃO PAULO",
+            "ji": "10:00",
+            "jf": "11:00",
+            "janela": "10:00-11:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781047832225-1",
+            "fornecedor": "MAHLE FILTROS",
+            "cidade": "SÃO PAULO",
+            "ji": "14:40",
+            "jf": "17:00",
+            "janela": "14:40-17:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781047832225-2",
+            "fornecedor": "MAHLE PISTÕES",
+            "cidade": "SÃO PAULO",
+            "ji": "15:00",
+            "jf": "17:00",
+            "janela": "15:00-17:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
+      }
+    ]
   },
   "dates": [
     "08/06",
