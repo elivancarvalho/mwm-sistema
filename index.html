@@ -58,7 +58,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .main{overflow-y:auto;background:var(--bg);}
 .page{display:none;}
 .page.active{display:block;}
-.ph{padding:20px 26px 0;display:flex;align-items:flex-start;justify-space:between;gap:12px;}
+.ph{padding:20px 26px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
 .pt{font-size:17px;font-weight:600;}
 .ps{font-size:11px;color:var(--text3);margin-top:2px;}
 .pact{display:flex;gap:8px;flex-shrink:0;}
@@ -120,7 +120,7 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 .prog-fill{height:100%;border-radius:3px;}
 
 .ava-ok{background:var(--green-bg);color:var(--green);border:1px solid rgba(46,204,113,.25);padding:2px 8px;border-radius:4px;font-size:10px;}
-.ava-par覆{background:var(--orange-bg);color:var(--orange);border:1px solid rgba(251,146,60,.25);padding:2px 8px;border-radius:4px;font-size:10px;}
+.ava-par{background:var(--orange-bg);color:var(--orange);border:1px solid rgba(251,146,60,.25);padding:2px 8px;border-radius:4px;font-size:10px;}
 .ava-pend{background:var(--bg4);color:var(--text3);border:1px solid var(--border2);padding:2px 8px;border-radius:4px;font-size:10px;}
 
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .18s;}
@@ -159,7 +159,6 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 .parada-box { background: var(--bg4); border: 1px solid var(--border); padding: 8px; border-radius: 5px; margin-bottom: 5px; position: relative; }
 .btn-del-parada { position: absolute; top: 4px; right: 6px; color: var(--red); cursor: pointer; font-weight: bold; border: none; background: none; }
 
-/* GRID DO NOVO PAINEL DE DISPONIBILIDADE */
 .disp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px 26px 28px; }
 .disp-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
 .disp-title { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text3); margin-bottom: 10px; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
@@ -319,14 +318,22 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
       <div class="msec-t">Dados do Veículo</div>
       <div class="fg">
         <div><label class="fg-label">Tipo Operação</label><select id="form-tipo" onchange="toggleFormCarreta()"><option value="TRUCK">Truck</option><option value="CONJUNTO">Conjunto (Cavalo+Carreta)</option></select></div>
-        <div><label class="fg-label">Frota Cavalo / Truck</label><select id="form-frota"></select></div>
+        <div>
+          <label class="fg-label">Frota Cavalo / Truck</label>
+          <select id="form-frota" onchange="verificarSeFrotaEManual()"></select>
+        </div>
         <div id="form-carreta-block" style="display:none"><label class="fg-label">Carreta Vinculada</label><select id="form-carreta"></select></div>
+      </div>
+      
+      <div id="form-frota-manual-block" style="display:none; margin-top:8px;">
+        <label class="fg-label" style="color:var(--orange)">Identificação / Placa do Agregado:</label>
+        <input type="text" id="form-frota-manual-input" placeholder="Ex: Placa ABC1D23 ou Nome do Dono">
       </div>
     </div>
     <div class="msec">
       <div class="msec-t">Rota e Horários</div>
       <div class="fg fg3">
-        <div><label class="fg-label">Identificação da Rota</label><input type="text" id="form-rota" placeholder="ROTA 01"></div>
+        <div><label class="fg-label">Identificação da Rota</label><input type="text" id="form-rota" placeholder="ROTA EXTRA 01"></div>
         <div><label class="fg-label">Motorista</label><input type="text" id="form-motorista" placeholder="Nome do motorista"></div>
         <div><label class="fg-label">Horário Saída CD</label><input type="time" id="form-saida" value="06:00"></div>
       </div>
@@ -373,6 +380,7 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 <div class="notif" id="notif"></div>
 
 <script>
+let viajesDB = [];
 let viagensDB = {};
 let availableDates = [];
 let currentDate = '';
@@ -396,9 +404,6 @@ function obterGHCredenciais() {
   };
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  FUNÇÕES AUXILIARES OPERACIONAIS DE CÁLCULO
-// ──────────────────────────────────────────────────────────────────────
 function h2m(s){const[h,m]=(s||'00:00').split(':').map(Number);return h*60+m;}
 function now(){const d=new Date();return d.getHours()*60+d.getMinutes();}
 
@@ -425,18 +430,11 @@ function obterNomeDiaSemana(dataTexto) {
     const dataObjeto = new Date(ano, mes - 1, dia);
     const dias = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
     return dias[dataObjeto.getDay()];
-  } catch(e) {
-    return 'Segunda-feira';
-  }
+  } catch(e) { return 'Segunda-feira'; }
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  REQUISIÇÕES DE REDE CLOUD
-// ──────────────────────────────────────────────────────────────────────
 async function carregarDicionariosRemotosGitHub() {
-  const creds = obterGHCredenciais();
-  if(!creds.token) return false;
-  
+  const creds = obterGHCredenciais(); if(!creds.token) return false;
   try {
     const urlF = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.fleetFile}?ref=${creds.branch}&t=${Date.now()}`;
     const respF = await fetch(urlF, { headers: { Authorization: `token ${creds.token}`, Accept: 'application/vnd.github.v3+json' } });
@@ -448,7 +446,7 @@ async function carregarDicionariosRemotosGitHub() {
         if(CONJUNTURA_VEICULOS[key].placa) MAPA_REVERSO_PLACAS[CONJUNTURA_VEICULOS[key].placa] = { ...CONJUNTURA_VEICULOS[key], frotaNova: key };
       });
     }
-  } catch(e) { console.error('Erro ao ler frota.json:', e); }
+  } catch(e) { console.error(e); }
 
   try {
     const urlR = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.routesFile}?ref=${creds.branch}&t=${Date.now()}`;
@@ -457,18 +455,14 @@ async function carregarDicionariosRemotosGitHub() {
       const dataR = await respR.json();
       ROTAS_MACRO_DATABASE = JSON.parse(atob(dataR.content.split('\n').join('')));
     }
-  } catch(e) { console.error('Erro ao ler rotas_padrao.json:', e); }
-
+  } catch(e) { console.error(e); }
   return true;
 }
 
 async function carregarTodos() {
   setLoadingState(true, 'Buscando dados...');
-  const creds = obterGHCredenciais();
-  if(!creds.token) { carregarCache(); setSyncErr(); setLoadingState(false); updateDashboard(); return; }
-  
+  const creds = obterGHCredenciais(); if(!creds.token) { carregarCache(); setSyncErr(); setLoadingState(false); updateDashboard(); return; }
   await carregarDicionariosRemotosGitHub();
-
   try {
     const apiURL = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.file}?ref=${creds.branch}&t=${Date.now()}`;
     const resp = await fetch(apiURL, { headers: { Authorization: `token ${creds.token}`, Accept: 'application/vnd.github.v3+json' } });
@@ -485,11 +479,7 @@ async function carregarTodos() {
 function updateDashboard() {
   if(!currentDate && availableDates.length) currentDate = availableDates[0];
   if(!currentDate) currentDate = new Date().toLocaleDateString('pt-BR').slice(0,5);
-  
-  if(!availableDates.includes(currentDate)) {
-    availableDates.push(currentDate); availableDates.sort();
-  }
-
+  if(!availableDates.includes(currentDate)) { availableDates.push(currentDate); availableDates.sort(); }
   renderDateNav(); renderTable(); renderStats(); updateBadges();
   if (document.getElementById('page-disp').classList.contains('active')) renderDisponibilidade();
   if (document.getElementById('page-alertas').classList.contains('active')) renderAlertas();
@@ -512,20 +502,14 @@ async function gravarTudo() {
   } catch(e) { setSyncErr(); }
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  MOTOR DE CÁLCULO E RENDERIZAÇÃO DO PAINEL DE DISPONIBILIDADE DA FROTA
-// ──────────────────────────────────────────────────────────────────────
 function renderDisponibilidade() {
   const vs = viagensDB[currentDate] || [];
   const lblSub = document.getElementById('disp-date-subtitle');
   if(lblSub) lblSub.textContent = `Frota ativa calculada para a data: ${currentDate} (${obterNomeDiaSemana(currentDate)})`;
 
-  // Identifica quais frotas de cavalos/trucks e carretas estão em uso nas rotas de hoje
   const frotasOcupadas = {};
   vs.forEach(v => {
     if(v.frota) frotasOcupadas[v.frota] = { rota: v.rota, motorista: v.motorista };
-    
-    // Tenta rastrear o código limpo da carreta se for um conjunto (Extrai o prefixo tipo SL3031)
     if(v.carreta && v.carreta !== '—') {
       const prefixoCarreta = v.carreta.split(' ')[0];
       frotasOcupadas[prefixoCarreta] = { rota: v.rota, motorista: v.motorista };
@@ -534,192 +518,91 @@ function renderDisponibilidade() {
 
   const cLivres = document.getElementById('disp-livres-container');
   const cOcupados = document.getElementById('disp-ocupados-container');
-  
   if(!cLivres || !cOcupados) return;
   
-  let htmlLivres = '';
-  let htmlOcupados = '';
-  let countLivres = 0;
+  let htmlLivres = ''; let htmlOcupados = ''; let countLivres = 0;
 
-  // Cruza a conjuntura global de cadastro contra as frotas em uso no dia
   Object.keys(CONJUNTURA_VEICULOS).forEach(prefixo => {
-    const v = CONJUNTURA_VEICULOS[prefixo];
-    const ocupado = frotasOcupadas[prefixo];
-
+    const v = CONJUNTURA_VEICULOS[prefixo]; const ocupado = frotasOcupadas[prefixo];
     if(ocupado) {
-      htmlOcupados += `
-        <div class="disp-item" style="border-left: 3px solid var(--red);">
-          <div><strong>${prefixo}</strong> — <span style="font-size:11px; color:var(--text2)">${v.placa}</span> [${v.tipo||'CARRETA'}]</div>
-          <div style="font-size:11px; text-align:right; color:var(--red);">🔒 ${ocupado.rota} (${ocupado.motorista})</div>
-        </div>`;
+      htmlOcupados += `<div class="disp-item" style="border-left: 3px solid var(--red);"><div>document.write<strong>${prefixo}</strong> — <span style="font-size:11px; color:var(--text2)">${v.placa}</span> [${v.tipo||'CARRETA'}]</div><div style="font-size:11px; text-align:right; color:var(--red);">🔒 ${ocupado.rota}</div></div>`;
     } else {
       countLivres++;
-      htmlLivres += `
-        <div class="disp-item" style="border-left: 3px solid var(--green);">
-          <div><strong>${prefixo}</strong> — <span style="font-size:11px; color:var(--text2)">${v.placa}</span> [${v.tipo||'CARRETA'}]</div>
-          <div style="font-size:11px; color:var(--green);">✅ DISPONÍVEL</div>
-        </div>`;
+      htmlLivres += `<div class="disp-item" style="border-left: 3px solid var(--green);"><div><strong>${prefixo}</strong> — <span style="font-size:11px; color:var(--text2)">${v.placa}</span> [${v.tipo||'CARRETA'}]</div><div style="font-size:11px; color:var(--green);">✅ LIVRE</div></div>`;
     }
   });
-
-  cLivres.innerHTML = htmlLivres || '<div style="color:var(--text3); padding:10px;">Nenhum veículo livre hoje.</div>';
-  cOcupados.innerHTML = htmlOcupados || '<div style="color:var(--text3); padding:10px;">Nenhum veículo em rota hoje.</div>';
-  
-  const bDisp = document.getElementById('badge-disp');
-  if(bDisp) bDisp.textContent = countLivres;
+  cLivres.innerHTML = htmlLivres; cOcupados.innerHTML = htmlOcupados;
+  const bDisp = document.getElementById('badge-disp'); if(bDisp) bDisp.textContent = countLivres;
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  AUTO-PREENCHIMENTO DINÂMICO
-// ──────────────────────────────────────────────────────────────────────
 function recalculasRotasDisponiveisNoDropdown() {
   const diaSelecionado = document.getElementById('form-filtro-dia-semana').value;
   const macroSel = document.getElementById('form-macro-rota');
   macroSel.innerHTML = '<option value="">-- Escolha uma rota padrão ou digite manual --</option>';
-  
   const rotasDoDiaEspecifico = ROTAS_MACRO_DATABASE[diaSelecionado] || {};
-  Object.keys(rotasDoDiaEspecifico).forEach(rName => {
-    macroSel.innerHTML += `<option value="${rName}">${rName}</option>`;
-  });
+  Object.keys(rotasDoDiaEspecifico).forEach(rName => { macroSel.innerHTML += `<option value="${rName}">${rName}</option>`; });
 }
 
 function verificarEAutoPreencherCamposRota() {
   const diaSelecionado = document.getElementById('form-filtro-dia-semana').value;
-  const rotaEscolhida = document.getElementById('form-macro-rota').value;
-  if(!rotaEscolhida) return;
-
-  const rotasDoDia = ROTAS_MACRO_DATABASE[diaSelecionado] || {};
-  const dadosRota = rotasDoDia[rotaEscolhida];
-  if(!dadosRota) return;
+  const rotaEscolhida = document.getElementById('form-macro-rota').value; if(!rotaEscolhida) return;
+  const rotasDoDia = ROTAS_MACRO_DATABASE[diaSelecionado] || {}; const dadosRota = rotasDoDia[rotaEscolhida]; if(!dadosRota) return;
 
   document.getElementById('form-tipo').value = dadosRota.tipo;
   document.getElementById('form-rota').value = rotaEscolhida;
   document.getElementById('form-saida').value = dadosRota.saida;
   toggleFormCarreta();
 
-  const container = document.getElementById('form-paradas-container');
-  container.innerHTML = '';
-
-  dadosRota.paradas.forEach(p => {
-    adicionarCamposParadaForm(p.fornecedor, p.ji, p.jf);
-  });
-  notify(`✓ Estrutura padrão de ${diaSelecionado} aplicada!`);
+  const container = document.getElementById('form-paradas-container'); container.innerHTML = '';
+  dadosRota.paradas.forEach(p => { adicionarCamposParadaForm(p.fornecedor, p.ji, p.jf); });
+  notify(`✓ Estrutura padrão aplicada!`);
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  CLONAGEM OPERACIONAL
-// ──────────────────────────────────────────────────────────────────────
-function abrirModalClonagemSemanal() {
-  diaSelecionadoParaClonar = null;
-  document.getElementById('lbl-data-destino').textContent = currentDate;
-  document.getElementById('btn-confirmar-clone').disabled = true;
-  const container = document.getElementById('clonagem-lista-dias');
-  container.innerHTML = '';
-  const diasComDados = availableDates.filter(d => d !== currentDate && (viagensDB[d] || []).length > 0);
-  
-  if(diasComDados.length === 0) {
-    container.innerHTML = `<p style="color:var(--text3); font-size:11px; padding:10px; text-align:center;">Nenhum dia de histórico encontrado no sistema para copiar.</p>`;
+// LÓGICA DO SELETOR DE AGREGADOS MANUAL
+function verificarSeFrotaEManual() {
+  const frotaValor = document.getElementById('form-frota').value;
+  const blocoManual = document.getElementById('form-frota-manual-block');
+  if(frotaValor === "MANUAL_AGREGADO") {
+    blocoManual.style.display = "block";
   } else {
-    diasComDados.reverse().forEach(d => {
-      const div = document.createElement('div');
-      div.className = 'clone-list-item';
-      div.id = `item-clone-${d.replace('/', '-')}`;
-      div.innerHTML = `<strong>Dia ${d} (${obterNomeDiaSemana(d)})</strong> <span style="font-size:11px; color:var(--text3)">${viagensDB[d].length} rotas</span>`;
-      div.onclick = () => selecionarDiaParaCopiar(d);
-      container.appendChild(div);
-    });
+    blocoManual.style.display = "none";
   }
-  abrirModal('clonagem');
 }
 
-function selecionarDiaParaCopiar(dataOrigem) {
-  diaSelecionadoParaClonar = dataOrigem;
-  document.querySelectorAll('.clone-list-item').forEach(el => el.classList.remove('selected'));
-  const selecionado = document.getElementById(`item-clone-${dataOrigem.replace('/', '-')}`);
-  if(selecionado) selecionado.classList.add('selected');
-  document.getElementById('btn-confirmar-clone').disabled = false;
-}
-
-function executarClonagemDiaCompleto() {
-  if(!diaSelecionadoParaClonar) return;
-  const baseOrigem = viagensDB[diaSelecionadoParaClonar] || [];
-  const clonesLimpos = baseOrigem.map((v, index) => {
-    const novoVid = Date.now() + index + Math.floor(Math.random()*1000);
-    return {
-      id: novoVid, tipo: v.tipo, frota: v.frota, frotaAntiga: v.frotaAntiga, placa: v.placa, carreta: v.carreta,
-      motorista: v.motorista, rota: v.rota, saida: v.saida, origem: v.origem, destino: v.destino,
-      cte: 'PENDENTE', obs: v.obs || '',
-      paradas: (v.paradas || []).map((p, idxIdx) => ({
-        id: `${novoVid}-${idxIdx}`, fornecedor: p.fornecedor, cidade: p.cidade || 'SÃO PAULO', ji: p.ji || '08:00', jf: p.jf || '18:00', janela: p.janela || '08:00-18:00', pedido: '—', importado: false
-      }))
-    };
-  });
-  if(!viagensDB[currentDate]) viagensDB[currentDate] = [];
-  viagensDB[currentDate] = [...viagensDB[currentDate], ...clonesLimpos];
-  fecharModal('clonagem');
-  notify(`✓ Sucesso! Copiado ${clonesLimpos.length} rotas!`);
-  agendarSalvamento(); updateDashboard();
-}
-
-// ──────────────────────────────────────────────────────────────────────
-//  CADASTRO MANUAL CORRIGIDO
-// ──────────────────────────────────────────────────────────────────────
 function abrirModalCadastroViagem() {
   document.getElementById('cadastro-mtitle').textContent = 'Cadastrar Viagem';
-  
   const diaSemanaAtual = obterNomeDiaSemana(currentDate);
   document.getElementById('lbl-info-dia-semana').textContent = `Calendário Ativo detectou: ${diaSemanaAtual} (${currentDate})`;
-
   document.getElementById('form-filtro-dia-semana').value = diaSemanaAtual;
   recalculasRotasDisponiveisNoDropdown();
 
   const selFrota = document.getElementById('form-frota');
   const selCarreta = document.getElementById('form-carreta');
   
+  // ADICIONA A OPÇÃO MANUAL NO DROP DOWN
   selFrota.innerHTML = '<option value="">-- Escolha o Veículo --</option>';
+  selFrota.innerHTML += '<option value="MANUAL_AGREGADO" style="color:var(--orange); font-weight:600;">--- DIGITAR MANUAL (AGREGADO EX) ---</option>';
   selCarreta.innerHTML = '<option value="">-- Nenhuma Carreta --</option>';
   
   Object.keys(CONJUNTURA_VEICULOS).forEach(key => {
     const v = CONJUNTURA_VEICULOS[key];
-    if(v.tipo === 'TRUCK' || v.tipo === 'CONJUNTO') {
-      selFrota.innerHTML += `<option value="${key}">${key} [${v.placa}] (${v.tipo})</option>`;
-    } else {
-      selCarreta.innerHTML += `<option value="${key}">${key} [${v.placa}]</option>`;
-    }
+    if(v.tipo === 'TRUCK' || v.tipo === 'CONJUNTO') { selFrota.innerHTML += `<option value="${key}">${key} [${v.placa}] (${v.tipo})</option>`; }
+    else { selCarreta.innerHTML += `<option value="${key}">${key} [${v.placa}]</option>`; }
   });
 
   document.getElementById('form-rota').value = '';
   document.getElementById('form-motorista').value = '';
   document.getElementById('form-obs').value = '';
+  document.getElementById('form-frota-manual-block').style.display = "none";
+  document.getElementById('form-frota-manual-input').value = "";
   document.getElementById('form-paradas-container').innerHTML = '';
   
-  adicionarCamposParadaForm();
-  abrirModal('cadastro');
-}
-
-function toggleFormCarreta() {
-  const tipo = document.getElementById('form-tipo').value;
-  document.getElementById('form-carreta-block').style.display = tipo === 'CONJUNTO' ? 'block' : 'none';
-}
-
-function adicionarCamposParadaForm(forn='', ji='08:00', jf='16:00') {
-  const container = document.getElementById('form-paradas-container');
-  const div = document.createElement('div');
-  div.className = 'parada-box';
-  div.innerHTML = `
-    <button class="btn-del-parada" onclick="this.parentElement.remove()">×</button>
-    <div class="fg" style="grid-template-columns: 2fr 1fr 1fr">
-      <div><label class="fg-label">Local Coleta (Fornecedor)</label><input type="text" class="f-p-forn" value="${forn}" placeholder="Ex: SEG AUTOMOTIVE"></div>
-      <div><label class="fg-label">Início Janela</label><input type="time" class="f-p-ji" value="${ji}"></div>
-      <div><label class="fg-label">Fim Janela</label><input type="time" class="f-p-jf" value="${jf}"></div>
-    </div>
-  `;
-  container.appendChild(div);
+  adicionarCamposParadaForm(); abrirModal('cadastro');
 }
 
 function salvarFormViagem() {
   const tipo = document.getElementById('form-tipo').value;
-  const frota = document.getElementById('form-frota').value;
+  let frota = document.getElementById('form-frota').value;
   const carreta = document.getElementById('form-carreta').value;
   const rota = document.getElementById('form-rota').value.trim();
   const motorista = document.getElementById('form-motorista').value.trim();
@@ -729,76 +612,92 @@ function salvarFormViagem() {
 
   if(!frota || !rota) { alert('Frota e Rota são obrigatórios.'); return; }
 
-  const dbVeiculo = CONJUNTURA_VEICULOS[frota] || { placa: 'MANUAL', antigo: '—' };
+  let placaFinal = ''; let antigoFinal = '—';
+
+  // REGRA DE CAPTURA DO AGREGADO MANUAL
+  if(frota === "MANUAL_AGREGADO") {
+    const textoDigitado = document.getElementById('form-frota-manual-input').value.trim();
+    frota = textoDigitado ? textoDigitado.toUpperCase() : "AGREGADO EXT";
+    placaFinal = "Caminhão Próprio Terceiro";
+    antigoFinal = "Agregado Extra";
+  } else {
+    const dbVeiculo = CONJUNTURA_VEICULOS[frota] || { placa: 'MANUAL', antigo: '—' };
+    placaFinal = dbVeiculo.placa; antigoFinal = dbVeiculo.antigo;
+  }
   
   let carretaInfo = '—';
   if(tipo === 'CONJUNTO') {
     if(carreta) {
       const dbCarreta = CONJUNTURA_VEICULOS[carreta] || { placa: '—', antigo: '—' };
       carretaInfo = `${carreta} / Placa: ${dbCarreta.placa} (Antigo: ${dbCarreta.antigo})`;
-    } else {
-      carretaInfo = 'Faltando Carreta';
-    }
+    } else { carretaInfo = 'Faltando Carreta'; }
   }
 
-  const vid = Date.now();
-  const paradas = [];
-  
+  const vid = Date.now(); const paradas = [];
   document.querySelectorAll('.parada-box').forEach((box, idx) => {
-    const forn = box.querySelector('.f-p-forn').value.trim();
-    const ji = box.querySelector('.f-p-ji').value;
-    const jf = box.querySelector('.f-p-jf').value;
-    if(forn) {
-      paradas.push({
-        id: `${vid}-${idx}`, fornecedor: forn, cidade: 'SÃO PAULO', ji, jf, janela: `${ji}-${jf}`, pedido: '—', importado: false
-      });
-    }
+    const forn = box.querySelector('.f-p-forn').value.trim(); const ji = box.querySelector('.f-p-ji').value; const jf = box.querySelector('.f-p-jf').value;
+    if(forn) paradas.push({ id: `${vid}-${idx}`, fornecedor: forn, cidade: 'SÃO PAULO', ji, jf, janela: `${ji}-${jf}`, pedido: '—', importado: false });
   });
 
   const novaViagem = {
-    id: vid, tipo, frota, frotaAntiga: dbVeiculo.antigo, placa: dbVeiculo.placa, carreta: carretaInfo,
-    motorista: motorista || 'MOTORISTA PADRÃO', rota, saida, origem: paradas[0] ? paradas[0].fornecedor : 'CD SBC',
-    destino: 'MWM STO AMARO', cte, obs, paradas
+    id: vid, tipo, frota, frotaAntiga: antigoFinal, placa: placaFinal, carreta: carretaInfo,
+    motorista: motorista || 'MOTORISTA PADRÃO', rota, saida, origem: paradas[0] ? paradas[0].fornecedor : 'CD SBC', destino: 'MWM STO AMARO', cte, obs, paradas
   };
 
   if(!viagensDB[currentDate]) viagensDB[currentDate] = [];
   viagensDB[currentDate].push(novaViagem);
-
-  fecharModal('cadastro');
-  notify('✓ Viagem salva!');
-  agendarSalvamento(); updateDashboard();
+  fecharModal('cadastro'); notify('✓ Viagem salva!'); agendarSalvamento(); updateDashboard();
 }
 
+function abrirModalClonagemSemanal() {
+  diaSelecionadoParaClonar = null; document.getElementById('lbl-data-destino').textContent = currentDate; document.getElementById('btn-confirmar-clone').disabled = true;
+  const container = document.getElementById('clonagem-lista-dias'); container.innerHTML = '';
+  const diasComDados = availableDates.filter(d => d !== currentDate && (viagensDB[d] || []).length > 0);
+  if(diasComDados.length === 0) {
+    container.innerHTML = `<p style="font-size:11px; padding:10px; text-align:center;">Nenhum dia de histórico encontrado no sistema para copiar.</p>`;
+  } else {
+    diasComDados.reverse().forEach(d => {
+      const div = document.createElement('div'); div.className = 'clone-list-item'; div.id = `item-clone-${d.replace('/', '-')}`;
+      div.innerHTML = `<strong>Dia ${d} (${obterNomeDiaSemana(d)})</strong> <span style="font-size:11px; color:var(--text3)">${viagensDB[d].length} rotas</span>`;
+      div.onclick = () => selecionarDiaParaCopiar(d); container.appendChild(div);
+    });
+  }
+  abrirModal('clonagem');
+}
+function selecionarDiaParaCopiar(dataOrigem) {
+  diaSelecionadoParaClonar = dataOrigem; document.querySelectorAll('.clone-list-item').forEach(el => el.classList.remove('selected'));
+  const selecionado = document.getElementById(`item-clone-${dataOrigem.replace('/', '-')}`); if(selecionado) selecionado.classList.add('selected');
+  document.getElementById('btn-confirmar-clone').disabled = false;
+}
+function executarClonagemDiaCompleto() {
+  if(!diaSelecionadoParaClonar) return; const baseOrigem = viagensDB[diaSelecionadoParaClonar] || [];
+  const clonesLimpos = baseOrigem.map((v, index) => {
+    const novoVid = Date.now() + index + Math.floor(Math.random()*1000);
+    return {
+      id: novoVid, tipo: v.tipo, frota: v.frota, frotaAntiga: v.frotaAntiga, placa: v.placa, carreta: v.carreta, motorista: v.motorista, rota: v.rota, saida: v.saida, origem: v.origem, destino: v.destino, cte: 'PENDENTE', obs: v.obs || '',
+      paradas: (v.paradas || []).map((p, idxIdx) => ({ id: `${novoVid}-${idxIdx}`, fornecedor: p.fornecedor, cidade: p.cidade || 'SÃO PAULO', ji: p.ji || '08:00', jf: p.jf || '18:00', janela: p.janela || '08:00-18:00', pedido: '—', importado: false }))
+    };
+  });
+  if(!viagensDB[currentDate]) viagensDB[currentDate] = []; viagensDB[currentDate] = [...viagensDB[currentDate], ...clonesLimpos];
+  fecharModal('clonagem'); notify(`✓ Sucesso! Copiado ${clonesLimpos.length} rotas!`); agendarSalvamento(); updateDashboard();
+}
+
+function toggleFormCarreta() { const tipo = document.getElementById('form-tipo').value; document.getElementById('form-carreta-block').style.display = tipo === 'CONJUNTO' ? 'block' : 'none'; }
+function adicionarCamposParadaForm(forn='', ji='08:00', jf='16:00') {
+  const container = document.getElementById('form-paradas-container'); const div = document.createElement('div'); div.className = 'parada-box';
+  div.innerHTML = `<button class="btn-del-parada" onclick="this.parentElement.remove()">×</button><div class="fg" style="grid-template-columns: 2fr 1fr 1fr"><div><label class="fg-label">Local Coleta (Fornecedor)</label><input type="text" class="f-p-forn" value="${forn}" placeholder="Ex: SEG AUTOMOTIVE"></div><div><label class="fg-label">Início Janela</label><input type="time" class="f-p-ji" value="${ji}"></div><div><label class="fg-label">Fim Janela</label><input type="time" class="f-p-jf" value="${jf}"></div></div>`;
+  container.appendChild(div);
+}
 function abrirModalCalendario() { abrirModal('data'); }
-function criarOuMudarDataAtiva() {
-  const d = document.getElementById('form-nova-data').value.trim();
-  if(!d.match(/^\d{2}\/\d{2}$/)) { alert('Use o formato DD/MM. Ex: 15/06'); return; }
-  currentDate = d; fecharModal('data'); updateDashboard();
-}
+function criarOuMudarDataAtiva() { const d = document.getElementById('form-nova-data').value.trim(); if(!d.match(/^\d{2}\/\d{2}$/)) { alert('Use o formato DD/MM. Ex: 15/06'); return; } currentDate = d; fecharModal('data'); updateDashboard(); }
 
-// ──────────────────────────────────────────────────────────────────────
-//  RENDERIZAÇÃO DAS ABAS OPERACIONAIS
-// ──────────────────────────────────────────────────────────────────────
 function renderAlertas() {
-  const vs = viagensDB[currentDate] || [];
-  const container = document.getElementById('alerta-wrap');
-  let html = '';
-
+  const vs = viagensDB[currentDate] || []; const container = document.getElementById('alerta-wrap'); let html = '';
   vs.forEach(v => {
     (v.paradas || []).forEach(p => {
       const js = janelaStatus(p);
       if(!p.importado) {
-        html += `
-          <div style="background:var(--bg2); padding:12px; border-radius:6px; border-left:4px solid ${js.urgente?'var(--orange)':'var(--red)'}; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;">
-            <div>
-              <strong>${v.frota} [${v.rota}]</strong> — Fornecedor: <span style="color:var(--text)">${p.fornecedor}</span><br>
-              <small style="color:var(--text3)">Motorista: ${v.motorista} | Horário Limite Janela: ${p.jf}</small>
-            </div>
-            <div style="text-align:right">
-              <span class="${js.cls}" style="font-weight:600; font-family:var(--mono)">${js.txt}</span><br>
-              <button class="btn btn-ghost btn-sm" style="margin-top:5px; padding:2px 6px;" onclick="marcarParadaImportada(${v.id}, '${p.id}')">✓ Baixar AVACORP</button>
-            </div>
-          </div>`;
+        html += `<div style="background:var(--bg2); padding:12px; border-radius:6px; border-left:4px solid ${js.urgente?'var(--orange)':'var(--red)'}; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;"><div><strong>${v.frota} [${v.rota}]</strong> — Fornecedor: <span style="color:var(--text)">${p.fornecedor}</span><br><small style="color:var(--text3)">Motorista: ${v.motorista} | Horário Limite Janela: ${p.jf}</small></div><div style="text-align:right"><span class="${js.cls}" style="font-weight:600; font-family:var(--mono)">${js.txt}</span><br><button class="btn btn-ghost btn-sm" style="margin-top:5px; padding:2px 6px;" onclick="marcarParadaImportada(${v.id}, '${p.id}')">✓ Baixar AVACORP</button></div></div>`;
       }
     });
   });
@@ -806,215 +705,66 @@ function renderAlertas() {
 }
 
 function renderPedidos() {
-  const vs = viagensDB[currentDate] || [];
-  const container = document.getElementById('pedidos-list');
-  let html = '';
-
-  if(vs.length === 0) {
-    container.innerHTML = '<div style="color:var(--text3); padding:10px; text-align:center;">Nenhuma rota cadastrada para listar pedidos.</div>';
-    return;
-  }
-
+  const vs = viagensDB[currentDate] || []; const container = document.getElementById('pedidos-list'); let html = '';
+  if(vs.length === 0) { container.innerHTML = '<div style="color:var(--text3); padding:10px; text-align:center;">Nenhuma rota cadastrada para listar pedidos.</div>'; return; }
   vs.forEach(v => {
     (v.paradas || []).forEach(p => {
       const statusAva = p.importado ? '<span class="ava-ok">IMPORTADO</span>' : '<span class="ava-pend">PENDENTE</span>';
-      html += `
-        <div style="background:var(--bg2); padding:10px; border-radius:6px; margin-bottom:6px; border:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
-          <div>
-            <strong style="color:var(--accent)">Pedido: ${p.pedido}</strong> — Fornecedor: ${p.fornecedor}<br>
-            <small style="color:var(--text3)">Rota: ${v.rota} | Veículo: ${v.frota} | Motorista: ${v.motorista}</small>
-          </div>
-          <div style="display:flex; gap:8px; align-items:center;">
-            ${statusAva}
-            <button class="btn btn-ghost btn-sm" onclick="digitarPedidoPrompt(${v.id}, '${p.id}', '${p.pedido}')">✏️ Editar Pedido</button>
-            <button class="btn btn-primary btn-sm" onclick="marcarParadaImportada(${v.id}, '${p.id}')">${p.importado?'Estornar':'✓ Baixar'}</button>
-          </div>
-        </div>`;
+      html += `<div style="background:var(--bg2); padding:10px; border-radius:6px; margin-bottom:6px; border:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;"><div><strong style="color:var(--accent)">Pedido: ${p.pedido}</strong> — Fornecedor: ${p.fornecedor}<br><small style="color:var(--text3)">Rota: ${v.rota} | Veículo: ${v.frota} | Motorista: ${v.motorista}</small></div><div style="display:flex; gap:8px; align-items:center;">${statusAva}<button class="btn btn-ghost btn-sm" onclick="digitarPedidoPrompt(${v.id}, '${p.id}', '${p.pedido}')">✏️ Editar Pedido</button><button class="btn btn-primary btn-sm" onclick="marcarParadaImportada(${v.id}, '${p.id}')">${p.importado?'Estornar':'✓ Baixar'}</button></div></div>`;
     });
   });
   container.innerHTML = html;
 }
 
 function renderPend() {
-  const vs = viagensDB[currentDate] || [];
-  const container = document.getElementById('pend-apto');
-  let html = '';
-
+  const vs = viagensDB[currentDate] || []; const container = document.getElementById('pend-apto'); let html = '';
   const pendentes = vs.filter(v => v.cte === 'PENDENTE');
-  if(pendentes.length === 0) {
-    container.innerHTML = '<div style="color:var(--text3); padding:10px; text-align:center;">✓ Todos os CTEs do dia ativo já foram emitidos ou cancelados.</div>';
-    return;
-  }
-
+  if(pendentes.length === 0) { container.innerHTML = '<div style="color:var(--text3); padding:10px; text-align:center;">✓ Todos os CTEs do dia ativo já foram emitidos ou cancelados.</div>'; return; }
   pendentes.forEach(v => {
-    const statusFaturamento = avaSt(v);
-    const liberadoParaEmitir = statusFaturamento === 'IMPORTADO' || statusFaturamento === 'N/A';
-    
-    html += `
-      <div style="background:var(--bg2); padding:12px; border-radius:6px; border:1px solid var(--border); margin-bottom:6px; display:flex; align-items:center; justify-content:space-between;">
-        <div>
-          <strong>${v.frota} — [${v.rota}]</strong> — Motorista: ${v.motorista}<br>
-          <small style="color:var(--text3)">Origem/Destino: ${v.origem} → ${v.destino} | Status AVACORP: ${statusFaturamento}</small>
-        </div>
-        <div>
-          ${liberadoParaEmitir 
-            ? `<button class="btn btn-success btn-sm" onclick="updateCTE(${v.id}, 'IMPRESSO')">⚙ Emitir CTE (Notas OK)</button>`
-            : `<span style="color:var(--red); font-weight:600; font-size:11px; padding:4px 8px; background:var(--red-bg); border-radius:4px;">🔒 Bloqueado (Falta AVACORP)</span>`
-          }
-        </div>
-      </div>`;
+    const statusFaturamento = avaSt(v); const liberadoParaEmitir = statusFaturamento === 'IMPORTADO' || statusFaturamento === 'N/A';
+    html += `<div style="background:var(--bg2); padding:12px; border-radius:6px; border:1px solid var(--border); margin-bottom:6px; display:flex; align-items:center; justify-content:space-between;"><div><strong>${v.frota} — [${v.rota}]</strong> — Motorista: ${v.motorista}<br><small style="color:var(--text3)">Origem/Destino: ${v.origem} → ${v.destino} | Status AVACORP: ${statusFaturamento}</small></div><div>${liberadoParaEmitir ? `<button class="btn btn-success btn-sm" onclick="updateCTE(${v.id}, 'IMPRESSO')">⚙ Emitir CTE (Notas OK)</button>` : `<span style="color:var(--red); font-weight:600; font-size:11px; padding:4px 8px; background:var(--red-bg); border-radius:4px;">🔒 Bloqueado (Falta AVACORP)</span>`}</div></div>`;
   });
   container.innerHTML = html;
 }
 
-function digitarPedidoPrompt(vid, pid, valAtual) {
-  const num = prompt("Digite o número do Pedido/Solicitação da AVACORP:", valAtual === '—' ? '' : valAtual);
-  if(num === null) return;
-  const vs = viagensDB[currentDate] || [];
-  const v = vs.find(x=>x.id===vid);
-  if(v){
-    const p = v.paradas.find(x=>x.id===pid);
-    if(p) { p.pedido = num.trim() || '—'; agendarSalvamento(); updateDashboard(); }
-  }
-}
-
-function marcarParadaImportada(vid, pid) {
-  const vs = viagensDB[currentDate] || [];
-  const v = vs.find(x=>x.id===vid);
-  if(v){
-    const p = v.paradas.find(x=>x.id===pid);
-    if(p){ p.importado = !p.importado; agendarSalvamento(); updateDashboard(); }
-  }
-}
-
-function removerViagemMesa(vid) {
-  if(!confirm('Deseja excluir esta rota permanentemente?')) return;
-  viagensDB[currentDate] = (viagensDB[currentDate] || []).filter(v => v.id !== vid);
-  notify('Viagem excluída.', 'var(--red)'); agendarSalvamento(); updateDashboard();
-}
-
-function updateCTE(id,val){ const v=(viagensDB[currentDate]||[]).find(x=>x.id===id); if(v){v.cte=val; agendarSalvamento(); notify('CTE atualizado!'); updateDashboard();} }
-
-// Utilitários estruturais nativos
-function toggleExp(id){ expanded=expanded===id?null:id; renderTable(); }
-function setSyncOk(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-ok'; }
-function setSyncErr(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-err'; }
-function setSyncPending(){ const s=document.getElementById('sync-indicator'); if(s)s.className='sync-pend'; }
-function setLoadingState(on, msg=''){ 
-  const bar = document.getElementById('loading-bar'); const lbl = document.getElementById('loading-label');
-  if(bar) bar.style.display=on?'block':'none'; if(lbl) { lbl.style.display=on?'block':'none'; lbl.textContent=msg; }
-}
-function notify(m,c){ const n=document.getElementById('notif'); n.style.background=c||'var(--green)'; n.innerHTML=m; n.classList.add('show'); setTimeout(()=>n.classList.remove('show'), 2500); }
-function toggleSidebar(){ document.getElementById('app').classList.toggle('collapsed'); }
-function abrirModal(id){ document.getElementById('modal-'+id).classList.add('open'); }
-function fecharModal(id){ document.getElementById('modal-'+id).classList.remove('open'); }
-
-function navTo(id,el){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  el.classList.add('active');
-  updateDashboard();
-}
-
+function navTo(id,el){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('page-'+id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active'); updateDashboard(); }
 function setSearch(v){ fSearch=v; renderTable(); }
 function setTipo(v){ fTipo=v; renderTable(); }
 function setCTE(v){ fCTE=v; renderTable(); }
-
-function renderDateNav(){
-  const c=document.getElementById('date-nav'); if(!c) return;
-  c.innerHTML = availableDates.map(d=>`<div class="date-tab ${currentDate===d?'active':''}" onclick="setDate('${d}')">${d} <span class="dtag">${(viagensDB[d]||[]).length}</span></div>`).join('');
-}
+function renderDateNav(){ const c=document.getElementById('date-nav'); if(!c) return; c.innerHTML = availableDates.map(d=>`<div class="date-tab ${currentDate===d?'active':''}" onclick="setDate('${d}')">${d} <span class="dtag">${(viagensDB[d]||[]).length}</span></div>`).join(''); }
 function setDate(d){ currentDate=d; expanded=null; updateDashboard(); }
-
 function renderStats(){
   const vs=viagensDB[currentDate]||[];
-  document.getElementById('stats-row').innerHTML=`
-    <div class="stat"><div class="stl">Total Viagens</div><div class="stv">${vs.length}</div></div>
-    <div class="stat"><div class="stl">Trucks</div><div class="stv" style="color:var(--accent)">${vs.filter(v=>v.tipo==='TRUCK').length}</div></div>
-    <div class="stat"><div class="stl">Conjuntos</div><div class="stv" style="color:var(--purple)">${vs.filter(v=>v.tipo==='CONJUNTO').length}</div></div>
-    <div class="stat"><div class="stl">Prontos p/ CTE</div><div class="stv" style="color:var(--green)">${vs.filter(v=>avaSt(v)==='IMPORTADO' || avaSt(v)==='N/A').length}/${vs.length}</div></div>
-  `;
+  document.getElementById('stats-row').innerHTML=`<div class="stat"><div class="stl">Total Viagens</div><div class="stv">${vs.length}</div></div><div class="stat"><div class="stl">Trucks</div><div class="stv" style="color:var(--accent)">${vs.filter(v=>v.tipo==='TRUCK').length}</div></div><div class="stat"><div class="stl">Conjuntos</div><div class="stv" style="color:var(--purple)">${vs.filter(v=>v.tipo==='CONJUNTO').length}</div></div><div class="stat"><div class="stl">Prontos p/ CTE</div><div class="stv" style="color:var(--green)">${vs.filter(v=>avaSt(v)==='IMPORTADO' || avaSt(v)==='N/A').length}/${vs.length}</div></div>`;
 }
 
 function renderTable(){
-  const filtered = (viagensDB[currentDate]||[]).filter(v=>{
-    const s=fSearch.toLowerCase(); return !s || v.frota.toLowerCase().includes(s) || v.motorista.toLowerCase().includes(s) || v.rota.toLowerCase().includes(s);
-  });
+  const filtered = (viagensDB[currentDate]||[]).filter(v=>{ const s=fSearch.toLowerCase(); return !s || v.frota.toLowerCase().includes(s) || v.motorista.toLowerCase().includes(s) || v.rota.toLowerCase().includes(s); });
   const tbody=document.getElementById('main-tbody'); if(!tbody) return; tbody.innerHTML='';
-  
   filtered.forEach(v=>{
-    const ava=avaSt(v); const prog=v.paradas.length ? Math.round(v.paradas.filter(p=>p.importado).length/v.paradas.length*100) : 100;
-    const tr=document.createElement('tr');
-    tr.innerHTML=`
-      <td><span style="cursor:pointer; user-select:none;" onclick="toggleExp(${v.id})">${expanded===v.id?'▼':'▶'}</span></td>
-      <td><strong class="mn">${v.frota}</strong><br><small style="color:var(--text3); font-size:10px">Antigo: ${v.frotaAntiga||'—'}</small></td>
-      <td><strong style="color:var(--text2); font-family:var(--mono); font-size:11.5px">${v.placa}</strong></td>
-      <td><small style="color:var(--purple); font-size:11px">${v.carreta}</small></td>
-      <td>${v.motorista}</td> <td><strong>${v.rota}</strong></td>
-      <td><span class="${v.tipo==='TRUCK'?'tipo-truck':'tipo-conj'}">${v.tipo}</span></td> <td>${v.saida}</td>
-      <td><small style="color:var(--text2)">${v.origem} → ${v.destino}</small></td>
-      <td>${v.paradas.map(p=>`<span class="pb p52" onclick="digitarPedidoPrompt(${v.id}, '${p.id}', '${p.pedido}')" style="cursor:pointer">${p.pedido}</span>`).join(' ')}</td>
-      <td><span class="${ava==='IMPORTADO'?'ava-ok':ava==='PARCIAL'?'ava-par':'ava-pend'}">${ava}</span></td>
-      <td><div class="prog-track"><div class="prog-fill" style="width:${prog}%; background:var(--green)"></div></div></td>
-      <td>
-        <select class="ctesel" onchange="updateCTE(${v.id},this.value)">
-          <option value="PENDENTE" ${v.cte==='PENDENTE'?'selected':''}>PENDENTE</option>
-          <option value="IMPRESSO" ${v.cte==='IMPRESSO'?'selected':''}>IMPRESSO</option>
-          <option value="NULA" ${v.cte==='NULA'?'selected':''}>NULA</option>
-        </select>
-      </td>
-      <td><small style="color:var(--text3)">${v.obs||'—'}</small></td>
-    `;
+    const ava=avaSt(v); const prog=v.paradas.length ? Math.round(v.paradas.filter(p=>p.importado).length/v.paradas.length*100) : 100; const tr=document.createElement('tr');
+    tr.innerHTML=`<td><span style="cursor:pointer; user-select:none;" onclick="toggleExp(${v.id})">${expanded===v.id?'▼':'▶'}</span></td><td><strong class="mn">${v.frota}</strong><br><small style="color:var(--text3); font-size:10px">Antigo: ${v.frotaAntiga||'—'}</small></td><td><strong style="color:var(--text2); font-family:var(--mono); font-size:11.5px">${v.placa}</strong></td><td><small style="color:var(--purple); font-size:11px">${v.carreta}</small></td><td>${v.motorista}</td><td><strong>${v.rota}</strong></td><td><span class="${v.tipo==='TRUCK'?'tipo-truck':'tipo-conj'}">${v.tipo}</span></td><td>${v.saida}</td><td><small style="color:var(--text2)">${v.origem} → ${v.destino}</small></td><td>${v.paradas.map(p=>`<span class="pb p52" onclick="digitarPedidoPrompt(${v.id}, '${p.id}', '${p.pedido}')" style="cursor:pointer">${p.pedido}</span>`).join(' ')}</td><td><span class="${ava==='IMPORTADO'?'ava-ok':ava==='PARCIAL'?'ava-par':'ava-pend'}">${ava}</span></td><td><div class="prog-track"><div class="prog-fill" style="width:${prog}%; background:var(--green)"></div></div></td><td><select class="ctesel" onchange="updateCTE(${v.id},this.value)"><option value="PENDENTE" ${v.cte==='PENDENTE'?'selected':''}>PENDENTE</option><option value="IMPRESSO" ${v.cte==='IMPRESSO'?'selected':''}>IMPRESSO</option><option value="NULA" ${v.cte==='NULA'?'selected':''}>NULA</option></select></td><td><small style="color:var(--text3)">${v.obs||'—'}</small></td>`;
     tbody.appendChild(tr);
-
     if(expanded===v.id){
       const exp=document.createElement('tr'); exp.className='erow';
-      exp.innerHTML=`<td colspan="13"><div class="econtent">
-        <table class="atbl">
-          <thead><tr><th>Fornecedor</th><th>Janela</th><th>Pedido / Solicitação</th><th>Status Janela</th><th>Ação</th></tr></thead>
-          <tbody>${v.paradas.map(p=>{
-            const js=janelaStatus(p);
-            return `<tr>
-              <td><strong>${p.fornecedor}</strong></td> <td>${p.janela}</td>
-              <td><button class="btn btn-ghost btn-sm" onclick="digitarPedidoPrompt(${v.id},'${p.id}','${p.pedido}')">${p.pedido==='—'?'+ Vincular Pedido':p.pedido}</button></td>
-              <td><span class="${js.cls}">${js.txt}</span></td>
-              <td>
-                <button class="btn btn-ghost btn-sm" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'Desfazer Baixa':'✓ Baixar AVACORP'}</button>
-              </td>
-            </tr>`;
-          }).join('')}</tbody>
-        </table>
-        <div style="margin-top:10px;"><button class="btn btn-sm" style="background:var(--red-bg); color:var(--red);" onclick="removerViagemMesa(${v.id})">Remover Rota do Dia</button></div>
-      </div></td>`;
+      exp.innerHTML=`<td colspan="13"><div class="econtent"><table class="atbl"><thead><tr><th>Fornecedor</th><th>Janela</th><th>Pedido / Solicitação</th><th>Status Janela</th><th>Ação</th></tr></thead><tbody>${v.paradas.map(p=>{ const js=janelaStatus(p); return `<tr><td><strong>${p.fornecedor}</strong></td><td>${p.janela}</td><td><button class="btn btn-ghost btn-sm" onclick="digitarPedidoPrompt(${v.id},'${p.id}','${p.pedido}')">${p.pedido==='—'?'+ Vincular Pedido':p.pedido}</button></td><td><span class="${js.cls}">${js.txt}</span></td><td><button class="btn btn-ghost btn-sm" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'Desfazer Baixa':'✓ Baixar AVACORP'}</button></td></tr>`; }).join('')}</tbody></table><div style="margin-top:10px;"><button class="btn btn-sm" style="background:var(--red-bg); color:var(--red);" onclick="removerViagemMesa(${v.id})">Remover Rota do Dia</button></div></div></td>`;
       tbody.appendChild(exp);
     }
   });
 }
 
 function updateBadges(){
-  const vs = viagensDB[currentDate] || [];
-  const badgAlertas = document.getElementById('badge-alertas');
-  const badgAva = document.getElementById('badge-ava');
-  const badgPend = document.getElementById('badge-pend');
-  
-  if(badgPend) badgPend.textContent=vs.filter(v=>v.cte==='PENDENTE').length;
-  if(badgAva) badgAva.textContent=vs.filter(v=>avaSt(v)==='PENDENTE' || avaSt(v)==='PARCIAL').length;
-  
-  let urgentes = 0;
-  vs.forEach(v => (v.paradas||[]).forEach(p => { if(!p.importado && janelaStatus(p).urgente) urgentes++; }));
+  const vs = viagensDB[currentDate] || []; const badgAlertas = document.getElementById('badge-alertas'); const badgAva = document.getElementById('badge-ava'); const badgPend = document.getElementById('badge-pend');
+  if(badgPend) badgPend.textContent=vs.filter(v=>v.cte==='PENDENTE').length; if(badgAva) badgAva.textContent=vs.filter(v=>avaSt(v)==='PENDENTE' || avaSt(v)==='PARCIAL').length;
+  let urgentes = 0; vs.forEach(v => (v.paradas||[]).forEach(p => { if(!p.importado && janelaStatus(p).urgente) urgentes++; }));
   if(badgAlertas) badgAlertas.textContent = urgentes;
 }
 
-function salvarConfiguracoesGitHub() {
-  localStorage.setItem('mwm_gh_token', document.getElementById('cfg-token').value.trim());
-  localStorage.setItem('mwm_gh_repo', document.getElementById('cfg-repo').value.trim());
-  localStorage.setItem('mwm_gh_branch', document.getElementById('cfg-branch').value.trim());
-  notify('✓ Conexão configurada!', 'var(--green)'); carregarTodos();
-}
+function toggleSidebar(){ document.getElementById('app').classList.toggle('collapsed'); }
+function abrirModal(id){ document.getElementById('modal-'+id).classList.add('open'); }
+function fecharModal(id){ document.getElementById('modal-'+id).classList.remove('open'); }
 function salvarCache(){ localStorage.setItem('mwm_v5_cache', JSON.stringify({viagens:viagensDB,dates:availableDates})); }
 function carregarCache(){ const s=localStorage.getItem('mwm_v5_cache'); if(s){const d=JSON.parse(s);viagensDB=d.viagens||{};availableDates=d.dates||[];} }
-
 document.addEventListener('DOMContentLoaded', () => { carregarCache(); carregarTodos(); setInterval(()=>document.getElementById('tclock').textContent=new Date().toLocaleTimeString('pt-BR'),1000); });
 </script>
 </body>
