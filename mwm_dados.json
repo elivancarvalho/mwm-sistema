@@ -1119,6 +1119,53 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781052164073,
+        "tipo": "TRUCK",
+        "frota": "DUO2539",
+        "frotaAntiga": "Agregado Extra",
+        "placa": "Caminhão Terceiro",
+        "carreta": "—",
+        "motorista": "SILVIO",
+        "rota": "ROTA 07",
+        "saida": "07:00",
+        "origem": "ARLINGTON THERMAL",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781052164073-0",
+            "fornecedor": "ARLINGTON THERMAL",
+            "cidade": "SÃO PAULO",
+            "ji": "11:00",
+            "jf": "12:00",
+            "janela": "11:00-12:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781052164073-1",
+            "fornecedor": "MC BRASIL",
+            "cidade": "SÃO PAULO",
+            "ji": "13:00",
+            "jf": "14:00",
+            "janela": "13:00-14:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781052164073-2",
+            "fornecedor": "MARTINREA HONSSEL",
+            "cidade": "SÃO PAULO",
+            "ji": "17:00",
+            "jf": "18:00",
+            "janela": "17:00-18:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
