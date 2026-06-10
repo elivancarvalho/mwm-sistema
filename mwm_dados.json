@@ -1085,7 +1085,7 @@
             "ji": "09:00",
             "jf": "10:00",
             "janela": "09:00-10:00",
-            "pedido": "—",
+            "pedido": "52630",
             "importado": false
           },
           {
@@ -1095,7 +1095,7 @@
             "ji": "11:00",
             "jf": "12:00",
             "janela": "11:00-12:00",
-            "pedido": "—",
+            "pedido": "52630",
             "importado": false
           },
           {
@@ -1105,7 +1105,7 @@
             "ji": "13:30",
             "jf": "14:30",
             "janela": "13:30-14:30",
-            "pedido": "—",
+            "pedido": "52630",
             "importado": false
           },
           {
@@ -1115,7 +1115,7 @@
             "ji": "15:00",
             "jf": "16:00",
             "janela": "15:00-16:00",
-            "pedido": "—",
+            "pedido": "52630",
             "importado": false
           }
         ]
