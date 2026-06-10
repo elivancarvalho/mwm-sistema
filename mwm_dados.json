@@ -741,6 +741,53 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781051159924,
+        "tipo": "TRUCK",
+        "frota": "R3026",
+        "frotaAntiga": "3254",
+        "placa": "TBB6A14",
+        "carreta": "—",
+        "motorista": "TULIO DOS SANTOS CORDEIRO",
+        "rota": "ROTA 09",
+        "saida": "07:00",
+        "origem": "LEPE",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781051159924-0",
+            "fornecedor": "LEPE",
+            "cidade": "SÃO PAULO",
+            "ji": "11:00",
+            "jf": "12:00",
+            "janela": "11:00-12:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781051159924-1",
+            "fornecedor": "CIP",
+            "cidade": "SÃO PAULO",
+            "ji": "13:00",
+            "jf": "14:00",
+            "janela": "13:00-14:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781051159924-2",
+            "fornecedor": "DELGA",
+            "cidade": "SÃO PAULO",
+            "ji": "15:00",
+            "jf": "16:00",
+            "janela": "15:00-16:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
