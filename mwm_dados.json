@@ -911,6 +911,53 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781051652315,
+        "tipo": "TRUCK",
+        "frota": "JOI2796",
+        "frotaAntiga": "Agregado Extra",
+        "placa": "Caminhão Terceiro",
+        "carreta": "—",
+        "motorista": "ANDERSON MACENA MELENDRE",
+        "rota": "ROTA 02",
+        "saida": "06:00",
+        "origem": "SABO",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781051652315-0",
+            "fornecedor": "SABO",
+            "cidade": "SÃO PAULO",
+            "ji": "11:00",
+            "jf": "12:00",
+            "janela": "11:00-12:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781051652315-1",
+            "fornecedor": "MAHLE FILTROS",
+            "cidade": "SÃO PAULO",
+            "ji": "14:30",
+            "jf": "17:00",
+            "janela": "14:30-17:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781051652315-2",
+            "fornecedor": "MAHLE PISTOES",
+            "cidade": "SÃO PAULO",
+            "ji": "15:00",
+            "jf": "18:00",
+            "janela": "15:00-18:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
