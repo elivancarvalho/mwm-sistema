@@ -958,6 +958,63 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781051743090,
+        "tipo": "TRUCK",
+        "frota": "R3019",
+        "frotaAntiga": "3245",
+        "placa": "TBA3C89",
+        "carreta": "—",
+        "motorista": "GILMAR PEREIRA SILVA",
+        "rota": "ROTA 04",
+        "saida": "05:00",
+        "origem": "MANGOTEX",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781051743090-0",
+            "fornecedor": "MANGOTEX",
+            "cidade": "SÃO PAULO",
+            "ji": "08:00",
+            "jf": "09:00",
+            "janela": "08:00-09:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781051743090-1",
+            "fornecedor": "METALAC",
+            "cidade": "SÃO PAULO",
+            "ji": "10:00",
+            "jf": "11:00",
+            "janela": "10:00-11:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781051743090-2",
+            "fornecedor": "TBA - EVAMO",
+            "cidade": "SÃO PAULO",
+            "ji": "12:00",
+            "jf": "13:00",
+            "janela": "12:00-13:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781051743090-3",
+            "fornecedor": "NEO PARTS",
+            "cidade": "SÃO PAULO",
+            "ji": "14:30",
+            "jf": "15:30",
+            "janela": "14:30-15:30",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
