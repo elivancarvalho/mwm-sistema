@@ -1062,6 +1062,63 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781052028634,
+        "tipo": "TRUCK",
+        "frota": "TBB6A14",
+        "frotaAntiga": "Agregado Extra",
+        "placa": "Caminhão Terceiro",
+        "carreta": "—",
+        "motorista": "TULIO DOS SANTOS CORDEIRO",
+        "rota": "ROTA 07",
+        "saida": "07:00",
+        "origem": "CARTEC",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781052028634-0",
+            "fornecedor": "CARTEC",
+            "cidade": "SÃO PAULO",
+            "ji": "09:00",
+            "jf": "10:00",
+            "janela": "09:00-10:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781052028634-1",
+            "fornecedor": "LOPSA",
+            "cidade": "SÃO PAULO",
+            "ji": "11:00",
+            "jf": "12:00",
+            "janela": "11:00-12:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781052028634-2",
+            "fornecedor": "MAHLE BRONZINAS",
+            "cidade": "SÃO PAULO",
+            "ji": "13:30",
+            "jf": "14:30",
+            "janela": "13:30-14:30",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781052028634-3",
+            "fornecedor": "IRBAS",
+            "cidade": "SÃO PAULO",
+            "ji": "15:00",
+            "jf": "16:00",
+            "janela": "15:00-16:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
