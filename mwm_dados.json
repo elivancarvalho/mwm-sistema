@@ -576,7 +576,7 @@
         "saida": "05:00",
         "origem": "METAL 2",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -623,7 +623,7 @@
         "saida": "05:00",
         "origem": "MODINE",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -650,7 +650,7 @@
         "saida": "05:00",
         "origem": "PROGERAL",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -697,7 +697,7 @@
         "saida": "07:30",
         "origem": "PRODUFLEX",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -754,7 +754,7 @@
         "saida": "07:00",
         "origem": "LEPE",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -801,7 +801,7 @@
         "saida": "07:00",
         "origem": "THYSSENKRUPP",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -838,7 +838,7 @@
         "saida": "11:00",
         "origem": "MANN HUMMEL",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
