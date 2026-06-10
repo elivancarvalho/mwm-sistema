@@ -908,7 +908,7 @@
             "jf": "16:00",
             "janela": "15:00-16:00",
             "pedido": "52626",
-            "importado": false
+            "importado": true
           }
         ]
       },
@@ -945,7 +945,7 @@
             "jf": "17:00",
             "janela": "14:30-17:00",
             "pedido": "52627",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781051652315-2",
@@ -955,7 +955,7 @@
             "jf": "18:00",
             "janela": "15:00-18:00",
             "pedido": "52627",
-            "importado": false
+            "importado": true
           }
         ]
       },
@@ -1002,7 +1002,7 @@
             "jf": "13:00",
             "janela": "12:00-13:00",
             "pedido": "52628",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781051743090-3",
@@ -1012,7 +1012,7 @@
             "jf": "15:30",
             "janela": "14:30-15:30",
             "pedido": "52628",
-            "importado": false
+            "importado": true
           }
         ]
       },
@@ -1049,7 +1049,7 @@
             "jf": "14:00",
             "janela": "13:00-14:00",
             "pedido": "52629",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781051910730-2",
@@ -1059,7 +1059,7 @@
             "jf": "15:30",
             "janela": "14:30-15:30",
             "pedido": "52629",
-            "importado": false
+            "importado": true
           }
         ]
       },
@@ -1106,7 +1106,7 @@
             "jf": "14:30",
             "janela": "13:30-14:30",
             "pedido": "52630",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781052028634-3",
@@ -1116,7 +1116,7 @@
             "jf": "16:00",
             "janela": "15:00-16:00",
             "pedido": "52630",
-            "importado": false
+            "importado": true
           }
         ]
       },
@@ -1153,7 +1153,7 @@
             "jf": "14:00",
             "janela": "13:00-14:00",
             "pedido": "52631",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781052164073-2",
@@ -1200,7 +1200,7 @@
             "jf": "15:00",
             "janela": "14:00-15:00",
             "pedido": "52632",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781052330497-2",
@@ -1210,7 +1210,7 @@
             "jf": "16:30",
             "janela": "15:30-16:30",
             "pedido": "52632",
-            "importado": false
+            "importado": true
           }
         ]
       },
@@ -1274,7 +1274,7 @@
             "jf": "14:00",
             "janela": "13:00-14:00",
             "pedido": "52635",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781052885639-1",
@@ -1284,7 +1284,7 @@
             "jf": "16:00",
             "janela": "15:00-16:00",
             "pedido": "52635",
-            "importado": false
+            "importado": true
           }
         ]
       },
@@ -1311,7 +1311,7 @@
             "jf": "15:30",
             "janela": "13:30-15:30",
             "pedido": "52636",
-            "importado": false
+            "importado": true
           }
         ]
       },
@@ -1338,7 +1338,7 @@
             "jf": "11:30",
             "janela": "10:00-11:30",
             "pedido": "52767",
-            "importado": false
+            "importado": true
           }
         ]
       },
