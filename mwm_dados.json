@@ -1143,7 +1143,7 @@
             "jf": "12:00",
             "janela": "11:00-12:00",
             "pedido": "52631",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781052164073-1",
