@@ -587,7 +587,7 @@
             "jf": "11:00",
             "janela": "10:00-11:00",
             "pedido": "52615",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781047832225-1",
@@ -597,7 +597,7 @@
             "jf": "17:00",
             "janela": "14:40-17:00",
             "pedido": "52615",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781047832225-2",
@@ -607,7 +607,7 @@
             "jf": "17:00",
             "janela": "15:00-17:00",
             "pedido": "52615",
-            "importado": false
+            "importado": true
           }
         ]
       },
@@ -634,7 +634,7 @@
             "jf": "09:00",
             "janela": "08:00-09:00",
             "pedido": "52616",
-            "importado": false
+            "importado": true
           }
         ]
       },
@@ -661,7 +661,7 @@
             "jf": "10:00",
             "janela": "09:00-10:00",
             "pedido": "52617",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781050854541-1",
@@ -671,7 +671,7 @@
             "jf": "12:30",
             "janela": "11:30-12:30",
             "pedido": "52617",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781050854541-2",
@@ -681,7 +681,7 @@
             "jf": "14:30",
             "janela": "13:30-14:30",
             "pedido": "52617",
-            "importado": false
+            "importado": true
           }
         ]
       },
@@ -708,7 +708,7 @@
             "jf": "10:00",
             "janela": "09:00-10:00",
             "pedido": "52618",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781051062100-1",
@@ -718,7 +718,7 @@
             "jf": "11:00",
             "janela": "10:00-11:00",
             "pedido": "52618",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781051062100-2",
@@ -728,7 +728,7 @@
             "jf": "13:00",
             "janela": "12:00-13:00",
             "pedido": "52618",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781051062100-3",
@@ -738,7 +738,7 @@
             "jf": "14:30",
             "janela": "13:30-14:30",
             "pedido": "52618",
-            "importado": false
+            "importado": true
           }
         ]
       },
@@ -765,7 +765,7 @@
             "jf": "12:00",
             "janela": "11:00-12:00",
             "pedido": "52697",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781051159924-1",
@@ -775,7 +775,7 @@
             "jf": "14:00",
             "janela": "13:00-14:00",
             "pedido": "52697",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781051159924-2",
@@ -785,7 +785,7 @@
             "jf": "16:00",
             "janela": "15:00-16:00",
             "pedido": "52697",
-            "importado": false
+            "importado": true
           }
         ]
       },
@@ -812,7 +812,7 @@
             "jf": "09:30",
             "janela": "08:00-09:30",
             "pedido": "52619",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781051272556-1",
@@ -822,7 +822,7 @@
             "jf": "18:00",
             "janela": "12:30-18:00",
             "pedido": "52620",
-            "importado": false
+            "importado": true
           }
         ]
       },
@@ -849,7 +849,7 @@
             "jf": "15:30",
             "janela": "14:30-15:30",
             "pedido": "52621",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781051428355-1",
@@ -859,7 +859,7 @@
             "jf": "21:00",
             "janela": "19:00-21:00",
             "pedido": "52621",
-            "importado": false
+            "importado": true
           }
         ]
       }
