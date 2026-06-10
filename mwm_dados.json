@@ -1250,6 +1250,43 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781052885639,
+        "tipo": "TRUCK",
+        "frota": "R3023",
+        "frotaAntiga": "3251",
+        "placa": "TBB6A15",
+        "carreta": "—",
+        "motorista": "IVAN LEONILDO",
+        "rota": "ROTA 14",
+        "saida": "10:00",
+        "origem": "GARRETT",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781052885639-0",
+            "fornecedor": "GARRETT",
+            "cidade": "SÃO PAULO",
+            "ji": "13:00",
+            "jf": "14:00",
+            "janela": "13:00-14:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781052885639-1",
+            "fornecedor": "DELUMA",
+            "cidade": "SÃO PAULO",
+            "ji": "15:00",
+            "jf": "16:00",
+            "janela": "15:00-16:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
