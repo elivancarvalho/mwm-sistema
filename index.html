@@ -349,9 +349,12 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
     <div class="config-container">
       <div class="fg">
         <div><label class="fg-label">GitHub Token (PAT)</label><input type="password" id="cfg-token"></div>
-        <div><label class="fg-label">Repositório</label><input type="text" id="cfg-repo" value="elivancarvalho/mwm-sistema"></div>
+        <div style="margin-top:8px;"><label class="fg-label">Repositório</label><input type="text" id="cfg-repo" value="elivancarvalho/mwm-sistema"></div>
         <div style="margin-top:8px;"><label class="fg-label">Branch</label><input type="text" id="cfg-branch" value="main"></div>
-        <div style="margin-top:8px;"><button class="btn btn-primary" onclick="salvarConfiguracoesGitHub()">Salvar Configurações</button></div>
+        <div style="margin-top:12px; display:flex; gap:10px;">
+          <button class="btn btn-primary" onclick="salvarConfiguracoesGitHub()">Salvar Configurações</button>
+          <button class="btn btn-ghost" style="color:var(--amber); border-color:var(--amber);" onclick="repararMojibakeBancoCompleto()">🔧 Reparar Acentos Corrompidos</button>
+        </div>
       </div>
     </div>
   </div>
@@ -359,7 +362,6 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 </main>
 </div>
 
-<!-- MODAL: CADASTRO DE VIAGEM -->
 <div class="overlay" id="modal-cadastro">
 <div class="modal">
   <div class="mhdr">
@@ -445,7 +447,6 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 </div>
 </div>
 
-<!-- MODAL: CLONAGEM -->
 <div class="overlay" id="modal-clonagem">
 <div class="modal" style="width:450px;">
   <div class="mhdr">
@@ -463,7 +464,6 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 </div>
 </div>
 
-<!-- MODAL: CALENDÁRIO -->
 <div class="overlay" id="modal-data">
 <div class="modal" style="width:320px;">
   <div class="mhdr">
@@ -503,14 +503,13 @@ let MAPA_REVERSO_PLACAS = {};
 let ROTAS_MACRO_DATABASE = {};
 let MOTORISTAS_CONTATOS = {};
 
-// Estado da página de Alertas (filtro/busca/ordenação)
 let alertaSearch = '';
 let alertaStatusFilter = '';
 let alertaSort = { col:'ji', dir:'asc' };
 let _alertaItensAtuais = [];
 
 // ──────────────────────────────────────────────────────────────────────
-//  BLOCO 1: AUXILIARES DE INTERFACE
+//  BLOCO 1: AUXILIARES DE INTERFACE E DECODE UTILS
 // ──────────────────────────────────────────────────────────────────────
 function obterGHCredenciais() {
   return {
@@ -566,7 +565,7 @@ function avaSt(v) {
 function janelaStatus(p) {
   if(p.importado) return { cls:'jimported', txt:'✓ Importado', urgente:false };
   const n=now(), fim=h2m(p.jf), restam=fim-n;
-  if(n>fim)      return { cls:'jdanger', txt:'ATRASADO', urgente:false };
+  if(n>fim)       return { cls:'jdanger', txt:'ATRASADO', urgente:false };
   if(restam<=30) return { cls:'jwarn',   txt:`Fecha em ${restam}m!`, urgente:true };
   return { cls:'jok', txt:'No prazo', urgente:false };
 }
@@ -581,11 +580,28 @@ function obterNomeDiaSemana(dataTexto) {
   } catch(e) { return 'Segunda-feira'; }
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  BLOCO 2: COMUNICAÇÃO GITHUB API
-// ──────────────────────────────────────────────────────────────────────
+// ALGORITMO CIRÚRGICO DE REVERSÃO COMPLETA DE MOJIBAKE (FRENTE 2)
+function reverterCorrupcaoTexto(str) {
+  if (!str || typeof str !== 'string') return str;
+  try {
+    return decodeURIComponent(escape(str));
+  } catch (e) {
+    let result = str;
+    const mapaReparo = {
+      'Ã¢â‚¬â€”': '—', 'â€”': '—', 'Ã£': 'ã', 'Ã ': 'à', 'Ã¡': 'á', 
+      'Ã§': 'ç', 'Ãª': 'ê', 'Ã©': 'é', 'Ã­': 'í', 'Ã³': 'ó', 
+      'Ãº': 'ú', 'Ã”': 'Ô', 'Ã•': 'Õ', 'Ã„': 'Ä'
+    };
+    Object.keys(mapaReparo).forEach(key => {
+      result = result.split(key).join(mapaReparo[key]);
+    });
+    return result;
+  }
+}
 
-// fetch com timeout — evita travar por até 2min quando a rede bloqueia/cai
+// ──────────────────────────────────────────────────────────────────────
+//  BLOCO 2: COMUNICAÇÃO GITHUB API (FRENTE 1: CORREÇÃO DEFINITIVA DECODE)
+// ──────────────────────────────────────────────────────────────────────
 async function fetchComTimeout(url, options = {}, timeoutMs = 8000) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -605,7 +621,9 @@ async function carregarDicionariosRemotosGitHub() {
     const respF = await fetchComTimeout(urlF, { headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' } });
     if(respF.ok) {
       const dataF = await respF.json();
-      CONJUNTURA_VEICULOS = JSON.parse(atob(dataF.content.split('\n').join('')));
+      // FIX DO DECODE DO CLAUDE: Reversão UTF-8 nativa aplicada
+      const contentF = decodeURIComponent(escape(atob(dataF.content.split('\n').join(''))));
+      CONJUNTURA_VEICULOS = JSON.parse(contentF);
       MAPA_REVERSO_PLACAS = {};
       Object.keys(CONJUNTURA_VEICULOS).forEach(key => {
         if(CONJUNTURA_VEICULOS[key].placa)
@@ -619,7 +637,9 @@ async function carregarDicionariosRemotosGitHub() {
     const respR = await fetchComTimeout(urlR, { headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' } });
     if(respR.ok) {
       const dataR = await respR.json();
-      ROTAS_MACRO_DATABASE = JSON.parse(atob(dataR.content.split('\n').join('')));
+      // FIX DO DECODE DO CLAUDE: Reversão UTF-8 nativa aplicada
+      const contentR = decodeURIComponent(escape(atob(dataR.content.split('\n').join(''))));
+      ROTAS_MACRO_DATABASE = JSON.parse(contentR);
     }
   } catch(e) { console.error('Erro ao carregar rotas:', e); }
 
@@ -628,10 +648,12 @@ async function carregarDicionariosRemotosGitHub() {
     const respD = await fetchComTimeout(urlD, { headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' } });
     if(respD.ok) {
       const dataD = await respD.json();
-      const raw = JSON.parse(atob(dataD.content.split('\n').join('')));
+      // FIX DO DECODE DO CLAUDE: Reversão UTF-8 nativa aplicada
+      const contentD = decodeURIComponent(escape(atob(dataD.content.split('\n').join(''))));
+      const raw = JSON.parse(contentD);
       MOTORISTAS_CONTATOS = {};
       Object.keys(raw).forEach(nome => {
-        const numero = String(raw[nome]).replace(/\D/g, ''); // mantém só dígitos
+        const numero = String(raw[nome]).replace(/\D/g, '');
         MOTORISTAS_CONTATOS[nome.trim().toUpperCase()] = numero;
       });
     }
@@ -652,7 +674,9 @@ async function carregarTodos() {
     if(resp.status === 200) {
       const meta = await resp.json();
       _fileSha = meta.sha;
-      const d = JSON.parse(atob(meta.content.split('\n').join('')));
+      // FIX DO DECODE DO CLAUDE: Sincronismo perfeito na leitura sem desdobramento de acentos
+      const content = decodeURIComponent(escape(atob(meta.content.split('\n').join(''))));
+      const d = JSON.parse(content);
       viagensDB = d.viagens || {};
       availableDates = d.dates || Object.keys(viagensDB).sort();
       salvarCache();
@@ -686,6 +710,50 @@ async function gravarTudo() {
     if(resp.ok) { const r=await resp.json(); _fileSha=r.content.sha; setSyncOk(); notify('✓ Alterações guardadas na Nuvem'); }
     else { setSyncErr(); }
   } catch(e) { setSyncErr(); notify('⚠ Não foi possível salvar na Nuvem (sem conexão).', 'var(--orange)'); }
+}
+
+// ──────────────────────────────────────────────────────────────────────
+//  ROTINA ATIVA DE EXPURGO E REPARO DE ACENTOS CORROMPIDOS (FRENTE 2)
+// ──────────────────────────────────────────────────────────────────────
+function repararMojibakeBancoCompleto() {
+  if(!confirm("Deseja executar a limpeza completa de UTF-8? O sistema corrigirá os textos corrompidos (como 'â€”' ou 'Ã£') acumulados no histórico.")) return;
+  
+  setLoadingState(true, "Purgando Mojibake do banco de dados...");
+  try {
+    Object.keys(viagensDB).forEach(dateKey => {
+      viagensDB[dateKey] = viagensDB[dateKey].map(v => {
+        v.frota = reverterCorrupcaoTexto(v.frota);
+        v.frotaAntiga = reverterCorrupcaoTexto(v.frotaAntiga);
+        v.placa = reverterCorrupcaoTexto(v.placa);
+        v.carreta = reverterCorrupcaoTexto(v.carreta);
+        v.motorista = reverterCorrupcaoTexto(v.motorista);
+        v.rota = reverterCorrupcaoTexto(v.rota);
+        v.origem = reverterCorrupcaoTexto(v.origem);
+        v.destino = reverterCorrupcaoTexto(v.destino);
+        v.obs = reverterCorrupcaoTexto(v.obs);
+        
+        if(v.paradas && v.paradas.length) {
+          v.paradas = v.paradas.map(p => {
+            p.fornecedor = reverterCorrupcaoTexto(p.fornecedor);
+            p.cidade = reverterCorrupcaoTexto(p.cidade);
+            p.janela = reverterCorrupcaoTexto(p.janela);
+            p.pedido = reverterCorrupcaoTexto(p.pedido);
+            return p;
+          });
+        }
+        return v;
+      });
+    });
+    
+    notify("✓ Limpeza concluída! Gravando dados reparados na Nuvem...", "var(--green)");
+    agendarSalvamento();
+    setTimeout(() => { gravarTudo(); updateDashboard(); }, 1200);
+  } catch(err) {
+    console.error(err);
+    alert("Erro na execução do reparo. Abra o console.");
+  } finally {
+    setLoadingState(false);
+  }
 }
 
 // ──────────────────────────────────────────────────────────────────────
@@ -812,7 +880,7 @@ function updateBadges() {
 }
 
 // ──────────────────────────────────────────────────────────────────────
-//  BLOCO 4: PÁGINAS SECUNDÁRIAS
+//  BLOCO 4: PÁGINAS SECUNDÁRIAS (ALERTAS AVANÇADOS CLAUDE + WHATSAPP)
 // ──────────────────────────────────────────────────────────────────────
 function renderDisponibilidade() {
   const vs = viagensDB[currentDate] || [];
@@ -876,7 +944,6 @@ function renderAlertas() {
   const tbody = document.getElementById('alerta-tbody');
   if(!tbody) return;
 
-  // Monta lista plana: uma linha por parada pendente
   let items = [];
   vs.forEach(v => {
     (v.paradas||[]).forEach(p => {
@@ -897,7 +964,6 @@ function renderAlertas() {
     });
   });
 
-  // Filtro de busca (frota, rota, fornecedor, motorista)
   const s = alertaSearch.trim().toLowerCase();
   if(s) {
     items = items.filter(it =>
@@ -908,10 +974,8 @@ function renderAlertas() {
     );
   }
 
-  // Filtro por status
   if(alertaStatusFilter) items = items.filter(it => it.statusKey === alertaStatusFilter);
 
-  // Ordenação
   const { col, dir } = alertaSort;
   items.sort((a,b) => {
     let va, vb;
@@ -923,25 +987,19 @@ function renderAlertas() {
     return 0;
   });
 
-  // Atualiza indicadores visuais de ordenação no cabeçalho
   document.querySelectorAll('#page-alertas .sort-ind').forEach(el => {
     el.textContent = (el.dataset.col === col) ? (dir === 'asc' ? '▲' : '▼') : '';
   });
 
-  // Contador de resultados
   const rc = document.getElementById('alerta-rcount');
   if(rc) rc.textContent = `${items.length} alerta(s)`;
 
-  // Renderização
   if(!items.length) {
-    const msg = (alertaSearch || alertaStatusFilter)
-      ? 'Nenhum alerta encontrado para esse filtro.'
-      : '✓ Nenhuma coleta pendente para hoje.';
+    const msg = (alertaSearch || alertaStatusFilter) ? 'Nenhum alerta encontrado.' : '✓ Nenhuma coleta pendente para hoje.';
     tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:20px;">${msg}</td></tr>`;
     return;
   }
 
-  // Guarda referência para o botão de WhatsApp localizar os dados depois
   _alertaItensAtuais = items;
 
   tbody.innerHTML = items.map((it,i) => {
@@ -955,15 +1013,12 @@ function renderAlertas() {
     <td><span class="${it.js.cls}" style="font-weight:600;font-family:var(--mono)">${it.js.txt}</span></td>
     <td style="white-space:nowrap;">
       <button class="btn btn-ghost btn-sm" onclick="marcarParadaImportada(${it.vid},'${it.pid}')">✓ Baixar AVACORP</button>
-      ${mostrarWpp ? `<button class="btn btn-sm btn-whatsapp" onclick="enviarWhatsappMotorista(${i})" title="Enviar mensagem para o motorista">💬 WhatsApp</button>` : ''}
+      ${mostrarWpp ? `<button class="btn btn-sm btn-whatsapp" onclick="enviarWhatsappMotorista(${i})">💬 WhatsApp</button>` : ''}
     </td>
   </tr>`;
   }).join('');
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  WHATSAPP — MENSAGEM AUTOMÁTICA PARA O MOTORISTA
-// ──────────────────────────────────────────────────────────────────────
 function saudacaoAtual() {
   const h = new Date().getHours();
   if(h >= 5 && h < 12)  return 'Bom dia';
@@ -983,69 +1038,38 @@ function buscarWhatsappMotorista(nomeCompleto) {
 }
 
 function enviarWhatsappMotorista(idx) {
-  const it = _alertaItensAtuais[idx];
-  if(!it) return;
-
+  const it = _alertaItensAtuais[idx]; if(!it) return;
   const numero = buscarWhatsappMotorista(it.motorista);
   if(!numero) {
-    alert(`⚠ Nenhum número de WhatsApp cadastrado para "${it.motorista}".\n\nAdicione esse motorista no arquivo motoristas.json do repositório (formato: "NOME COMPLETO": "5511999999999").`);
+    alert(`⚠ Sem WhatsApp cadastrado para "${it.motorista}".\n\nAdicione-o no motoristas.json do GitHub.`);
     return;
   }
-
-  const saud = saudacaoAtual();
-  const nome = formatarPrimeiroNome(it.motorista);
-
+  const saud = saudacaoAtual(); const nome = formatarPrimeiroNome(it.motorista);
   const msg = `${saud}!\n\nSr(a). ${nome}, tudo bem?\n\nA janela de coleta na *${it.fornecedor}* (${it.janela}) está chegando no limite.\n\nPoderia nos informar a situação:\n- Ainda não iniciou o carregamento?\n- Está carregando?\n- Já finalizou?\n\nPor favor responda para alinharmos com a equipe de transporte da MWM. Obrigado!`;
-
-  const url = `https://wa.me/${numero}?text=${encodeURIComponent(msg)}`;
-  window.open(url, '_blank');
+  window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
 function renderPedidos() {
-  const vs = viagensDB[currentDate] || [];
-  const container = document.getElementById('pedidos-list');
+  const vs = viagensDB[currentDate] || []; const container = document.getElementById('pedidos-list');
   if(!vs.length) { container.innerHTML='<div style="color:var(--text3);padding:10px;text-align:center;">Nenhuma rota cadastrada.</div>'; return; }
   let html = '';
   vs.forEach(v => {
     (v.paradas||[]).forEach(p => {
       const stAva = p.importado ? '<span class="ava-ok">IMPORTADO</span>' : '<span class="ava-pend">PENDENTE</span>';
-      html += `<div style="background:var(--bg2);padding:10px;border-radius:6px;margin-bottom:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-        <div>
-          <strong style="color:var(--accent)">Pedido: ${p.pedido}</strong> — Fornecedor: ${p.fornecedor}<br>
-          <small style="color:var(--text3)">Rota: ${v.rota} | Veículo: ${v.frota} | Motorista: ${v.motorista}</small>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          ${stAva}
-          <button class="btn btn-ghost btn-sm" onclick="digitarPedidoPrompt(${v.id},'${p.id}','${p.pedido}')">✏️ Editar</button>
-          <button class="btn btn-primary btn-sm" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'Estornar':'✓ Baixar'}</button>
-        </div>
-      </div>`;
+      html += `<div style="background:var(--bg2);padding:10px;border-radius:6px;margin-bottom:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;"><div><strong style="color:var(--accent)">Pedido: ${p.pedido}</strong> — Fornecedor: ${p.fornecedor}<br><small style="color:var(--text3)">Rota: ${v.rota} | Veículo: ${v.frota} | Motorista: ${v.motorista}</small></div><div style="display:flex;gap:8px;align-items:center;">${stAva}<button class="btn btn-ghost btn-sm" onclick="digitarPedidoPrompt(${v.id},'${p.id}','${p.pedido}')">✏️ Editar</button><button class="btn btn-primary btn-sm" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'Estornar':'✓ Baixar'}</button></div></div>`;
     });
   });
   container.innerHTML = html;
 }
 
 function renderPend() {
-  const vs = viagensDB[currentDate] || [];
-  const container = document.getElementById('pend-apto');
+  const vs = viagensDB[currentDate] || []; const container = document.getElementById('pend-apto');
   const pendentes = vs.filter(v => v.cte === 'PENDENTE');
   if(!pendentes.length) { container.innerHTML='<div style="color:var(--text3);padding:10px;text-align:center;">✓ Todos os CTEs do dia já foram emitidos.</div>'; return; }
   let html = '';
   pendentes.forEach(v => {
-    const stFat = avaSt(v);
-    const liberado = stFat === 'IMPORTADO' || stFat === 'N/A';
-    html += `<div style="background:var(--bg2);padding:12px;border-radius:6px;border:1px solid var(--border);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;">
-      <div>
-        <strong>${v.frota} — [${v.rota}]</strong> — Motorista: ${v.motorista}<br>
-        <small style="color:var(--text3)">${v.origem} → ${v.destino} | AVACORP: ${stFat}</small>
-      </div>
-      <div>
-        ${liberado
-          ? `<button class="btn btn-success btn-sm" onclick="updateCTE(${v.id},'IMPRESSO')">⚙ Emitir CTE</button>`
-          : `<span style="color:var(--red);font-weight:600;font-size:11px;padding:4px 8px;background:var(--red-bg);border-radius:4px;">🔒 Bloqueado (Falta AVACORP)</span>`
-        }
-      </div>
-    </div>`;
+    const stFat = avaSt(v); const liberado = stFat === 'IMPORTADO' || stFat === 'N/A';
+    html += `<div style="background:var(--bg2);padding:12px;border-radius:6px;border:1px solid var(--border);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;"><div><strong>${v.frota} — [${v.rota}]</strong> — Motorista: ${v.motorista}<br><small style="color:var(--text3)">${v.origem} → ${v.destino} | AVACORP: ${stFat}</small></div><div>${liberado ? `<button class="btn btn-success btn-sm" onclick="updateCTE(${v.id},'IMPRESSO')">⚙ Emitir CTE</button>` : `<span style="color:var(--red);font-weight:600;font-size:11px;padding:4px 8px;background:var(--red-bg);border-radius:4px;">🔒 Bloqueado (Falta AVACORP)</span>`}</div></div>`;
   });
   container.innerHTML = html;
 }
@@ -1053,36 +1077,10 @@ function renderPend() {
 // ──────────────────────────────────────────────────────────────────────
 //  BLOCO 5: AÇÕES OPERACIONAIS
 // ──────────────────────────────────────────────────────────────────────
-function marcarParadaImportada(vid, pid) {
-  const vs = viagensDB[currentDate] || [];
-  const v  = vs.find(x => x.id === vid);
-  if(v) {
-    const p = v.paradas.find(x => x.id === pid);
-    if(p) {
-      p.importado = !p.importado;
-      notify(p.importado ? '✓ Baixa realizada!' : 'Baixa desfeita.', p.importado ? 'var(--green)' : 'var(--amber)');
-      agendarSalvamento();
-      updateDashboard();
-    }
-  }
-}
-
-function digitarPedidoPrompt(vid, pid, valAtual) {
-  const num = prompt('Digite o número do Pedido/Solicitação AVACORP:', valAtual === '—' ? '' : valAtual);
-  if(num === null) return;
-  const v = (viagensDB[currentDate]||[]).find(x => x.id === vid);
-  if(v) {
-    const p = v.paradas.find(x => x.id === pid);
-    if(p) { p.pedido = num.trim() || '—'; agendarSalvamento(); updateDashboard(); }
-  }
-}
-
 function removerViagemMesa(vid) {
   if(!confirm('Deseja excluir esta rota permanentemente?')) return;
   viagensDB[currentDate] = (viagensDB[currentDate]||[]).filter(v => v.id !== vid);
-  notify('Viagem excluída.', 'var(--red)');
-  agendarSalvamento();
-  updateDashboard();
+  notify('Viagem excluída.', 'var(--red)'); agendarSalvamento(); updateDashboard();
 }
 
 function updateCTE(id, val) {
@@ -1094,27 +1092,22 @@ function updateCTE(id, val) {
 //  BLOCO 6: FORMULÁRIO DE CADASTRO DE VIAGEM
 // ──────────────────────────────────────────────────────────────────────
 function recalculasRotasDisponiveisNoDropdown() {
-  const dia = document.getElementById('form-filtro-dia-semana').value;
-  const sel = document.getElementById('form-macro-rota');
+  const dia = document.getElementById('form-filtro-dia-semana').value; const sel = document.getElementById('form-macro-rota');
   sel.innerHTML = '<option value="">-- Escolha uma rota padrão ou digite manual --</option>';
   const rotasDia = ROTAS_MACRO_DATABASE[dia] || {};
   Object.keys(rotasDia).forEach(rName => { sel.innerHTML += `<option value="${rName}">${rName}</option>`; });
 }
 
 function verificarEAutoPreencherCamposRota() {
-  const dia  = document.getElementById('form-filtro-dia-semana').value;
-  const nome = document.getElementById('form-macro-rota').value;
-  if(!nome) return;
-  const dados = (ROTAS_MACRO_DATABASE[dia]||{})[nome];
-  if(!dados) return;
+  const dia  = document.getElementById('form-filtro-dia-semana').value; const nome = document.getElementById('form-macro-rota').value;
+  if(!nome) return; const dados = (ROTAS_MACRO_DATABASE[dia]||{})[nome]; if(!dados) return;
 
   document.getElementById('form-tipo').value  = dados.tipo;
   document.getElementById('form-rota').value  = nome;
   document.getElementById('form-saida').value = dados.saida;
   toggleFormCarreta();
 
-  const container = document.getElementById('form-paradas-container');
-  container.innerHTML = '';
+  const container = document.getElementById('form-paradas-container'); container.innerHTML = '';
   dados.paradas.forEach(p => adicionarCamposParadaForm(p.fornecedor, p.ji, p.jf));
   notify('✓ Estrutura padrão aplicada!');
 }
@@ -1131,16 +1124,8 @@ function toggleFormCarreta() {
 }
 
 function adicionarCamposParadaForm(forn='', ji='08:00', jf='16:00') {
-  const container = document.getElementById('form-paradas-container');
-  const div = document.createElement('div');
-  div.className = 'parada-box';
-  div.innerHTML =
-    `<button class="btn-del-parada" onclick="this.parentElement.remove()">×</button>` +
-    `<div class="fg" style="grid-template-columns:2fr 1fr 1fr">` +
-      `<div><label class="fg-label">Local de Coleta (Fornecedor)</label><input type="text" class="f-p-forn" value="${forn}" placeholder="Ex: SEG AUTOMOTIVE" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:12px;"></div>` +
-      `<div><label class="fg-label">Início Janela</label><input type="time" class="f-p-ji" value="${ji}" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:12px;"></div>` +
-      `<div><label class="fg-label">Fim Janela</label><input type="time" class="f-p-jf" value="${jf}" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:12px;"></div>` +
-    `</div>`;
+  const container = document.getElementById('form-paradas-container'); const div = document.createElement('div'); div.className = 'parada-box';
+  div.innerHTML = `<button class="btn-del-parada" onclick="this.parentElement.remove()">×</button><div class="fg" style="grid-template-columns:2fr 1fr 1fr"><div><label class="fg-label">Local de Coleta (Fornecedor)</label><input type="text" class="f-p-forn" value="${forn}" placeholder="Ex: SEG AUTOMOTIVE" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:12px;"></div><div><label class="fg-label">Início Janela</label><input type="time" class="f-p-ji" value="${ji}" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:12px;"></div><div><label class="fg-label">Fim Janela</label><input type="time" class="f-p-jf" value="${jf}" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:12px;"></div></div>`;
   container.appendChild(div);
 }
 
@@ -1151,18 +1136,14 @@ function abrirModalCadastroViagem() {
   document.getElementById('form-filtro-dia-semana').value = diaSemana;
   recalculasRotasDisponiveisNoDropdown();
 
-  const selFrota   = document.getElementById('form-frota');
-  const selCarreta = document.getElementById('form-carreta');
-
+  const selFrota   = document.getElementById('form-frota'); const selCarreta = document.getElementById('form-carreta');
   selFrota.innerHTML   = '<option value="">-- Escolha o Veículo --</option><option value="MANUAL_AGREGADO" style="color:var(--orange);font-weight:600;">--- DIGITAR MANUAL (AGREGADO) ---</option>';
   selCarreta.innerHTML = '<option value="">-- Nenhuma Carreta --</option>';
 
   Object.keys(CONJUNTURA_VEICULOS).forEach(key => {
     const v = CONJUNTURA_VEICULOS[key];
-    if(v.tipo === 'TRUCK' || v.tipo === 'CONJUNTO')
-      selFrota.innerHTML += `<option value="${key}">${key} [${v.placa}] (${v.tipo})</option>`;
-    else
-      selCarreta.innerHTML += `<option value="${key}">${key} [${v.placa}]</option>`;
+    if(v.tipo === 'TRUCK' || v.tipo === 'CONJUNTO') selFrota.innerHTML += `<option value="${key}">${key} [${v.placa}] (${v.tipo})</option>`;
+    else selCarreta.innerHTML += `<option value="${key}">${key} [${v.placa}]</option>`;
   });
 
   document.getElementById('form-rota').value              = '';
@@ -1171,33 +1152,25 @@ function abrirModalCadastroViagem() {
   document.getElementById('form-frota-manual-block').style.display = 'none';
   document.getElementById('form-frota-manual-input').value = '';
   document.getElementById('form-paradas-container').innerHTML = '';
-  adicionarCamposParadaForm();
-  abrirModal('cadastro');
+  adicionarCamposParadaForm(); abrirModal('cadastro');
 }
 
 function salvarFormViagem() {
-  const tipo = document.getElementById('form-tipo').value;
-  let frota  = document.getElementById('form-frota').value;
-  const carreta   = document.getElementById('form-carreta').value;
-  const rota      = document.getElementById('form-rota').value.trim();
-  const motorista = document.getElementById('form-motorista').value.trim();
-  const saida     = document.getElementById('form-saida').value;
-  const cte       = document.getElementById('form-cte').value;
-  const obs       = document.getElementById('form-obs').value.trim();
+  const tipo = document.getElementById('form-tipo').value; let frota  = document.getElementById('form-frota').value;
+  const carreta   = document.getElementById('form-carreta').value; const rota      = document.getElementById('form-rota').value.trim();
+  const motorista = document.getElementById('form-motorista').value.trim(); const saida     = document.getElementById('form-saida').value;
+  const cte       = document.getElementById('form-cte').value; const obs       = document.getElementById('form-obs').value.trim();
 
   if(!frota || !rota) { alert('Frota e Rota são obrigatórios.'); return; }
-
   let placaFinal='', antigoFinal='—';
 
   if(frota === 'MANUAL_AGREGADO') {
     const texto = document.getElementById('form-frota-manual-input').value.trim();
     frota       = texto ? texto.toUpperCase() : 'AGREGADO EXT';
-    placaFinal  = 'Caminhão Terceiro';
-    antigoFinal = 'Agregado Extra';
+    placaFinal  = 'Caminhão Terceiro'; antigoFinal = 'Agregado Extra';
   } else {
     const db   = CONJUNTURA_VEICULOS[frota] || { placa:'MANUAL', antigo:'—' };
-    placaFinal  = db.placa;
-    antigoFinal = db.antigo;
+    placaFinal  = db.placa; antigoFinal = db.antigo;
   }
 
   let carretaInfo = '—';
@@ -1208,102 +1181,69 @@ function salvarFormViagem() {
     } else { carretaInfo = 'Faltando Carreta'; }
   }
 
-  const vid     = Date.now();
-  const paradas = [];
+  const vid     = Date.now(); const paradas = [];
   document.querySelectorAll('.parada-box').forEach((box, idx) => {
-    const forn = box.querySelector('.f-p-forn').value.trim();
-    const ji   = box.querySelector('.f-p-ji').value;
-    const jf   = box.querySelector('.f-p-jf').value;
+    const forn = box.querySelector('.f-p-forn').value.trim(); const ji   = box.querySelector('.f-p-ji').value; const jf   = box.querySelector('.f-p-jf').value;
     if(forn) paradas.push({ id:`${vid}-${idx}`, fornecedor:forn, cidade:'SÃO PAULO', ji, jf, janela:`${ji}-${jf}`, pedido:'—', importado:false });
   });
 
   const novaViagem = {
     id:vid, tipo, frota, frotaAntiga:antigoFinal, placa:placaFinal, carreta:carretaInfo,
-    motorista: motorista || 'MOTORISTA PADRÃO', rota, saida,
-    origem: paradas[0] ? paradas[0].fornecedor : 'CD SBC',
-    destino: 'MWM STO AMARO', cte, obs, paradas
+    motorista: motorista || 'MOTORISTA PADRÃO', rota, saida, origem: paradas[0] ? paradas[0].fornecedor : 'CD SBC', destino: 'MWM STO AMARO', cte, obs, paradas
   };
 
   if(!viagensDB[currentDate]) viagensDB[currentDate] = [];
   viagensDB[currentDate].push(novaViagem);
-  fecharModal('cadastro');
-  notify('✓ Viagem salva!');
-  agendarSalvamento();
-  updateDashboard();
+  fecharModal('cadastro'); notify('✓ Viagem salva!'); agendarSalvamento(); updateDashboard();
 }
 
 // ──────────────────────────────────────────────────────────────────────
 //  BLOCO 7: CLONAGEM E CALENDÁRIO
 // ──────────────────────────────────────────────────────────────────────
 function abrirModalClonagemSemanal() {
-  diaSelecionadoParaClonar = null;
-  document.getElementById('lbl-data-destino').textContent = currentDate;
-  document.getElementById('btn-confirmar-clone').disabled = true;
-
-  const container  = document.getElementById('clonagem-lista-dias');
-  container.innerHTML = '';
+  diaSelecionadoParaClonar = null; document.getElementById('lbl-data-destino').textContent = currentDate; document.getElementById('btn-confirmar-clone').disabled = true;
+  const container  = document.getElementById('clonagem-lista-dias'); container.innerHTML = '';
   const diasComDados = availableDates.filter(d => d !== currentDate && (viagensDB[d]||[]).length > 0);
 
   if(!diasComDados.length) {
     container.innerHTML = '<p style="font-size:11px;padding:10px;text-align:center;">Nenhum histórico encontrado para copiar.</p>';
   } else {
     [...diasComDados].reverse().forEach(d => {
-      const div = document.createElement('div');
-      div.className = 'clone-list-item';
-      div.id = `item-clone-${d.replace('/','_')}`;
+      const div = document.createElement('div'); div.className = 'clone-list-item'; div.id = `item-clone-${d.replace('/','_')}`;
       div.innerHTML = `<strong>Dia ${d} (${obterNomeDiaSemana(d)})</strong> <span style="font-size:11px;color:var(--text3)">${viagensDB[d].length} rotas</span>`;
-      div.onclick = () => selecionarDiaParaCopiar(d);
-      container.appendChild(div);
+      div.onclick = () => selecionarDiaParaCopiar(d); container.appendChild(div);
     });
   }
   abrirModal('clonagem');
 }
 
 function selecionarDiaParaCopiar(dataOrigem) {
-  diaSelecionadoParaClonar = dataOrigem;
-  document.querySelectorAll('.clone-list-item').forEach(el => el.classList.remove('selected'));
-  const sel = document.getElementById(`item-clone-${dataOrigem.replace('/','_')}`);
-  if(sel) sel.classList.add('selected');
+  diaSelecionadoParaClonar = dataOrigem; document.querySelectorAll('.clone-list-item').forEach(el => el.classList.remove('selected'));
+  const sel = document.getElementById(`item-clone-${dataOrigem.replace('/','_')}`); if(sel) sel.classList.add('selected');
   document.getElementById('btn-confirmar-clone').disabled = false;
 }
 
 function executarClonagemDiaCompleto() {
-  if(!diaSelecionadoParaClonar) return;
-  const baseOrigem = viagensDB[diaSelecionadoParaClonar] || [];
+  if(!diaSelecionadoParaClonar) return; const baseOrigem = viagensDB[diaSelecionadoParaClonar] || [];
   const clonesLimpos = baseOrigem.map((v, index) => {
     const novoVid = Date.now() + index + Math.floor(Math.random()*1000);
     return {
-      id:novoVid, tipo:v.tipo, frota:v.frota, frotaAntiga:v.frotaAntiga, placa:v.placa,
-      carreta:v.carreta, motorista:v.motorista, rota:v.rota, saida:v.saida,
-      origem:v.origem, destino:v.destino, cte:'PENDENTE', obs:v.obs||'',
-      paradas:(v.paradas||[]).map((p, i) => ({
-        id:`${novoVid}-${i}`, fornecedor:p.fornecedor, cidade:p.cidade||'SÃO PAULO',
-        ji:p.ji||'08:00', jf:p.jf||'18:00', janela:p.janela||'08:00-18:00',
-        pedido:'—', importado:false
-      }))
+      id:novoVid, tipo:v.tipo, frota:v.frota, frotaAntiga:v.frotaAntiga, placa:v.placa, carreta:v.carreta, motorista:v.motorista, rota:v.rota, saida:v.saida, origem:v.origem, destino:v.destino, cte:'PENDENTE', obs:v.obs||'',
+      paradas:(v.paradas||[]).map((p, i) => ({ id:`${novoVid}-${i}`, fornecedor:p.fornecedor, cidade:p.cidade||'SÃO PAULO', ji:p.ji||'08:00', jf:p.jf||'18:00', janela:p.janela||'08:00-18:00', pedido:'—', importado:false }))
     };
   });
-
-  if(!viagensDB[currentDate]) viagensDB[currentDate] = [];
-  viagensDB[currentDate] = [...viagensDB[currentDate], ...clonesLimpos];
-  fecharModal('clonagem');
-  notify(`✓ ${clonesLimpos.length} rotas copiadas!`);
-  agendarSalvamento();
-  updateDashboard();
+  if(!viagensDB[currentDate]) viagensDB[currentDate] = []; viagensDB[currentDate] = [...viagensDB[currentDate], ...clonesLimpos];
+  fecharModal('clonagem'); notify(`✓ ${clonesLimpos.length} rotas copiadas!`); agendarSalvamento(); updateDashboard();
 }
 
 function abrirModalCalendario() { abrirModal('data'); }
-
 function criarOuMudarDataAtiva() {
-  const d = document.getElementById('form-nova-data').value.trim();
-  if(!d.match(/^\d{2}\/\d{2}$/)) { alert('Use o formato DD/MM. Ex: 15/06'); return; }
-  currentDate = d;
-  fecharModal('data');
-  updateDashboard();
+  const d = document.getElementById('form-nova-data').value.trim(); if(!d.match(/^\d{2}\/\d{2}$/)) { alert('Use o formato DD/MM. Ex: 15/06'); return; }
+  currentDate = d; fecharModal('data'); updateDashboard();
 }
 
 // ──────────────────────────────────────────────────────────────────────
-//  BLOCO 8: NAVEGAÇÃO E PERSISTÊNCIA
+//  BLOCO 8: NAVEGAÇÃO E PERSISTÊNCIA NATIVA
 // ──────────────────────────────────────────────────────────────────────
 function navTo(id, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1313,49 +1253,26 @@ function navTo(id, el) {
   updateDashboard();
 }
 
-function salvarCache() {
-  localStorage.setItem('mwm_v5_cache', JSON.stringify({ viagens:viagensDB, dates:availableDates }));
-}
-
-function carregarCache() {
-  const s = localStorage.getItem('mwm_v5_cache');
-  if(s) { const d=JSON.parse(s); viagensDB=d.viagens||{}; availableDates=d.dates||[]; }
-}
-
-function salvarConfiguracoesGitHub() {
-  localStorage.setItem('mwm_gh_token',  document.getElementById('cfg-token').value.trim());
-  localStorage.setItem('mwm_gh_repo',   document.getElementById('cfg-repo').value.trim());
-  localStorage.setItem('mwm_gh_branch', document.getElementById('cfg-branch').value.trim());
-  notify('✓ Conexão configurada!', 'var(--green)');
-  carregarTodos();
-}
+function salvarCache() { localStorage.setItem('mwm_v5_cache', JSON.stringify({ viagens:viagensDB, dates:availableDates })); }
+function carregarCache() { const s = localStorage.getItem('mwm_v5_cache'); if(s) { const d=JSON.parse(s); viagensDB=d.viagens||{}; availableDates=d.dates||[]; } }
 
 // ──────────────────────────────────────────────────────────────────────
-//  BLOCO 9: INICIALIZAÇÃO (boot da aplicação)
+//  BLOCO 9: INICIALIZAÇÃO CORE (BOOT DA APLICAÇÃO)
 // ──────────────────────────────────────────────────────────────────────
-function updateClock() {
-  const el = document.getElementById('tclock');
-  if(el) el.textContent = new Date().toLocaleTimeString('pt-BR');
-}
+function updateClock() { const el = document.getElementById('tclock'); if(el) el.textContent = new Date().toLocaleTimeString('pt-BR'); }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Relógio em tempo real
-  updateClock();
-  setInterval(updateClock, 1000);
+  updateClock(); setInterval(updateClock, 1000);
 
-  // Preenche campos de config com valores salvos
   const cfgToken  = document.getElementById('cfg-token');
   const cfgRepo   = document.getElementById('cfg-repo');
   const cfgBranch = document.getElementById('cfg-branch');
-  if(cfgToken)  cfgToken.value  = localStorage.getItem('mwm_gh_token')   || '';
+  if(cfgToken)  cfgToken.value  = localStorage.getItem('mwm_gh_token')  || '';
   if(cfgRepo)   cfgRepo.value   = localStorage.getItem('mwm_gh_repo')    || 'elivancarvalho/mwm-sistema';
   if(cfgBranch) cfgBranch.value = localStorage.getItem('mwm_gh_branch')  || 'main';
 
-  // Carrega dados (nuvem ou cache)
-  carregarCache();
-  carregarTodos();
+  carregarCache(); carregarTodos();
 
-  // Re-checagem periódica de badges e alertas a cada 30 segundos
   setInterval(() => {
     updateBadges();
     if(document.getElementById('page-alertas').classList.contains('active')) renderAlertas();
