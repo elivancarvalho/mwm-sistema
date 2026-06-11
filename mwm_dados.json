@@ -1481,6 +1481,43 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781210830971,
+        "tipo": "TRUCK",
+        "frota": "DPC1D11",
+        "frotaAntiga": "Agregado Extra",
+        "placa": "Caminhão Terceiro",
+        "carreta": "—",
+        "motorista": "ROBERTO",
+        "rota": "ROTA 18",
+        "saida": "05:00",
+        "origem": "ARLINGTON THERMAL",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781210830971-0",
+            "fornecedor": "ARLINGTON THERMAL",
+            "city": "SÃO PAULO",
+            "ji": "08:00",
+            "jf": "09:00",
+            "janela": "08:00-09:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781210830971-1",
+            "fornecedor": "MAHLE PISTÕES",
+            "city": "SÃO PAULO",
+            "ji": "11:00",
+            "jf": "12:00",
+            "janela": "11:00-12:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
