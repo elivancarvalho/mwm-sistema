@@ -1545,6 +1545,33 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781211146669,
+        "tipo": "TRUCK",
+        "frota": "R3025",
+        "frotaAntiga": "3253",
+        "placa": "TBB3I31",
+        "carreta": "—",
+        "motorista": "MILTONILO DE MATOS",
+        "rota": "ROTA 05",
+        "saida": "10:00",
+        "origem": "CINPAL",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781211146669-0",
+            "fornecedor": "CINPAL",
+            "city": "SÃO PAULO",
+            "ji": "08:00",
+            "jf": "16:00",
+            "janela": "08:00-16:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
