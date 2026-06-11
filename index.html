@@ -165,6 +165,13 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 .disp-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;margin-bottom:4px;font-family:var(--mono);}
 
 .config-container{padding:20px 26px;}
+
+.sortable{cursor:pointer;user-select:none;transition:color .12s;}
+.sortable:hover{color:var(--text);}
+.sort-ind{display:inline-block;min-width:10px;font-size:9px;color:var(--accent);}
+
+.btn-whatsapp{background:#25D366;color:#fff;margin-left:5px;}
+.btn-whatsapp:hover{background:#1ebe5a;}
 </style>
 </head>
 <body>
@@ -298,7 +305,33 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 
   <div class="page" id="page-alertas">
     <div class="ph"><div><div class="pt">Alertas de Janela</div><div class="ps">Prazos de Fechamento de Coleta</div></div></div>
-    <div style="padding:16px 26px" id="alerta-wrap"></div>
+    <div class="twrap">
+      <div class="ttoolbar">
+        <div class="swrap">
+          <svg class="sico" width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"/></svg>
+          <input type="text" placeholder="Buscar frota, motorista, rota, fornecedor..." oninput="setAlertaSearch(this.value)">
+        </div>
+        <select class="fsel" onchange="setAlertaStatus(this.value)">
+          <option value="">Todos os status</option>
+          <option value="ATRASADO">Atrasado</option>
+          <option value="URGENTE">Urgente (≤30min)</option>
+          <option value="NO_PRAZO">No prazo</option>
+        </select>
+        <span class="rcount" id="alerta-rcount"></span>
+      </div>
+      <table>
+        <thead><tr>
+          <th class="sortable" onclick="sortAlertas('frota')">Frota <span class="sort-ind" data-col="frota"></span></th>
+          <th class="sortable" onclick="sortAlertas('rota')">Rota <span class="sort-ind" data-col="rota"></span></th>
+          <th class="sortable" onclick="sortAlertas('fornecedor')">Fornecedor <span class="sort-ind" data-col="fornecedor"></span></th>
+          <th class="sortable" onclick="sortAlertas('motorista')">Motorista <span class="sort-ind" data-col="motorista"></span></th>
+          <th class="sortable" onclick="sortAlertas('ji')">Janela <span class="sort-ind" data-col="ji"></span></th>
+          <th class="sortable" onclick="sortAlertas('status')">Status <span class="sort-ind" data-col="status"></span></th>
+          <th>Ação</th>
+        </tr></thead>
+        <tbody id="alerta-tbody"></tbody>
+      </table>
+    </div>
   </div>
 
   <div class="page" id="page-pedidos">
@@ -468,6 +501,13 @@ let diaSelecionadoParaClonar = null;
 let CONJUNTURA_VEICULOS = {};
 let MAPA_REVERSO_PLACAS = {};
 let ROTAS_MACRO_DATABASE = {};
+let MOTORISTAS_CONTATOS = {};
+
+// Estado da página de Alertas (filtro/busca/ordenação)
+let alertaSearch = '';
+let alertaStatusFilter = '';
+let alertaSort = { col:'ji', dir:'asc' };
+let _alertaItensAtuais = [];
 
 // ──────────────────────────────────────────────────────────────────────
 //  BLOCO 1: AUXILIARES DE INTERFACE
@@ -479,7 +519,8 @@ function obterGHCredenciais() {
     token:     localStorage.getItem('mwm_gh_token')  || '',
     file:      'mwm_dados.json',
     fleetFile: 'frota.json',
-    routesFile:'rotas_padrao.json'
+    routesFile:'rotas_padrao.json',
+    driversFile:'motoristas.json'
   };
 }
 
@@ -543,13 +584,25 @@ function obterNomeDiaSemana(dataTexto) {
 // ──────────────────────────────────────────────────────────────────────
 //  BLOCO 2: COMUNICAÇÃO GITHUB API
 // ──────────────────────────────────────────────────────────────────────
+
+// fetch com timeout — evita travar por até 2min quando a rede bloqueia/cai
+async function fetchComTimeout(url, options = {}, timeoutMs = 8000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function carregarDicionariosRemotosGitHub() {
   const creds = obterGHCredenciais();
   if(!creds.token) return false;
 
   try {
     const urlF = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.fleetFile}?ref=${creds.branch}&t=${Date.now()}`;
-    const respF = await fetch(urlF, { headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' } });
+    const respF = await fetchComTimeout(urlF, { headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' } });
     if(respF.ok) {
       const dataF = await respF.json();
       CONJUNTURA_VEICULOS = JSON.parse(atob(dataF.content.split('\n').join('')));
@@ -563,12 +616,26 @@ async function carregarDicionariosRemotosGitHub() {
 
   try {
     const urlR = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.routesFile}?ref=${creds.branch}&t=${Date.now()}`;
-    const respR = await fetch(urlR, { headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' } });
+    const respR = await fetchComTimeout(urlR, { headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' } });
     if(respR.ok) {
       const dataR = await respR.json();
       ROTAS_MACRO_DATABASE = JSON.parse(atob(dataR.content.split('\n').join('')));
     }
   } catch(e) { console.error('Erro ao carregar rotas:', e); }
+
+  try {
+    const urlD = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.driversFile}?ref=${creds.branch}&t=${Date.now()}`;
+    const respD = await fetchComTimeout(urlD, { headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' } });
+    if(respD.ok) {
+      const dataD = await respD.json();
+      const raw = JSON.parse(atob(dataD.content.split('\n').join('')));
+      MOTORISTAS_CONTATOS = {};
+      Object.keys(raw).forEach(nome => {
+        const numero = String(raw[nome]).replace(/\D/g, ''); // mantém só dígitos
+        MOTORISTAS_CONTATOS[nome.trim().toUpperCase()] = numero;
+      });
+    }
+  } catch(e) { console.error('Erro ao carregar motoristas:', e); }
 
   return true;
 }
@@ -581,7 +648,7 @@ async function carregarTodos() {
 
   try {
     const apiURL = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.file}?ref=${creds.branch}&t=${Date.now()}`;
-    const resp = await fetch(apiURL, { headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' } });
+    const resp = await fetchComTimeout(apiURL, { headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' } });
     if(resp.status === 200) {
       const meta = await resp.json();
       _fileSha = meta.sha;
@@ -591,7 +658,11 @@ async function carregarTodos() {
       salvarCache();
       setSyncOk();
     } else { setSyncErr(); carregarCache(); }
-  } catch(e) { setSyncErr(); carregarCache(); }
+  } catch(e) {
+    setSyncErr();
+    carregarCache();
+    notify('⚠ Sem conexão com a Nuvem. Exibindo dados salvos localmente.', 'var(--orange)');
+  }
 
   updateDashboard();
 }
@@ -611,10 +682,10 @@ async function gravarTudo() {
     const content = btoa(unescape(encodeURIComponent(JSON.stringify({ viagens:viagensDB, dates:availableDates }, null, 2))));
     const body = { message:'Sincronismo mestre MWM estável', content, branch:creds.branch };
     if(_fileSha) body.sha = _fileSha;
-    const resp = await fetch(apiURL, { method:'PUT', headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' }, body:JSON.stringify(body) });
+    const resp = await fetchComTimeout(apiURL, { method:'PUT', headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' }, body:JSON.stringify(body) }, 12000);
     if(resp.ok) { const r=await resp.json(); _fileSha=r.content.sha; setSyncOk(); notify('✓ Alterações guardadas na Nuvem'); }
     else { setSyncErr(); }
-  } catch(e) { setSyncErr(); }
+  } catch(e) { setSyncErr(); notify('⚠ Não foi possível salvar na Nuvem (sem conexão).', 'var(--orange)'); }
 }
 
 // ──────────────────────────────────────────────────────────────────────
@@ -787,28 +858,147 @@ function renderDisponibilidade() {
   if(bDisp) bDisp.textContent = countL;
 }
 
+function setAlertaSearch(v) { alertaSearch = v; renderAlertas(); }
+function setAlertaStatus(v) { alertaStatusFilter = v; renderAlertas(); }
+
+function sortAlertas(col) {
+  if(alertaSort.col === col) {
+    alertaSort.dir = alertaSort.dir === 'asc' ? 'desc' : 'asc';
+  } else {
+    alertaSort.col = col;
+    alertaSort.dir = 'asc';
+  }
+  renderAlertas();
+}
+
 function renderAlertas() {
   const vs = viagensDB[currentDate] || [];
-  const container = document.getElementById('alerta-wrap');
-  let html = '';
+  const tbody = document.getElementById('alerta-tbody');
+  if(!tbody) return;
+
+  // Monta lista plana: uma linha por parada pendente
+  let items = [];
   vs.forEach(v => {
     (v.paradas||[]).forEach(p => {
       if(!p.importado) {
         const js = janelaStatus(p);
-        html += `<div style="background:var(--bg2);padding:12px;border-radius:6px;border-left:4px solid ${js.urgente?'var(--orange)':'var(--red)'};margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
-          <div>
-            <strong>${v.frota} [${v.rota}]</strong> — Fornecedor: <span style="color:var(--text)">${p.fornecedor}</span><br>
-            <small style="color:var(--text3)">Motorista: ${v.motorista} | Limite: ${p.jf}</small>
-          </div>
-          <div style="text-align:right">
-            <span class="${js.cls}" style="font-weight:600;font-family:var(--mono)">${js.txt}</span><br>
-            <button class="btn btn-ghost btn-sm" style="margin-top:5px;" onclick="marcarParadaImportada(${v.id},'${p.id}')">✓ Baixar AVACORP</button>
-          </div>
-        </div>`;
+        let statusOrder, statusKey;
+        if(js.cls === 'jdanger')      { statusOrder = 0; statusKey = 'ATRASADO'; }
+        else if(js.cls === 'jwarn')   { statusOrder = 1; statusKey = 'URGENTE'; }
+        else                           { statusOrder = 2; statusKey = 'NO_PRAZO'; }
+        items.push({
+          vid: v.id, pid: p.id,
+          frota: v.frota || '', rota: v.rota || '',
+          fornecedor: p.fornecedor || '', motorista: v.motorista || '',
+          ji: p.ji || '00:00', janela: p.janela || `${p.ji||'--:--'}-${p.jf||'--:--'}`,
+          js, statusOrder, statusKey
+        });
       }
     });
   });
-  container.innerHTML = html || '<div style="color:var(--text3);padding:10px;text-align:center;">✓ Nenhuma coleta pendente para hoje.</div>';
+
+  // Filtro de busca (frota, rota, fornecedor, motorista)
+  const s = alertaSearch.trim().toLowerCase();
+  if(s) {
+    items = items.filter(it =>
+      it.frota.toLowerCase().includes(s) ||
+      it.rota.toLowerCase().includes(s) ||
+      it.fornecedor.toLowerCase().includes(s) ||
+      it.motorista.toLowerCase().includes(s)
+    );
+  }
+
+  // Filtro por status
+  if(alertaStatusFilter) items = items.filter(it => it.statusKey === alertaStatusFilter);
+
+  // Ordenação
+  const { col, dir } = alertaSort;
+  items.sort((a,b) => {
+    let va, vb;
+    if(col === 'status')   { va = a.statusOrder; vb = b.statusOrder; }
+    else if(col === 'ji')  { va = h2m(a.ji); vb = h2m(b.ji); }
+    else                    { va = (a[col]||'').toString().toLowerCase(); vb = (b[col]||'').toString().toLowerCase(); }
+    if(va < vb) return dir === 'asc' ? -1 : 1;
+    if(va > vb) return dir === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  // Atualiza indicadores visuais de ordenação no cabeçalho
+  document.querySelectorAll('#page-alertas .sort-ind').forEach(el => {
+    el.textContent = (el.dataset.col === col) ? (dir === 'asc' ? '▲' : '▼') : '';
+  });
+
+  // Contador de resultados
+  const rc = document.getElementById('alerta-rcount');
+  if(rc) rc.textContent = `${items.length} alerta(s)`;
+
+  // Renderização
+  if(!items.length) {
+    const msg = (alertaSearch || alertaStatusFilter)
+      ? 'Nenhum alerta encontrado para esse filtro.'
+      : '✓ Nenhuma coleta pendente para hoje.';
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:20px;">${msg}</td></tr>`;
+    return;
+  }
+
+  // Guarda referência para o botão de WhatsApp localizar os dados depois
+  _alertaItensAtuais = items;
+
+  tbody.innerHTML = items.map((it,i) => {
+    const mostrarWpp = it.js.urgente || it.js.cls === 'jdanger';
+    return `<tr>
+    <td><strong>${it.frota}</strong></td>
+    <td>${it.rota}</td>
+    <td>${it.fornecedor}</td>
+    <td>${it.motorista}</td>
+    <td style="font-family:var(--mono)">${it.janela}</td>
+    <td><span class="${it.js.cls}" style="font-weight:600;font-family:var(--mono)">${it.js.txt}</span></td>
+    <td style="white-space:nowrap;">
+      <button class="btn btn-ghost btn-sm" onclick="marcarParadaImportada(${it.vid},'${it.pid}')">✓ Baixar AVACORP</button>
+      ${mostrarWpp ? `<button class="btn btn-sm btn-whatsapp" onclick="enviarWhatsappMotorista(${i})" title="Enviar mensagem para o motorista">💬 WhatsApp</button>` : ''}
+    </td>
+  </tr>`;
+  }).join('');
+}
+
+// ──────────────────────────────────────────────────────────────────────
+//  WHATSAPP — MENSAGEM AUTOMÁTICA PARA O MOTORISTA
+// ──────────────────────────────────────────────────────────────────────
+function saudacaoAtual() {
+  const h = new Date().getHours();
+  if(h >= 5 && h < 12)  return 'Bom dia';
+  if(h >= 12 && h < 18) return 'Boa tarde';
+  return 'Boa noite';
+}
+
+function formatarPrimeiroNome(nomeCompleto) {
+  if(!nomeCompleto) return 'Motorista';
+  const primeira = nomeCompleto.trim().split(/\s+/)[0];
+  return primeira.charAt(0).toUpperCase() + primeira.slice(1).toLowerCase();
+}
+
+function buscarWhatsappMotorista(nomeCompleto) {
+  if(!nomeCompleto) return null;
+  return MOTORISTAS_CONTATOS[nomeCompleto.trim().toUpperCase()] || null;
+}
+
+function enviarWhatsappMotorista(idx) {
+  const it = _alertaItensAtuais[idx];
+  if(!it) return;
+
+  const numero = buscarWhatsappMotorista(it.motorista);
+  if(!numero) {
+    alert(`⚠ Nenhum número de WhatsApp cadastrado para "${it.motorista}".\n\nAdicione esse motorista no arquivo motoristas.json do repositório (formato: "NOME COMPLETO": "5511999999999").`);
+    return;
+  }
+
+  const saud = saudacaoAtual();
+  const nome = formatarPrimeiroNome(it.motorista);
+
+  const msg = `${saud}!\n\nSr(a). ${nome}, tudo bem?\n\nA janela de coleta na *${it.fornecedor}* (${it.janela}) está chegando no limite.\n\nPoderia nos informar a situação:\n- Ainda não iniciou o carregamento?\n- Está carregando?\n- Já finalizou?\n\nPor favor responda para alinharmos com a equipe de transporte da MWM. Obrigado!`;
+
+  const url = `https://wa.me/${numero}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
 }
 
 function renderPedidos() {
