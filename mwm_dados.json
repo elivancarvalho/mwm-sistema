@@ -1611,6 +1611,33 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781607706623,
+        "tipo": "TRUCK",
+        "frota": "JOI2796",
+        "frotaAntiga": "Agregado Extra",
+        "placa": "Caminhão Terceiro",
+        "carreta": "—",
+        "motorista": "ANDERSON MACENA MELENDRE",
+        "rota": "ROTA 03",
+        "saida": "05:00",
+        "origem": "MODINE",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781607706623-0",
+            "fornecedor": "MODINE",
+            "city": "SÃO PAULO",
+            "ji": "08:00",
+            "jf": "09:00",
+            "janela": "08:00-09:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
