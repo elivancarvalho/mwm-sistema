@@ -965,10 +965,11 @@ function now()  { const d=new Date(); return d.getHours()*60+d.getMinutes(); }
 
 function avaSt(v) {
   if(!v || !v.paradas || !v.paradas.length) return 'N/A';
-  const rel = v.paradas.filter(p => p.pedido && p.pedido !== '—');
-  if(!rel.length) return 'N/A';
-  const imp = rel.filter(p => p.importado).length;
-  return imp===0 ? 'PENDENTE' : imp<rel.length ? 'PARCIAL' : 'IMPORTADO';
+  const total = v.paradas.length;
+  const importados = v.paradas.filter(p => p.importado && p.pedido && p.pedido !== '—').length;
+  if(importados === total) return 'IMPORTADO';
+  if(importados === 0) return 'PENDENTE';
+  return 'PARCIAL';
 }
 
 function janelaStatus(p) {
@@ -1370,12 +1371,15 @@ function renderTable() {
           </tr></thead>
           <tbody>${v.paradas.map(p => {
             const js = janelaStatus(p);
+            const ji = p.ji || '--:--';
+            const jf = p.jf || '--:--';
+            const janelaStr = (p.ji && p.jf) ? `${ji} – ${jf}` : (p.janela || '--:--');
             return `<tr>
               <td><strong style="color:var(--text)">${esc(p.fornecedor)}</strong></td>
-              <td style="font-family:var(--mono);font-size:11px">${esc(p.janela)}</td>
+              <td style="font-family:var(--mono);font-size:11px">${esc(janelaStr)}</td>
               <td><button class="btn btn-ghost btn-sm" onclick="abrirModalPedido(${v.id},'${p.id}',\`${esc(p.pedido)}\`)">${p.pedido==='—'?'+ Vincular':'✏ '+esc(p.pedido)}</button></td>
               <td><span class="${js.cls}">${js.txt}</span></td>
-              <td><button class="btn btn-sm ${p.importado?'btn-danger':'btn-success'}" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'↩ Desfazer':'✓ Baixar AVACORP'}</button></td>
+              <td><button class="btn btn-sm ${p.importado?'btn-danger':'btn-success'}" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'↩ Desfazer':'✓ NF Importada'}</button></td>
             </tr>`;
           }).join('')}</tbody>
         </table>
@@ -1584,7 +1588,7 @@ function renderAlertas() {
     <td style="font-family:var(--mono)">${it.janela}</td>
     <td><span class="${it.js.cls}" style="font-weight:700;font-family:var(--mono)">${it.js.txt}</span></td>
     <td style="white-space:nowrap">
-      <button class="btn btn-success btn-sm" onclick="marcarParadaImportada(${it.vid},'${it.pid}')">✓ Baixar</button>
+      <button class="btn btn-success btn-sm" onclick="marcarParadaImportada(${it.vid},'${it.pid}')">✓ NF Importada</button>
       <button class="btn btn-whatsapp btn-sm" onclick="enviarWhatsappMotorista(${i})" title="${it.statusKey==='NO_PRAZO'?'No prazo · Envio desnecessário':'Enviar WhatsApp'}" ${it.statusKey==='NO_PRAZO'?'disabled':''}>💬</button>
     </td>
   </tr>`).join('');
@@ -1632,7 +1636,7 @@ function renderPedidos() {
         <div style="display:flex;gap:8px;align-items:center">
           ${st}
           <button class="btn btn-ghost btn-sm" onclick="abrirModalPedido(${v.id},'${p.id}',\`${p.pedido}\`)">✏️ Editar</button>
-          <button class="btn btn-sm ${p.importado?'btn-danger':'btn-success'}" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'↩ Estornar':'✓ Baixar'}</button>
+          <button class="btn btn-sm ${p.importado?'btn-danger':'btn-success'}" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'↩ Estornar':'✓ NF Importada'}</button>
         </div>
       </div>`;
     });
