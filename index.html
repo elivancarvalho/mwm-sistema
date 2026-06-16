@@ -2,191 +2,508 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="MWM Sistema de Programação Operacional — Painel de controle de frota, rotas, CTE e AVACORP da MWM Sulista.">
 <title>MWM · Sistema de Programação</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <style>
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════════════════════ */
 :root{
-  --bg:#0c0e14;--bg2:#13151f;--bg3:#1a1d28;--bg4:#222535;--bg5:#2a2e40;
-  --border:#252836;--border2:#333752;
-  --text:#e4e6f0;--text2:#8a8da8;--text3:#50536a;
-  --accent:#4f8ef7;--accent2:#3a6fd8;--accent3:rgba(79,142,247,.12);
-  --green:#2ecc71;--green-bg:#0a2316;--green-dim:rgba(46,204,113,.15);
-  --amber:#f5a623;--amber-bg:#261a05;
-  --red:#e05c5c;--red-bg:#280d0d;
-  --orange:#fb923c;--orange-bg:#2a1200;
-  --teal:#2dd4bf;--teal-bg:#082420;
-  --purple:#a78bfa;--purple-bg:#1b1330;
-  --sw:240px;--sc:54px;
+  --bg:#080a10;--bg2:#0f111a;--bg3:#161924;--bg4:#1e2130;--bg5:#262a3e;
+  --border:#1e2235;--border2:#2d3154;--border3:#3d4468;
+  --text:#eaedf8;--text2:#9196b8;--text3:#525878;--text4:#363a55;
+  --accent:#5b9cf6;--accent2:#3b7de0;--accent3:rgba(91,156,246,.13);--accent4:rgba(91,156,246,.06);
+  --green:#34d399;--green-bg:#071f14;--green-dim:rgba(52,211,153,.15);--green-border:rgba(52,211,153,.25);
+  --amber:#fbbf24;--amber-bg:#1f1500;--amber-dim:rgba(251,191,36,.15);
+  --red:#f87171;--red-bg:#1c0909;--red-dim:rgba(248,113,113,.15);
+  --orange:#fb923c;--orange-bg:#1f0d00;--orange-dim:rgba(251,146,60,.15);
+  --teal:#22d3ee;--teal-bg:#071519;--teal-dim:rgba(34,211,238,.15);
+  --purple:#a78bfa;--purple-bg:#130f24;--purple-dim:rgba(167,139,250,.15);
+  --indigo:#818cf8;--indigo-bg:#0d1024;
+  --sw:248px;--sc:56px;
   --mono:'IBM Plex Mono',monospace;
   --sans:'IBM Plex Sans',sans-serif;
+  --radius:8px;--radius-sm:5px;--radius-lg:12px;
+  --shadow:0 4px 24px rgba(0,0,0,.5);--shadow-sm:0 2px 8px rgba(0,0,0,.35);
+  --transition:.18s cubic-bezier(.4,0,.2,1);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;overflow:hidden;}
-::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:var(--border3);}
 
-.app{display:grid;grid-template-columns:var(--sw) 1fr;grid-template-rows:48px 1fr;height:100vh;transition:grid-template-columns .22s ease;}
+/* ═══════════════════════════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════════════════════════ */
+.app{display:grid;grid-template-columns:var(--sw) 1fr;grid-template-rows:52px 1fr;height:100vh;transition:grid-template-columns var(--transition);}
 .app.collapsed{grid-template-columns:var(--sc) 1fr;}
 
-.topbar{grid-column:1/-1;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;gap:10px;z-index:20;}
-.logo{font-family:var(--mono);font-size:16px;font-weight:600;letter-spacing:3px;white-space:nowrap;flex-shrink:0;}
-.logo span{color:var(--accent);}
-.tsep{width:1px;height:18px;background:var(--border2);flex-shrink:0;}
-.tlabel{font-size:11px;color:var(--text3);white-space:nowrap;}
-.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
-.tclock{font-family:var(--mono);font-size:12px;color:var(--green);background:var(--green-bg);border:1px solid rgba(46,204,113,.2);padding:3px 10px;border-radius:5px;min-width:72px;text-align:center;}
-.avatar{width:26px;height:26px;border-radius:50%;background:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff;flex-shrink:0;}
+/* ═══════════════════════════════════════════════════════════════
+   TOPBAR
+═══════════════════════════════════════════════════════════════ */
+.topbar{
+  grid-column:1/-1;
+  background:linear-gradient(90deg,var(--bg2) 0%,#0c0f1c 100%);
+  border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;padding:0 20px;gap:12px;z-index:20;
+  backdrop-filter:blur(20px);
+}
+.logo{
+  font-family:var(--mono);font-size:17px;font-weight:600;letter-spacing:4px;
+  white-space:nowrap;flex-shrink:0;
+  background:linear-gradient(135deg,var(--text) 30%,var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.logo em{-webkit-text-fill-color:var(--accent);font-style:normal;}
+.tsep{width:1px;height:20px;background:var(--border2);flex-shrink:0;}
+.tlabel{font-size:11px;color:var(--text3);white-space:nowrap;letter-spacing:.3px;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.tclock{
+  font-family:var(--mono);font-size:12px;color:var(--green);
+  background:var(--green-bg);border:1px solid var(--green-border);
+  padding:3px 11px;border-radius:20px;min-width:76px;text-align:center;
+  letter-spacing:.5px;
+}
+.sync-dot{width:8px;height:8px;border-radius:50%;transition:background .3s,box-shadow .3s;}
+.sync-ok{background:var(--green);box-shadow:0 0 8px var(--green);}
+.sync-err{background:var(--red);box-shadow:0 0 8px var(--red);}
+.sync-off{background:var(--text3);}
+.sync-pend{background:var(--accent);box-shadow:0 0 8px var(--accent);animation:pulse-dot 1s infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
+.avatar{
+  width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent2),var(--purple));
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#fff;flex-shrink:0;
+  box-shadow:0 0 12px rgba(91,156,246,.3);
+}
 
-.sidebar{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;overflow-x:hidden;position:relative;transition:width .22s ease;}
-.toggle-btn{position:absolute;right:-13px;top:18px;width:26px;height:26px;background:var(--bg3);border:1px solid var(--border2);border-radius:50%;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:30;transition:all .15s;font-size:11px;}
-.toggle-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
-.sb-section{padding:16px 10px 0;margin-bottom:8px;}
-.sb-label{font-size:9px;font-weight:600;letter-spacing:1.8px;color:var(--text3);text-transform:uppercase;padding:0 8px;margin-bottom:4px;white-space:nowrap;overflow:hidden;opacity:1;transition:opacity .15s;}
+/* ═══════════════════════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════════════════════ */
+.sidebar{
+  background:var(--bg2);border-right:1px solid var(--border);
+  overflow-y:auto;overflow-x:hidden;position:relative;
+  transition:width var(--transition);
+}
+.toggle-btn{
+  position:absolute;right:-14px;top:20px;width:28px;height:28px;
+  background:var(--bg3);border:1px solid var(--border2);border-radius:50%;
+  color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  z-index:30;transition:all .15s;font-size:11px;
+}
+.toggle-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 0 12px rgba(91,156,246,.4);}
+.sb-section{padding:18px 10px 0;margin-bottom:10px;}
+.sb-label{
+  font-size:9px;font-weight:700;letter-spacing:2px;color:var(--text4);
+  text-transform:uppercase;padding:0 9px;margin-bottom:6px;
+  white-space:nowrap;overflow:hidden;opacity:1;transition:opacity .15s;
+}
 .collapsed .sb-label{opacity:0;}
-.nav-item{display:flex;align-items:center;gap:9px;padding:8px 8px;border-radius:7px;cursor:pointer;color:var(--text2);font-size:12.5px;border:none;background:none;width:100%;text-align:left;transition:all .15s;white-space:nowrap;overflow:hidden;}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:9px 9px;
+  border-radius:var(--radius-sm);cursor:pointer;color:var(--text2);
+  font-size:12.5px;border:none;background:none;width:100%;text-align:left;
+  transition:all .15s;white-space:nowrap;overflow:hidden;position:relative;
+}
 .nav-item:hover{background:var(--bg3);color:var(--text);}
-.nav-item.active{background:var(--accent3);color:var(--accent);}
-.nav-icon{width:17px;height:17px;flex-shrink:0;}
+.nav-item.active{background:var(--accent3);color:var(--accent);border-right:2px solid var(--accent);}
+.nav-item.active::before{
+  content:'';position:absolute;left:0;top:20%;bottom:20%;
+  width:2px;background:var(--accent);border-radius:2px;
+}
+.nav-icon{width:18px;height:18px;flex-shrink:0;}
 .nav-txt{opacity:1;transition:opacity .1s;overflow:hidden;}
 .collapsed .nav-txt{opacity:0;}
-.nav-badge{margin-left:auto;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:600;flex-shrink:0;}
-.bc-red{background:var(--red-bg);color:var(--red);}
-.bc-orange{background:var(--orange-bg);color:var(--orange);}
-.bc-green{background:var(--green-bg);color:var(--green);}
+.nav-badge{
+  margin-left:auto;border-radius:10px;padding:1px 7px;
+  font-size:10px;font-weight:700;flex-shrink:0;font-family:var(--mono);
+  transition:opacity .1s;
+}
+.collapsed .nav-badge{opacity:0;}
+.bc-red{background:var(--red-dim);color:var(--red);}
+.bc-orange{background:var(--orange-dim);color:var(--orange);}
+.bc-green{background:var(--green-dim);color:var(--green);}
 
-.main{overflow-y:auto;background:var(--bg);}
-.page{display:none;}
+/* ═══════════════════════════════════════════════════════════════
+   MAIN & PAGES
+═══════════════════════════════════════════════════════════════ */
+.main{overflow-y:auto;background:var(--bg);position:relative;}
+.page{display:none;animation:fadeSlide .2s ease;}
 .page.active{display:block;}
-.ph{padding:20px 26px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
-.pt{font-size:17px;font-weight:600;}
-.ps{font-size:11px;color:var(--text3);margin-top:2px;}
-.pact{display:flex;gap:8px;flex-shrink:0;}
+@keyframes fadeSlide{
+  from{opacity:0;transform:translateY(8px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.ph{padding:22px 28px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.pt{font-size:18px;font-weight:700;letter-spacing:-.3px;}
+.ps{font-size:11px;color:var(--text3);margin-top:3px;}
+.pact{display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap;}
 
-.date-nav{padding:12px 26px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
-.date-tab{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:5px;font-size:11px;cursor:pointer;color:var(--text2);background:var(--bg3);border:1px solid var(--border);font-family:var(--mono);transition:all .12s;}
-.date-tab:hover{background:var(--bg4);}
-.date-tab.active{background:var(--accent);color:#fff;border-color:var(--accent);}
-.dtag{background:rgba(255,255,255,.2);border-radius:8px;padding:0 5px;font-size:9px;}
+/* ═══════════════════════════════════════════════════════════════
+   DATE NAV
+═══════════════════════════════════════════════════════════════ */
+.date-nav{
+  padding:14px 28px;display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid var(--border);flex-wrap:wrap;
+}
+.date-tab{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 12px;
+  border-radius:20px;font-size:11px;cursor:pointer;color:var(--text2);
+  background:var(--bg3);border:1px solid var(--border);
+  font-family:var(--mono);transition:all .12s;
+}
+.date-tab:hover{background:var(--bg4);color:var(--text);border-color:var(--border2);}
+.date-tab.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 0 16px rgba(91,156,246,.3);}
+.dtag{background:rgba(255,255,255,.2);border-radius:8px;padding:0 6px;font-size:9px;font-weight:700;}
 
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 26px;}
-.stat{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;}
-.stl{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:5px;}
-.stv{font-family:var(--mono);font-size:20px;font-weight:500;}
+/* ═══════════════════════════════════════════════════════════════
+   STATS ROW — COM MINI GRÁFICOS
+═══════════════════════════════════════════════════════════════ */
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;padding:16px 28px 8px;}
+.stat{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+  padding:12px 16px;position:relative;overflow:hidden;
+  transition:border-color .2s,box-shadow .2s;
+}
+.stat:hover{border-color:var(--border2);box-shadow:var(--shadow-sm);}
+.stat::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.02) 0%,transparent 100%);
+  pointer-events:none;
+}
+.stl{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.stv{font-family:var(--mono);font-size:22px;font-weight:600;line-height:1;}
+.stat-donut{position:absolute;right:12px;top:50%;transform:translateY(-50%);opacity:.9;}
 
-.twrap{padding:0 26px 28px;overflow-x:auto;}
-.ttoolbar{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+/* ═══════════════════════════════════════════════════════════════
+   TABLE AREA
+═══════════════════════════════════════════════════════════════ */
+.twrap{padding:0 28px 32px;overflow-x:auto;}
+.ttoolbar{
+  display:flex;align-items:center;gap:8px;margin-bottom:12px;
+  flex-wrap:wrap;padding:12px 0 4px;
+}
 .swrap{position:relative;}
-.swrap input{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:6px 10px 6px 28px;font-size:11.5px;outline:none;width:230px;}
+.swrap input{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);
+  color:var(--text);padding:7px 10px 7px 30px;font-size:11.5px;outline:none;
+  width:210px;transition:border-color .15s;font-family:var(--sans);
+}
+.swrap input:focus{border-color:var(--accent);}
 .sico{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text3);}
-.fsel{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text2);padding:6px 10px;font-size:11.5px;outline:none;cursor:pointer;}
-.rcount{margin-left:auto;font-size:11px;color:var(--text3);}
+.fsel{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);
+  color:var(--text2);padding:7px 10px;font-size:11.5px;outline:none;cursor:pointer;
+  transition:border-color .15s;font-family:var(--sans);
+}
+.fsel:focus{border-color:var(--accent);}
+.rcount{margin-left:auto;font-size:11px;color:var(--text3);font-family:var(--mono);}
 
 table{width:100%;border-collapse:collapse;min-width:1200px;}
-thead th{text-align:left;font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text3);padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap;}
+thead th{
+  text-align:left;font-size:9px;font-weight:700;letter-spacing:1.1px;
+  text-transform:uppercase;color:var(--text3);padding:9px 11px;
+  border-bottom:1px solid var(--border);white-space:nowrap;
+  position:sticky;top:0;background:var(--bg);z-index:5;
+}
 tbody tr{border-bottom:1px solid var(--border);transition:background .08s;}
-tbody tr:hover:not(.erow){background:var(--bg2);}
-tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middle;}
+tbody tr:hover:not(.erow){background:rgba(91,156,246,.04);}
+tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middle;}
 
+/* Skeleton loading */
+.skeleton-row td{padding:10px 11px;}
+.skel{
+  height:12px;background:linear-gradient(90deg,var(--bg3) 25%,var(--bg4) 50%,var(--bg3) 75%);
+  background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:4px;
+}
+.skel-sm{height:9px;width:60%;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* Expand row */
 .erow td{padding:0;}
-.econtent{padding:14px 14px 14px 42px;background:var(--bg2);border-top:1px solid var(--border);}
-.esec{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:8px;}
+.econtent{
+  padding:16px 16px 16px 44px;
+  background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);
+  border-top:1px solid var(--border);
+}
+.esec{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:10px;}
 
 .atbl{width:100%;border-collapse:collapse;}
-.atbl th{text-align:left;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);padding:5px 9px;border-bottom:1px solid var(--border);}
-.atbl td{padding:7px 9px;font-size:11.5px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.atbl th{
+  text-align:left;font-size:9px;font-weight:700;letter-spacing:.8px;
+  text-transform:uppercase;color:var(--text3);padding:6px 10px;
+  border-bottom:1px solid var(--border);
+}
+.atbl td{padding:8px 10px;font-size:11.5px;border-bottom:1px solid var(--border);vertical-align:middle;}
 
-.pb{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-family:var(--mono);font-size:10px;font-weight:600;margin-right:3px;}
-.p52{background:rgba(79,142,247,.15);color:var(--accent);border:1px solid rgba(79,142,247,.25);}
+/* Pedido badge */
+.pb{
+  display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;
+  font-family:var(--mono);font-size:10px;font-weight:600;margin-right:3px;cursor:pointer;
+  transition:all .12s;
+}
+.pb:hover{transform:scale(1.05);}
+.p52{background:rgba(91,156,246,.15);color:var(--accent);border:1px solid rgba(91,156,246,.25);}
 
+/* Status indicators */
 .jok{color:var(--green);font-size:11px;}
-.jwarn{color:var(--orange);font-size:11px;font-weight:600;}
-.jdanger{color:var(--red);font-size:11px;font-weight:600;}
+.jwarn{color:var(--orange);font-size:11px;font-weight:700;animation:blink-warn 1.5s infinite;}
+.jdanger{color:var(--red);font-size:11px;font-weight:700;}
 .jimported{color:var(--green);font-size:11px;}
+@keyframes blink-warn{0%,100%{opacity:1}50%{opacity:.5}}
 
-.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:6px;font-size:11.5px;font-weight:500;cursor:pointer;border:none;font-family:var(--sans);transition:all .15s;}
+/* Buttons */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;padding:7px 14px;
+  border-radius:var(--radius-sm);font-size:11.5px;font-weight:500;
+  cursor:pointer;border:none;font-family:var(--sans);transition:all .15s;
+  white-space:nowrap;
+}
 .btn-primary{background:var(--accent);color:#fff;}
-.btn-primary:hover{background:var(--accent2);}
+.btn-primary:hover{background:var(--accent2);box-shadow:0 0 16px rgba(91,156,246,.35);}
 .btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2);}
-.btn-ghost:hover{background:var(--bg3);color:var(--text);}
+.btn-ghost:hover{background:var(--bg3);color:var(--text);border-color:var(--border3);}
 .btn-sm{padding:4px 10px;font-size:11px;}
-.btn-success{background:var(--green-bg);color:var(--green);border:1px solid rgba(46,204,113,.25);}
+.btn-success{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);}
+.btn-success:hover{background:rgba(52,211,153,.1);box-shadow:0 0 12px rgba(52,211,153,.2);}
+.btn-danger{background:var(--red-bg);color:var(--red);border:1px solid rgba(248,113,113,.25);}
+.btn-danger:hover{background:rgba(248,113,113,.1);}
+.btn-whatsapp{background:#25D366;color:#fff;}
+.btn-whatsapp:hover{background:#1ebe5a;box-shadow:0 0 12px rgba(37,211,102,.35);}
+.btn-icon{padding:6px;border-radius:var(--radius-sm);}
+.btn-export{background:var(--teal-bg);color:var(--teal);border:1px solid rgba(34,211,238,.25);}
+.btn-export:hover{background:rgba(34,211,238,.1);}
 
-.tipo-truck{background:rgba(79,142,247,.1);color:var(--accent);border:1px solid rgba(79,142,247,.2);padding:2px 6px;border-radius:3px;font-size:10px;}
-.tipo-conj{background:rgba(167,139,250,.1);color:var(--purple);border:1px solid rgba(167,139,250,.2);padding:2px 6px;border-radius:3px;font-size:10px;}
+/* Tipo badges */
+.tipo-truck{background:rgba(91,156,246,.1);color:var(--accent);border:1px solid rgba(91,156,246,.2);padding:2px 7px;border-radius:3px;font-size:10px;font-weight:600;}
+.tipo-conj{background:rgba(167,139,250,.1);color:var(--purple);border:1px solid rgba(167,139,250,.2);padding:2px 7px;border-radius:3px;font-size:10px;font-weight:600;}
 
+/* CTE select */
 .ctesel{background:transparent;border:none;color:inherit;font-family:var(--sans);font-size:11px;cursor:pointer;}
-.prog-track{width:80px;height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;display:inline-block;}
-.prog-fill{height:100%;border-radius:3px;}
 
-.ava-ok{background:var(--green-bg);color:var(--green);border:1px solid rgba(46,204,113,.25);padding:2px 8px;border-radius:4px;font-size:10px;}
-.ava-par{background:var(--orange-bg);color:var(--orange);border:1px solid rgba(251,146,60,.25);padding:2px 8px;border-radius:4px;font-size:10px;}
+/* Progress */
+.prog-track{width:80px;height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;display:inline-block;}
+.prog-fill{height:100%;border-radius:3px;transition:width .5s ease;}
+
+/* AVA status */
+.ava-ok{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border);padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;}
+.ava-par{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(251,146,60,.25);padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;}
 .ava-pend{background:var(--bg4);color:var(--text3);border:1px solid var(--border2);padding:2px 8px;border-radius:4px;font-size:10px;}
 
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .18s;}
-.overlay.open{opacity:1;pointer-events:all;}
-.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;width:650px;max-height:88vh;overflow-y:auto;}
-.mhdr{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.mtitle{font-size:14px;font-weight:600;}
-.mx{background:var(--bg4);border:none;color:var(--text2);width:26px;height:26px;border-radius:5px;cursor:pointer;}
-.mbody{padding:18px 22px;}
-.mftr{padding:12px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;}
-
-.msec{margin-bottom:15px;border-bottom:1px solid var(--border);padding-bottom:12px;}
-.msec:last-child{border:none;}
-.msec-t{font-size:10px;font-weight:600;color:var(--accent);text-transform:uppercase;margin-bottom:8px;letter-spacing:0.5px;}
-.fg{display:grid;gap:8px;grid-template-columns:1fr 1fr;}
-.fg3{grid-template-columns:1fr 1fr 1fr;}
-.fg-label{display:block;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
-.fg-label+input,.fg-label+select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:6px 8px;outline:none;font-family:var(--sans);font-size:12px;}
-
-.clone-list-item{display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;margin-bottom:5px;cursor:pointer;transition:all 0.15s;}
-.clone-list-item:hover{border-color:var(--accent);background:var(--bg4);}
-.clone-list-item.selected{border-color:var(--green);background:rgba(46,204,113,0.08);}
-
-.notif{position:fixed;bottom:22px;right:22px;padding:10px 16px;border-radius:8px;font-size:12px;font-weight:500;transform:translateY(70px);opacity:0;transition:all .28s;z-index:300;color:#fff;}
-.notif.show{transform:translateY(0);opacity:1;}
-#loading-bar{position:fixed;top:48px;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--teal),var(--accent));background-size:200%;animation:shimmer 1.2s infinite;display:none;z-index:100;}
-#loading-label{position:fixed;top:54px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--text2);background:var(--bg2);padding:3px 10px;border-radius:4px;border:1px solid var(--border);z-index:101;display:none;}
-
-.sync-ok{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;margin-left:6px;}
-.sync-err{width:7px;height:7px;border-radius:50%;background:var(--red);display:inline-block;margin-left:6px;}
-.sync-off{width:7px;height:7px;border-radius:50%;background:var(--text3);display:inline-block;margin-left:6px;}
-.sync-pend{width:7px;height:7px;border-radius:50%;background:#60a5fa;display:inline-block;margin-left:6px;}
-
-.btn-add-parada{background:var(--bg4);border:1px dashed var(--border2);color:var(--text2);padding:5px;text-align:center;border-radius:4px;cursor:pointer;font-size:11px;margin-top:5px;}
-.btn-add-parada:hover{border-color:var(--accent);color:var(--text);}
-.parada-box{background:var(--bg4);border:1px solid var(--border);padding:8px;border-radius:5px;margin-bottom:5px;position:relative;}
-.btn-del-parada{position:absolute;top:4px;right:6px;color:var(--red);cursor:pointer;font-weight:bold;border:none;background:none;}
-
-.disp-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;padding:15px 26px 28px;}
-.disp-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;}
-.disp-title{font-size:11px;font-weight:600;text-transform:uppercase;color:var(--text3);margin-bottom:10px;letter-spacing:0.5px;border-bottom:1px solid var(--border);padding-bottom:5px;}
-.disp-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;margin-bottom:4px;font-family:var(--mono);}
-
-.config-container{padding:20px 26px;}
-
+/* Sortable */
 .sortable{cursor:pointer;user-select:none;transition:color .12s;}
 .sortable:hover{color:var(--text);}
 .sort-ind{display:inline-block;min-width:10px;font-size:9px;color:var(--accent);}
 
-.btn-whatsapp{background:#25D366;color:#fff;margin-left:5px;}
-.btn-whatsapp:hover{background:#1ebe5a;}
+/* ═══════════════════════════════════════════════════════════════
+   MODAL
+═══════════════════════════════════════════════════════════════ */
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.75);
+  backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;
+  z-index:200;opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.overlay.open{opacity:1;pointer-events:all;}
+.overlay.open .modal{transform:translateY(0) scale(1);}
+.modal{
+  background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-lg);
+  width:660px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow);
+  transform:translateY(20px) scale(.97);transition:transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+.mhdr{
+  padding:18px 24px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(180deg,var(--bg3) 0%,var(--bg2) 100%);
+  border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+}
+.mtitle{font-size:15px;font-weight:700;letter-spacing:-.2px;}
+.mx{
+  background:var(--bg4);border:none;color:var(--text2);
+  width:28px;height:28px;border-radius:var(--radius-sm);cursor:pointer;
+  font-size:16px;transition:all .15s;display:flex;align-items:center;justify-content:center;
+}
+.mx:hover{background:var(--red-bg);color:var(--red);}
+.mbody{padding:20px 24px;}
+.mftr{padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;}
+
+.msec{margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:14px;}
+.msec:last-child{border:none;margin-bottom:0;}
+.msec-t{font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;margin-bottom:10px;letter-spacing:.6px;}
+.fg{display:grid;gap:10px;grid-template-columns:1fr 1fr;}
+.fg3{grid-template-columns:1fr 1fr 1fr;}
+.fg-label{display:block;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+.fg-label+input,.fg-label+select,.fg-label+textarea{
+  width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);
+  color:var(--text);padding:7px 9px;outline:none;font-family:var(--sans);font-size:12px;
+  transition:border-color .15s;
+}
+.fg-label+input:focus,.fg-label+select:focus{border-color:var(--accent);}
+
+/* Clone modal */
+.clone-list-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 13px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--radius-sm);margin-bottom:6px;cursor:pointer;transition:all .15s;
+}
+.clone-list-item:hover{border-color:var(--accent);background:var(--bg4);}
+.clone-list-item.selected{border-color:var(--green);background:rgba(52,211,153,.06);}
+
+/* Parada form */
+.btn-add-parada{
+  background:var(--bg4);border:1px dashed var(--border2);color:var(--text2);
+  padding:7px;text-align:center;border-radius:var(--radius-sm);
+  cursor:pointer;font-size:11px;margin-top:6px;transition:all .15s;
+}
+.btn-add-parada:hover{border-color:var(--accent);color:var(--text);background:var(--accent4);}
+.parada-box{
+  background:var(--bg4);border:1px solid var(--border);padding:10px;
+  border-radius:var(--radius-sm);margin-bottom:6px;position:relative;
+  animation:fadeIn .2s ease;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.btn-del-parada{
+  position:absolute;top:6px;right:8px;color:var(--red);cursor:pointer;
+  font-weight:bold;border:none;background:none;font-size:14px;opacity:.6;transition:opacity .15s;
+}
+.btn-del-parada:hover{opacity:1;}
+
+/* Pedido modal */
+.pedido-modal-input{
+  width:100%;background:var(--bg3);border:2px solid var(--border);
+  border-radius:var(--radius);color:var(--text);padding:12px 14px;
+  font-family:var(--mono);font-size:16px;outline:none;
+  transition:border-color .15s;letter-spacing:1px;margin-top:6px;
+}
+.pedido-modal-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(91,156,246,.1);}
+
+/* ═══════════════════════════════════════════════════════════════
+   DISPONIBILIDADE — KANBAN STYLE
+═══════════════════════════════════════════════════════════════ */
+.disp-header{padding:0 28px 14px;}
+.disp-stats-bar{display:flex;gap:10px;margin-top:12px;}
+.disp-stat-pill{
+  display:flex;align-items:center;gap:7px;padding:6px 14px;
+  border-radius:20px;font-size:11px;font-weight:600;
+}
+.disp-stat-pill.green{background:var(--green-dim);color:var(--green);border:1px solid var(--green-border);}
+.disp-stat-pill.red{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,.25);}
+.disp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:0 28px 32px;}
+.disp-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);
+  overflow:hidden;
+}
+.disp-card-header{
+  padding:14px 18px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;
+}
+.disp-card-body{padding:12px;display:flex;flex-direction:column;gap:6px;max-height:420px;overflow-y:auto;}
+.disp-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 13px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--radius-sm);font-family:var(--mono);font-size:11.5px;
+  transition:all .15s;
+}
+.disp-item:hover{border-color:var(--border2);background:var(--bg4);}
+.disp-item-label{display:flex;flex-direction:column;gap:2px;}
+.disp-item-frota{font-weight:600;color:var(--text);}
+.disp-item-placa{font-size:10px;color:var(--text3);}
+
+/* ═══════════════════════════════════════════════════════════════
+   ALERTAS PAGE
+═══════════════════════════════════════════════════════════════ */
+.alerta-urgente-bar{
+  margin:10px 28px;padding:10px 16px;
+  background:linear-gradient(90deg,var(--orange-bg),transparent);
+  border:1px solid rgba(251,146,60,.3);border-radius:var(--radius-sm);
+  font-size:11.5px;color:var(--orange);font-weight:600;
+  display:flex;align-items:center;gap:8px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PEDIDOS / PEND PAGES
+═══════════════════════════════════════════════════════════════ */
+.pedido-card{
+  background:var(--bg2);padding:13px 16px;border-radius:var(--radius-sm);
+  margin-bottom:7px;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  transition:border-color .15s;
+}
+.pedido-card:hover{border-color:var(--border2);}
+
+/* ═══════════════════════════════════════════════════════════════
+   CONFIG PAGE
+═══════════════════════════════════════════════════════════════ */
+.config-section{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:20px 24px;margin-bottom:14px;
+}
+.config-section-title{font-size:12px;font-weight:700;color:var(--accent);margin-bottom:14px;text-transform:uppercase;letter-spacing:.6px;}
+
+/* ═══════════════════════════════════════════════════════════════
+   LOADING & NOTIFICATIONS
+═══════════════════════════════════════════════════════════════ */
+#loading-bar{
+  position:fixed;top:52px;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent),var(--teal),var(--purple),var(--accent));
+  background-size:300%;animation:loading-anim 1.4s ease infinite;
+  display:none;z-index:100;
+}
+@keyframes loading-anim{0%{background-position:0%}100%{background-position:300%}}
+#loading-label{
+  position:fixed;top:58px;left:50%;transform:translateX(-50%);
+  font-size:11px;color:var(--text2);background:var(--bg2);
+  padding:4px 12px;border-radius:4px;border:1px solid var(--border2);
+  z-index:101;display:none;font-family:var(--mono);
+}
+.notif{
+  position:fixed;bottom:24px;right:24px;padding:11px 18px;
+  border-radius:var(--radius);font-size:12.5px;font-weight:600;
+  transform:translateY(70px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  z-index:300;color:#fff;box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:8px;
+  backdrop-filter:blur(10px);max-width:340px;
+}
+.notif.show{transform:translateY(0);opacity:1;}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════════════ */
+@media (max-width:1280px){
+  .stats-row{grid-template-columns:repeat(3,1fr);}
+  .app{grid-template-columns:var(--sc) 1fr;}
+  .app.expanded{grid-template-columns:var(--sw) 1fr;}
+  .nav-txt,.nav-badge,.sb-label{opacity:0;}
+  .app.expanded .nav-txt,.app.expanded .nav-badge,.app.expanded .sb-label{opacity:1;}
+}
+@media (max-width:900px){
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .disp-grid{grid-template-columns:1fr;}
+  .pact{display:none;}
+}
 </style>
 </head>
 <body>
-<div id="loading-bar"></div><div id="loading-label"></div>
+<div id="loading-bar"></div>
+<div id="loading-label"></div>
 <div class="app" id="app">
 
 <header class="topbar">
-  <div class="logo">MW<span>M</span></div>
+  <div class="logo">MW<em>M</em></div>
   <div class="tsep"></div>
-  <span class="tlabel">Sistema de Programação Mestre MWM</span>
+  <span class="tlabel">Sistema de Programação Mestre</span>
   <div class="topbar-right">
     <span class="tclock" id="tclock">--:--:--</span>
-    <div class="avatar">PS</div>
-    <span style="font-size:12px;color:var(--text2)">Painel Operacional</span>
-    <span class="sync-off" id="sync-indicator"></span>
+    <div class="sync-dot sync-off" id="sync-indicator" title="Status de sincronização"></div>
+    <div class="avatar" title="Painel Operacional">PS</div>
+    <span style="font-size:11.5px;color:var(--text2)">Painel Operacional</span>
   </div>
 </header>
 
@@ -194,42 +511,43 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
   <button class="toggle-btn" id="toggle-btn" onclick="toggleSidebar()">◀</button>
   <div class="sb-section">
     <div class="sb-label">Operação</div>
-    <button class="nav-item active" onclick="navTo('prog',this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke-width="2"/><line x1="3" y1="9" x2="21" y2="9" stroke-width="2"/></svg>
+    <button class="nav-item active" id="nav-prog" onclick="navTo('prog',this)">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke-width="2"/><line x1="3" y1="9" x2="21" y2="9" stroke-width="2"/><line x1="9" y1="14" x2="15" y2="14" stroke-width="1.5"/></svg>
       <span class="nav-txt">Programação</span>
     </button>
-    <button class="nav-item" onclick="navTo('disp',this)">
-      <span style="color:var(--teal);font-weight:600;margin-right:5px;">🚚</span>
-      <span class="nav-txt">Disponibilidade Frota</span>
+    <button class="nav-item" id="nav-disp" onclick="navTo('disp',this)">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M1 3h15v13H1z" stroke-width="1.8"/><path d="M16 8h5l3 4v5h-8V8z" stroke-width="1.8"/><circle cx="5.5" cy="18.5" r="2.5" stroke-width="1.8"/><circle cx="18.5" cy="18.5" r="2.5" stroke-width="1.8"/></svg>
+      <span class="nav-txt">Disponibilidade</span>
       <span class="nav-badge bc-green" id="badge-disp">0</span>
     </button>
-    <button class="nav-item" onclick="navTo('alertas',this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-width="2"/></svg>
+    <button class="nav-item" id="nav-alertas" onclick="navTo('alertas',this)">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-width="1.8"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke-width="1.8"/></svg>
       <span class="nav-txt">Alertas de Janela</span>
       <span class="nav-badge bc-orange" id="badge-alertas">0</span>
     </button>
-    <button class="nav-item" onclick="navTo('pedidos',this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke-width="2"/></svg>
+    <button class="nav-item" id="nav-pedidos" onclick="navTo('pedidos',this)">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke-width="1.8"/><polyline points="14 2 14 8 20 8" stroke-width="1.8"/></svg>
       <span class="nav-txt">Pedidos AVACORP</span>
       <span class="nav-badge bc-orange" id="badge-ava">0</span>
     </button>
-    <button class="nav-item" onclick="navTo('pend',this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke-width="2"/></svg>
+    <button class="nav-item" id="nav-pend" onclick="navTo('pend',this)">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.8"/><line x1="12" y1="8" x2="12" y2="12" stroke-width="2"/><line x1="12" y1="16" x2="12.01" y2="16" stroke-width="2"/></svg>
       <span class="nav-txt">Pendentes CTE</span>
       <span class="nav-badge bc-red" id="badge-pend">0</span>
     </button>
   </div>
   <div class="sb-section">
     <div class="sb-label">Sistema</div>
-    <button class="nav-item" onclick="navTo('config',this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke-width="2"/></svg>
-      <span class="nav-txt">Conexão GitHub</span>
+    <button class="nav-item" id="nav-config" onclick="navTo('config',this)">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke-width="1.8"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke-width="1.8"/></svg>
+      <span class="nav-txt">Configurações</span>
     </button>
   </div>
 </nav>
 
 <main class="main">
 
+  <!-- ══════════ PROGRAMAÇÃO ══════════ -->
   <div class="page active" id="page-prog">
     <div class="ph">
       <div>
@@ -237,8 +555,9 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
         <div class="ps" id="prog-date-subtitle">Aguardando nuvem...</div>
       </div>
       <div class="pact">
-        <button class="btn btn-ghost" style="color:var(--orange)" onclick="abrirModalClonagemSemanal()">⎘ Clonar de Outro Dia</button>
-        <button class="btn btn-ghost" onclick="abrirModalCalendario()">📅 Mudar/Criar Data</button>
+        <button class="btn btn-ghost" style="color:var(--orange)" onclick="abrirModalClonagemSemanal()">⎘ Clonar Dia</button>
+        <button class="btn btn-ghost" onclick="abrirModalCalendario()">📅 Gerenciar Data</button>
+        <button class="btn btn-export btn-sm" onclick="exportarXLSX()" title="Exportar tabela para Excel">⬇ XLSX</button>
         <button class="btn btn-primary" onclick="abrirModalCadastroViagem()">+ Nova Viagem</button>
       </div>
     </div>
@@ -248,7 +567,7 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
       <div class="ttoolbar">
         <div class="swrap">
           <svg class="sico" width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"/></svg>
-          <input type="text" placeholder="Buscar frota, motorista, rota..." oninput="setSearch(this.value)">
+          <input type="text" placeholder="Buscar frota, motorista, rota..." oninput="setSearch(this.value)" id="search-input">
         </div>
         <select class="fsel" onchange="setTipo(this.value)">
           <option value="">Todos os tipos</option>
@@ -260,14 +579,17 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
           <option value="PENDENTE">Pendente</option>
           <option value="IMPRESSO">Impresso</option>
         </select>
+        <select class="fsel" id="filter-motorista" onchange="setMotorista(this.value)">
+          <option value="">Todos Motoristas</option>
+        </select>
         <span class="rcount" id="rcount"></span>
       </div>
       <table>
         <thead><tr>
           <th style="width:20px"></th>
-          <th>Frota (Nova / Antiga)</th>
-          <th>Placa do Veículo</th>
-          <th>Carreta (Nova / Placa / Antiga)</th>
+          <th>Frota</th>
+          <th>Placa</th>
+          <th>Carreta</th>
           <th>Motorista</th>
           <th>Rota</th>
           <th>Tipo</th>
@@ -277,6 +599,7 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
           <th>AVACORP</th>
           <th>Coletas</th>
           <th>CTE</th>
+          <th>Ações</th>
           <th>Obs</th>
         </tr></thead>
         <tbody id="main-tbody"></tbody>
@@ -284,27 +607,41 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
     </div>
   </div>
 
+  <!-- ══════════ DISPONIBILIDADE ══════════ -->
   <div class="page" id="page-disp">
     <div class="ph">
       <div>
-        <div class="pt">Painel de Disponibilidade da Frota</div>
+        <div class="pt">Disponibilidade da Frota</div>
         <div class="ps" id="disp-date-subtitle">Cruzamento em tempo real...</div>
       </div>
     </div>
+    <div class="disp-header">
+      <div class="disp-stats-bar" id="disp-stats-bar"></div>
+    </div>
     <div class="disp-grid">
       <div class="disp-card">
-        <div class="disp-title" style="color:var(--green)">✓ Veículos Livres / Disponíveis</div>
-        <div id="disp-livres-container"></div>
+        <div class="disp-card-header" style="color:var(--green);border-bottom-color:rgba(52,211,153,.15)">
+          <span>✓ Disponíveis / Livres</span>
+          <span id="disp-livres-count" style="background:var(--green-dim);padding:2px 9px;border-radius:10px;font-size:11px;">0</span>
+        </div>
+        <div class="disp-card-body" id="disp-livres-container"></div>
       </div>
       <div class="disp-card">
-        <div class="disp-title" style="color:var(--red)">🔒 Veículos Ocupados em Rota</div>
-        <div id="disp-ocupados-container"></div>
+        <div class="disp-card-header" style="color:var(--red);border-bottom-color:rgba(248,113,113,.15)">
+          <span>🔒 Em Rota / Ocupados</span>
+          <span id="disp-ocupados-count" style="background:var(--red-dim);padding:2px 9px;border-radius:10px;font-size:11px;">0</span>
+        </div>
+        <div class="disp-card-body" id="disp-ocupados-container"></div>
       </div>
     </div>
   </div>
 
+  <!-- ══════════ ALERTAS ══════════ -->
   <div class="page" id="page-alertas">
-    <div class="ph"><div><div class="pt">Alertas de Janela</div><div class="ps">Prazos de Fechamento de Coleta</div></div></div>
+    <div class="ph"><div><div class="pt">Alertas de Janela</div><div class="ps">Prazos de Fechamento de Coleta — Tempo Real</div></div></div>
+    <div class="alerta-urgente-bar" id="alerta-urgente-bar" style="display:none">
+      ⚡ <span id="alerta-urgente-txt">Coletas urgentes detectadas!</span>
+    </div>
     <div class="twrap">
       <div class="ttoolbar">
         <div class="swrap">
@@ -334,26 +671,43 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
     </div>
   </div>
 
+  <!-- ══════════ PEDIDOS AVACORP ══════════ -->
   <div class="page" id="page-pedidos">
     <div class="ph"><div><div class="pt">Pedidos — AVACORP</div><div class="ps">Gerenciamento por Número de Pedido</div></div></div>
-    <div style="padding:14px 26px" id="pedidos-list"></div>
+    <div style="padding:16px 28px" id="pedidos-list"></div>
   </div>
 
+  <!-- ══════════ PENDENTES CTE ══════════ -->
   <div class="page" id="page-pend">
     <div class="ph"><div><div class="pt">Pendentes de CTE</div><div class="ps">Liberações Finais para Emissão</div></div></div>
-    <div style="padding:14px 26px" id="pend-apto"></div>
+    <div style="padding:16px 28px" id="pend-apto"></div>
   </div>
 
+  <!-- ══════════ CONFIG ══════════ -->
   <div class="page" id="page-config">
-    <div class="ph"><div><div class="pt">Configurações GitHub</div><div class="ps">Gerencie suas chaves de acesso</div></div></div>
-    <div class="config-container">
-      <div class="fg">
-        <div><label class="fg-label">GitHub Token (PAT)</label><input type="password" id="cfg-token"></div>
-        <div><label class="fg-label">Repositório</label><input type="text" id="cfg-repo" value="elivancarvalho/mwm-sistema"></div>
-        <div style="margin-top:8px;"><label class="fg-label">Branch</label><input type="text" id="cfg-branch" value="main"></div>
-        <div style="margin-top:8px; display:flex; gap:10px;">
-          <button class="btn btn-primary" onclick="salvarConfiguracoesGitHub()">Salvar Configurações</button>
-          <button class="btn btn-ghost" style="color:var(--amber); border-color:var(--amber);" onclick="repararMojibakeBancoCompleto()">🔧 Reparar Acentos Corrompidos</button>
+    <div class="ph"><div><div class="pt">Configurações do Sistema</div><div class="ps">Gerencie a conexão com a Nuvem GitHub</div></div></div>
+    <div style="padding:20px 28px;max-width:640px;">
+      <div class="config-section">
+        <div class="config-section-title">🔐 Conexão GitHub</div>
+        <div class="fg">
+          <div><label class="fg-label">GitHub Token (PAT)</label><input type="password" id="cfg-token" placeholder="ghp_..."></div>
+          <div><label class="fg-label">Repositório</label><input type="text" id="cfg-repo" value="elivancarvalho/mwm-sistema"></div>
+          <div><label class="fg-label">Branch</label><input type="text" id="cfg-branch" value="main"></div>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="salvarConfiguracoesGitHub()">✓ Salvar Configurações</button>
+          <button class="btn btn-ghost" onclick="testarConexao()" style="color:var(--teal);border-color:var(--teal)">⚡ Testar Conexão</button>
+        </div>
+      </div>
+      <div class="config-section">
+        <div class="config-section-title">🔧 Manutenção</div>
+        <p style="font-size:11.5px;color:var(--text2);margin-bottom:12px;line-height:1.6;">Use as ferramentas abaixo caso o banco de dados apresente caracteres corrompidos ou inconsistências.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn btn-ghost" style="color:var(--amber);border-color:var(--amber);" onclick="repararMojibakeBancoCompleto()">🔧 Reparar Acentos Corrompidos</button>
+          <button class="btn btn-ghost" style="color:var(--red);border-color:var(--red);" onclick="sincronizarForcar()">🔄 Forçar Sincronização</button>
+        </div>
+        <div style="margin-top:14px;padding:10px 14px;background:var(--amber-bg);border:1px solid var(--amber-dim);border-radius:var(--radius-sm);font-size:11px;color:var(--amber);">
+          ⚠ O token GitHub é armazenado localmente no seu navegador. Use um PAT com permissões mínimas (<code>contents:write</code>).
         </div>
       </div>
     </div>
@@ -362,6 +716,11 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 </main>
 </div>
 
+<!-- ══════════════════════════════════════════════════════
+     MODAIS
+══════════════════════════════════════════════════════════ -->
+
+<!-- Modal Cadastro / Edição de Viagem -->
 <div class="overlay" id="modal-cadastro">
 <div class="modal">
   <div class="mhdr">
@@ -369,11 +728,11 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
     <button class="mx" onclick="fecharModal('cadastro')">×</button>
   </div>
   <div class="mbody">
-    <div class="msec" style="background:rgba(79,142,247,0.03);border:1px dashed var(--accent);padding:12px;border-radius:6px;">
+    <div class="msec" style="background:rgba(91,156,246,0.04);border:1px dashed var(--accent);padding:14px;border-radius:var(--radius-sm);">
       <div class="msec-t" id="lbl-info-dia-semana">Dia da semana ativo: ...</div>
-      <div style="margin-bottom:8px;">
+      <div style="margin-bottom:10px;">
         <label class="fg-label" style="color:var(--teal)">Filtrar Rotas Padrão por Dia da Semana:</label>
-        <select id="form-filtro-dia-semana" onchange="recalculasRotasDisponiveisNoDropdown()" style="width:100%;background:var(--bg3);border:1px solid var(--teal);border-radius:5px;color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:12px;font-weight:500;">
+        <select id="form-filtro-dia-semana" onchange="recalculasRotasDisponiveisNoDropdown()" style="width:100%;background:var(--bg3);border:1px solid var(--teal);border-radius:var(--radius-sm);color:var(--text);padding:7px 9px;font-family:var(--sans);font-size:12px;font-weight:500;outline:none;">
           <option value="Segunda-feira">Segunda-feira</option>
           <option value="Terça-feira">Terça-feira</option>
           <option value="Quarta-feira">Quarta-feira</option>
@@ -383,8 +742,8 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
       </div>
       <div>
         <label class="fg-label" style="color:var(--accent)">Selecione o Itinerário da Rota Padrão:</label>
-        <select id="form-macro-rota" onchange="verificarEAutoPreencherCamposRota()" style="width:100%;background:var(--bg3);border:1px solid var(--accent);border-radius:5px;color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:12px;">
-          <option value="">-- Escolha uma rota padrão ou digite manual --</option>
+        <select id="form-macro-rota" onchange="verificarEAutoPreencherCamposRota()" style="width:100%;background:var(--bg3);border:1px solid var(--accent);border-radius:var(--radius-sm);color:var(--text);padding:7px 9px;font-family:var(--sans);font-size:12px;outline:none;">
+          <option value="">-- Escolha uma rota padrão ou preencha manualmente --</option>
         </select>
       </div>
     </div>
@@ -406,18 +765,22 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
           <label class="fg-label">Carreta Vinculada</label>
           <select id="form-carreta"></select>
         </div>
-    </div>
-      <div id="form-frota-manual-block" style="display:none;margin-top:8px;">
+      </div>
+      <div id="form-frota-manual-block" style="display:none;margin-top:10px;">
         <label class="fg-label" style="color:var(--orange)">Identificação / Placa do Agregado:</label>
-        <input type="text" id="form-frota-manual-input" placeholder="Ex: Placa ABC1D23 ou Nome do Dono" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:12px;">
+        <input type="text" id="form-frota-manual-input" placeholder="Ex: Placa ABC1D23 ou Nome do Dono">
       </div>
     </div>
     <div class="msec">
       <div class="msec-t">Rota e Horários</div>
       <div class="fg fg3">
         <div><label class="fg-label">Identificação da Rota</label><input type="text" id="form-rota" placeholder="ROTA EXTRA 01"></div>
-        <div><label class="fg-label">Motorista</label><input type="text" id="form-motorista" placeholder="Nome do motorista"></div>
+        <div><label class="fg-label">Motorista</label><input type="text" id="form-motorista" placeholder="Nome completo do motorista"></div>
         <div><label class="fg-label">Horário Saída CD</label><input type="time" id="form-saida" value="06:00"></div>
+      </div>
+      <div class="fg" style="margin-top:10px;">
+        <div><label class="fg-label">Origem</label><input type="text" id="form-origem" placeholder="CD SBC"></div>
+        <div><label class="fg-label">Destino</label><input type="text" id="form-destino" placeholder="MWM STO AMARO"></div>
       </div>
     </div>
     <div class="msec">
@@ -442,20 +805,21 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
   </div>
   <div class="mftr">
     <button class="btn btn-ghost" onclick="fecharModal('cadastro')">Cancelar</button>
-    <button class="btn btn-primary" onclick="salvarFormViagem()">Salvar no Banco</button>
+    <button class="btn btn-primary" onclick="salvarFormViagem()" id="btn-salvar-viagem">Salvar no Banco</button>
   </div>
 </div>
 </div>
 
+<!-- Modal Clonagem -->
 <div class="overlay" id="modal-clonagem">
-<div class="modal" style="width:450px;">
+<div class="modal" style="width:460px;">
   <div class="mhdr">
-    <div class="mtitle">Copiar & Colar Programação</div>
+    <div class="mtitle">⎘ Copiar &amp; Colar Programação</div>
     <button class="mx" onclick="fecharModal('clonagem')">×</button>
   </div>
   <div class="mbody">
-    <p style="color:var(--text2);font-size:12px;margin-bottom:12px;">Escolha qual dia usar como base para o dia ativo (<strong style="color:var(--accent)" id="lbl-data-destino"></strong>):</p>
-    <div id="clonagem-lista-dias" style="max-height:250px;overflow-y:auto;margin-bottom:10px;"></div>
+    <p style="color:var(--text2);font-size:12px;margin-bottom:14px;line-height:1.6;">Escolha qual dia usar como base para o dia ativo (<strong style="color:var(--accent)" id="lbl-data-destino"></strong>). Todos os CTEs serão reiniciados como PENDENTE:</p>
+    <div id="clonagem-lista-dias" style="max-height:280px;overflow-y:auto;margin-bottom:10px;"></div>
   </div>
   <div class="mftr">
     <button class="btn btn-ghost" onclick="fecharModal('clonagem')">Cancelar</button>
@@ -464,15 +828,16 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 </div>
 </div>
 
+<!-- Modal Calendário -->
 <div class="overlay" id="modal-data">
-<div class="modal" style="width:320px;">
+<div class="modal" style="width:340px;">
   <div class="mhdr">
-    <div class="mtitle">Gerenciar Calendário</div>
+    <div class="mtitle">📅 Gerenciar Calendário</div>
     <button class="mx" onclick="fecharModal('data')">×</button>
   </div>
   <div class="mbody">
     <label class="fg-label">Digitar Data (Formato DD/MM)</label>
-    <input type="text" id="form-nova-data" placeholder="Ex: 15/06" maxlength="5" style="width:100%;background:var(--bg3);border:1px solid var(--border);padding:8px;color:var(--text);border-radius:5px;font-family:var(--mono);">
+    <input type="text" id="form-nova-data" placeholder="Ex: 15/06" maxlength="5" style="width:100%;background:var(--bg3);border:1px solid var(--border);padding:9px;color:var(--text);border-radius:var(--radius-sm);font-family:var(--mono);font-size:15px;outline:none;letter-spacing:2px;margin-top:4px;">
   </div>
   <div class="mftr">
     <button class="btn btn-ghost" onclick="fecharModal('data')">Cancelar</button>
@@ -481,22 +846,45 @@ tbody td{padding:8px 10px;font-size:12px;color:var(--text2);vertical-align:middl
 </div>
 </div>
 
+<!-- Modal Pedido AVACORP (substitui prompt nativo) -->
+<div class="overlay" id="modal-pedido">
+<div class="modal" style="width:420px;">
+  <div class="mhdr">
+    <div class="mtitle">📋 Vincular Pedido AVACORP</div>
+    <button class="mx" onclick="fecharModal('pedido')">×</button>
+  </div>
+  <div class="mbody">
+    <p style="color:var(--text2);font-size:12px;margin-bottom:6px;" id="pedido-modal-info">Informe o número do pedido/solicitação:</p>
+    <input type="text" id="pedido-modal-input" class="pedido-modal-input" placeholder="Ex: 123456" maxlength="30">
+  </div>
+  <div class="mftr">
+    <button class="btn btn-ghost" onclick="fecharModal('pedido')">Cancelar</button>
+    <button class="btn btn-primary" onclick="confirmarPedidoModal()" id="btn-confirmar-pedido">Confirmar</button>
+  </div>
+</div>
+</div>
+
 <div class="notif" id="notif"></div>
 
 <script>
-// ──────────────────────────────────────────────────────────────────────
-//  BLOCO 0: VARIÁVEIS GLOBAIS
-// ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+//  BLOCO 0: ESTADO GLOBAL
+// ══════════════════════════════════════════════════════════════════
 let viagensDB = {};
 let availableDates = [];
 let currentDate = '';
 let fSearch = '';
 let fTipo = '';
 let fCTE = '';
+let fMotorista = '';
 let expanded = null;
 let _saveTimeout = null;
 let _fileSha = null;
 let diaSelecionadoParaClonar = null;
+let _editandoViagemId = null; // ID da viagem em edição (null = novo)
+let _pedidoCallbackVid = null;
+let _pedidoCallbackPid = null;
+let _carregando = false;
 
 let CONJUNTURA_VEICULOS = {};
 let MAPA_REVERSO_PLACAS = {};
@@ -508,54 +896,64 @@ let alertaStatusFilter = '';
 let alertaSort = { col:'ji', dir:'asc' };
 let _alertaItensAtuais = [];
 
-// ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
 //  BLOCO 1: AUXILIARES DE INTERFACE
-// ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
 function obterGHCredenciais() {
   return {
-    ownerRepo: localStorage.getItem('mwm_gh_repo')   || 'elivancarvalho/mwm-sistema',
-    branch:    localStorage.getItem('mwm_gh_branch') || 'main',
-    token:     localStorage.getItem('mwm_gh_token')  || '',
-    file:      'mwm_dados.json',
-    fleetFile: 'frota.json',
-    routesFile:'rotas_padrao.json',
+    ownerRepo:  localStorage.getItem('mwm_gh_repo')    || 'elivancarvalho/mwm-sistema',
+    branch:     localStorage.getItem('mwm_gh_branch')  || 'main',
+    token:      localStorage.getItem('mwm_gh_token')   || '',
+    file:       'mwm_dados.json',
+    fleetFile:  'frota.json',
+    routesFile: 'rotas_padrao.json',
     driversFile:'motoristas.json'
   };
 }
 
-function setSyncOk()      { const s=document.getElementById('sync-indicator'); if(s) s.className='sync-ok'; }
-function setSyncErr()     { const s=document.getElementById('sync-indicator'); if(s) s.className='sync-err'; }
-function setSyncPending() { const s=document.getElementById('sync-indicator'); if(s) s.className='sync-pend'; }
+function setSyncOk()      { const s=document.getElementById('sync-indicator'); if(s){s.className='sync-dot sync-ok';s.title='Sincronizado com a nuvem';} }
+function setSyncErr()     { const s=document.getElementById('sync-indicator'); if(s){s.className='sync-dot sync-err';s.title='Erro de conexão';} }
+function setSyncPending() { const s=document.getElementById('sync-indicator'); if(s){s.className='sync-dot sync-pend';s.title='Salvando...';} }
+function setSyncOff()     { const s=document.getElementById('sync-indicator'); if(s){s.className='sync-dot sync-off';s.title='Sem token configurado';} }
 
 function setLoadingState(on, msg='') {
-  const bar=document.getElementById('loading-bar');
-  const lbl=document.getElementById('loading-label');
+  _carregando = on;
+  const bar = document.getElementById('loading-bar');
+  const lbl = document.getElementById('loading-label');
   if(bar) bar.style.display = on ? 'block' : 'none';
   if(lbl) { lbl.style.display = on ? 'block' : 'none'; lbl.textContent = msg; }
+  if(on) renderSkeletons();
 }
 
-function notify(m, c) {
-  const n=document.getElementById('notif');
+function notify(m, c, dur=2800) {
+  const n = document.getElementById('notif');
   if(!n) return;
-  n.style.background = c || 'var(--green)';
+  n.style.background = c || 'linear-gradient(135deg,#0f7a44,#065f33)';
   n.innerHTML = m;
   n.classList.add('show');
-  setTimeout(() => n.classList.remove('show'), 2500);
+  clearTimeout(n._t);
+  n._t = setTimeout(() => n.classList.remove('show'), dur);
 }
 
-function toggleSidebar() { document.getElementById('app').classList.toggle('collapsed'); }
+function toggleSidebar() {
+  const app = document.getElementById('app');
+  const btn = document.getElementById('toggle-btn');
+  app.classList.toggle('collapsed');
+  btn.textContent = app.classList.contains('collapsed') ? '▶' : '◀';
+}
 function abrirModal(id)  { document.getElementById('modal-'+id).classList.add('open'); }
 function fecharModal(id) { document.getElementById('modal-'+id).classList.remove('open'); }
 
-function setSearch(v) { fSearch=v; renderTable(); }
-function setTipo(v)   { fTipo=v;   renderTable(); }
-function setCTE(v)    { fCTE=v;    renderTable(); }
+function setSearch(v)    { fSearch=v;    renderTable(); }
+function setTipo(v)      { fTipo=v;      renderTable(); }
+function setCTE(v)       { fCTE=v;       renderTable(); }
+function setMotorista(v) { fMotorista=v; renderTable(); }
 
 function h2m(s) { const[h,m]=(s||'00:00').split(':').map(Number); return h*60+m; }
 function now()  { const d=new Date(); return d.getHours()*60+d.getMinutes(); }
 
 function avaSt(v) {
-  if(!v.paradas || !v.paradas.length) return 'N/A';
+  if(!v || !v.paradas || !v.paradas.length) return 'N/A';
   const rel = v.paradas.filter(p => p.pedido && p.pedido !== '—');
   if(!rel.length) return 'N/A';
   const imp = rel.filter(p => p.importado).length;
@@ -564,7 +962,7 @@ function avaSt(v) {
 
 function janelaStatus(p) {
   if(p.importado) return { cls:'jimported', txt:'✓ Importado', urgente:false };
-  const n=now(), fim=h2m(p.jf), restam=fim-n;
+  const n=now(), fim=h2m(p.jf||'23:59'), restam=fim-n;
   if(n>fim)      return { cls:'jdanger', txt:'ATRASADO', urgente:false };
   if(restam<=30) return { cls:'jwarn',   txt:`Fecha em ${restam}m!`, urgente:true };
   return { cls:'jok', txt:'No prazo', urgente:false };
@@ -582,109 +980,96 @@ function obterNomeDiaSemana(dataTexto) {
 
 function reverterCorrupcaoTexto(str) {
   if (!str || typeof str !== 'string') return str;
-  try {
-    return decodeURIComponent(escape(str));
-  } catch (e) {
-    let result = str;
-    const mapaReparo = {
-      'Ã¢â‚¬â€”': '—', 'â€”': '—', 'Ã¼': 'ü', 'Ã‡': 'Ç', 'Ã§': 'ç', 'Ã£': 'ã', 'Ã ': 'à', 'Ã¡': 'á', 
-      'Ãª': 'ê', 'Ã©': 'é', 'Ã­': 'í', 'Ã³': 'ó', 
-      'Ãº': 'ú', 'Ã”': 'Ô', 'Ã•': 'Õ', 'Ã„': 'Ä'
-    };
-    Object.keys(mapaReparo).forEach(key => {
-      result = result.split(key).join(mapaReparo[key]);
-    });
-    return result;
+  try { return decodeURIComponent(escape(str)); }
+  catch(e) {
+    let r = str;
+    const m = {'Ã¢â‚¬â€"':'—','â€"':'—','Ã¼':'ü','Ã‡':'Ç','Ã§':'ç','Ã£':'ã','Ã ':'à','Ã¡':'á','Ãª':'ê','Ã©':'é','Ã­':'í','Ã³':'ó','Ãº':'ú','Ã"':'Ô','Ã•':'Õ','Ã„':'Ä'};
+    Object.keys(m).forEach(k => { r = r.split(k).join(m[k]); });
+    return r;
   }
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  BLOCO 2: COMUNICAÇÃO GITHUB API
-// ──────────────────────────────────────────────────────────────────────
-async function fetchComTimeout(url, options = {}, timeoutMs = 8000) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    return await fetch(url, { ...options, signal: controller.signal });
-  } finally {
-    clearTimeout(timer);
-  }
+// ══════════════════════════════════════════════════════════════════
+//  BLOCO 2: GITHUB API
+// ══════════════════════════════════════════════════════════════════
+async function fetchComTimeout(url, options={}, timeoutMs=10000) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), timeoutMs);
+  try { return await fetch(url, {...options, signal:ctrl.signal}); }
+  finally { clearTimeout(t); }
 }
 
 async function carregarDicionariosRemotosGitHub() {
-  const creds = obterGHCredenciais();
-  if(!creds.token) return false;
+  const c = obterGHCredenciais();
+  if(!c.token) return false;
+  const hdrs = { Authorization:`token ${c.token}`, Accept:'application/vnd.github.v3+json' };
+  const decodeB64 = raw => decodeURIComponent(escape(atob(raw.replace(/\n/g,''))));
 
-  try {
-    const urlF = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.fleetFile}?ref=${creds.branch}&t=${Date.now()}`;
-    const respF = await fetchComTimeout(urlF, { headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' } });
-    if(respF.ok) {
-      const dataF = await respF.json();
-      const contentF = decodeURIComponent(escape(atob(dataF.content.split('\n').join(''))));
-      CONJUNTURA_VEICULOS = JSON.parse(contentF);
-      MAPA_REVERSO_PLACAS = {};
-      Object.keys(CONJUNTURA_VEICULOS).forEach(key => {
-        if(CONJUNTURA_VEICULOS[key].placa)
-          MAPA_REVERSO_PLACAS[CONJUNTURA_VEICULOS[key].placa] = { ...CONJUNTURA_VEICULOS[key], frotaNova:key };
-      });
-    }
-  } catch(e) { console.error('Erro ao carregar frota:', e); }
+  const loadFile = async (fname) => {
+    try {
+      const r = await fetchComTimeout(`https://api.github.com/repos/${c.ownerRepo}/contents/${fname}?ref=${c.branch}&t=${Date.now()}`, { headers:hdrs });
+      if(!r.ok) return null;
+      const d = await r.json();
+      return JSON.parse(decodeB64(d.content));
+    } catch(e) { console.warn(`Erro ao carregar ${fname}:`, e); return null; }
+  };
 
-  try {
-    const urlR = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.routesFile}?ref=${creds.branch}&t=${Date.now()}`;
-    const respR = await fetchComTimeout(urlR, { headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' } });
-    if(respR.ok) {
-      const dataR = await respR.json();
-      const contentR = decodeURIComponent(escape(atob(dataR.content.split('\n').join(''))));
-      ROTAS_MACRO_DATABASE = JSON.parse(contentR);
-    }
-  } catch(e) { console.error('Erro ao carregar rotas:', e); }
+  const [frota, rotas, motoristas] = await Promise.all([
+    loadFile(c.fleetFile), loadFile(c.routesFile), loadFile(c.driversFile)
+  ]);
 
-  try {
-    const urlD = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.driversFile}?ref=${creds.branch}&t=${Date.now()}`;
-    const respD = await fetchComTimeout(urlD, { headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' } });
-    if(respD.ok) {
-      const dataD = await respD.json();
-      const contentD = decodeURIComponent(escape(atob(dataD.content.split('\n').join(''))));
-      const raw = JSON.parse(contentD);
-      MOTORISTAS_CONTATOS = {};
-      Object.keys(raw).forEach(nome => {
-        const numero = String(raw[nome]).replace(/\D/g, ''); 
-        MOTORISTAS_CONTATOS[nome.trim().toUpperCase()] = numero;
-      });
-    }
-  } catch(e) { console.error('Erro ao carregar motoristas:', e); }
-
+  if(frota) {
+    CONJUNTURA_VEICULOS = frota;
+    MAPA_REVERSO_PLACAS = {};
+    Object.keys(frota).forEach(k => {
+      if(frota[k].placa) MAPA_REVERSO_PLACAS[frota[k].placa] = {...frota[k], frotaNova:k};
+    });
+  }
+  if(rotas) ROTAS_MACRO_DATABASE = rotas;
+  if(motoristas) {
+    MOTORISTAS_CONTATOS = {};
+    Object.keys(motoristas).forEach(n => {
+      MOTORISTAS_CONTATOS[n.trim().toUpperCase()] = String(motoristas[n]).replace(/\D/g,'');
+    });
+  }
   return true;
 }
 
 async function carregarTodos() {
-  const creds = obterGHCredenciais();
-  if(!creds.token) { carregarCache(); setSyncErr(); updateDashboard(); return; }
+  const c = obterGHCredenciais();
+  if(!c.token) { carregarCache(); setSyncOff(); updateDashboard(); return; }
 
-  await carregarDicionariosRemotosGitHub();
-
+  setLoadingState(true, 'Conectando à nuvem...');
   try {
-    const apiURL = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.file}?ref=${creds.branch}&t=${Date.now()}`;
-    const resp = await fetchComTimeout(apiURL, { headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' } });
+    await carregarDicionariosRemotosGitHub();
+    const url = `https://api.github.com/repos/${c.ownerRepo}/contents/${c.file}?ref=${c.branch}&t=${Date.now()}`;
+    const resp = await fetchComTimeout(url, { headers:{Authorization:`token ${c.token}`, Accept:'application/vnd.github.v3+json'} });
     if(resp.status === 200) {
       const meta = await resp.json();
       _fileSha = meta.sha;
-      const content = decodeURIComponent(escape(atob(meta.content.split('\n').join(''))));
+      const content = decodeURIComponent(escape(atob(meta.content.replace(/\n/g,''))));
       const d = JSON.parse(content);
       viagensDB = d.viagens || {};
       availableDates = d.dates || Object.keys(viagensDB).sort();
       salvarCache();
       setSyncOk();
-    } else { setSyncErr(); carregarCache(); }
+      notify('✓ Dados carregados da nuvem');
+    } else {
+      setSyncErr();
+      carregarCache();
+      notify('⚠ Falha ao carregar nuvem. Exibindo cache local.', 'linear-gradient(135deg,#7a3f0f,#5a2d00)');
+    }
   } catch(e) {
     setSyncErr();
     carregarCache();
-    notify('⚠ Sem conexão com a Nuvem. Exibindo dados salvos localmente.', 'var(--orange)');
+    notify('⚠ Sem conexão. Exibindo dados locais.', 'linear-gradient(135deg,#7a3f0f,#5a2d00)');
+  } finally {
+    setLoadingState(false);
+    updateDashboard();
   }
-
-  updateDashboard();
 }
+
+function sincronizarForcar() { carregarTodos(); }
 
 function agendarSalvamento() {
   clearTimeout(_saveTimeout);
@@ -694,80 +1079,94 @@ function agendarSalvamento() {
 }
 
 async function gravarTudo() {
-  const creds = obterGHCredenciais();
-  if(!creds.token) return;
+  const c = obterGHCredenciais();
+  if(!c.token) return;
   try {
-    const apiURL = `https://api.github.com/repos/${creds.ownerRepo}/contents/${creds.file}`;
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify({ viagens:viagensDB, dates:availableDates }, null, 2))));
-    const body = { message:'Sincronismo mestre MWM estável', content, branch:creds.branch };
+    const url = `https://api.github.com/repos/${c.ownerRepo}/contents/${c.file}`;
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify({viagens:viagensDB, dates:availableDates}, null, 2))));
+    const body = {message:'Sincronismo mestre MWM estável', content, branch:c.branch};
     if(_fileSha) body.sha = _fileSha;
-    const resp = await fetchComTimeout(apiURL, { method:'PUT', headers:{ Authorization:`token ${creds.token}`, Accept:'application/vnd.github.v3+json' }, body:JSON.stringify(body) }, 12000);
-    if(resp.ok) { const r=await resp.json(); _fileSha=r.content.sha; setSyncOk(); notify('✓ Alterações guardadas na Nuvem'); }
-    else { setSyncErr(); }
-  } catch(e) { setSyncErr(); notify('⚠ Não foi possível salvar na Nuvem (sem conexão).', 'var(--orange)'); }
+    const resp = await fetchComTimeout(url, {method:'PUT', headers:{Authorization:`token ${c.token}`, Accept:'application/vnd.github.v3+json'}, body:JSON.stringify(body)}, 15000);
+    if(resp.ok) { const r=await resp.json(); _fileSha=r.content.sha; setSyncOk(); notify('✓ Alterações gravadas na nuvem'); }
+    else { setSyncErr(); notify('⚠ Falha ao gravar na nuvem.','linear-gradient(135deg,#7a1414,#5a0a0a)'); }
+  } catch(e) { setSyncErr(); notify('⚠ Sem conexão. Tentando novamente...','linear-gradient(135deg,#7a3f0f,#5a2d00)'); }
+}
+
+async function testarConexao() {
+  const c = obterGHCredenciais();
+  if(!c.token) { notify('⚠ Configure o token primeiro.','linear-gradient(135deg,#7a3f0f,#5a2d00)'); return; }
+  notify('🔄 Testando conexão...','linear-gradient(135deg,#0f4a7a,#063357)');
+  try {
+    const r = await fetchComTimeout(`https://api.github.com/repos/${c.ownerRepo}`, {headers:{Authorization:`token ${c.token}`}}, 6000);
+    if(r.ok) { const d=await r.json(); notify(`✓ Conectado! Repo: ${d.full_name}`,'linear-gradient(135deg,#0f7a44,#065f33)'); }
+    else notify(`⚠ Erro ${r.status} — verifique token/repositório.`,'linear-gradient(135deg,#7a1414,#5a0a0a)', 4000);
+  } catch(e) { notify('⚠ Timeout ou sem conexão.','linear-gradient(135deg,#7a1414,#5a0a0a)'); }
 }
 
 function repararMojibakeBancoCompleto() {
-  if(!confirm("Deseja executar a limpeza completa de UTF-8? O sistema corrigirá os textos corrompidos (como 'â€”' ou 'Ã£') acumulados no histórico.")) return;
-  
-  setLoadingState(true, "Purgando Mojibake do banco de dados...");
+  if(!confirm('Deseja executar a limpeza completa de UTF-8? O sistema corrigirá os textos corrompidos acumulados no histórico.')) return;
+  setLoadingState(true, 'Reparando acentos corrompidos...');
   try {
     Object.keys(viagensDB).forEach(dateKey => {
-      viagensDB[dateKey] = viajesDB = viagensDB[dateKey].map(v => {
-        v.frota = reverterCorrupcaoTexto(v.frota);
-        v.frotaAntiga = reverterCorrupcaoTexto(v.frotaAntiga);
-        v.placa = reverterCorrupcaoTexto(v.placa);
-        v.carreta = reverterCorrupcaoTexto(v.carreta);
-        v.motorista = reverterCorrupcaoTexto(v.motorista);
-        v.rota = reverterCorrupcaoTexto(v.rota);
-        v.origem = reverterCorrupcaoTexto(v.origem);
-        v.destino = reverterCorrupcaoTexto(v.destino);
-        v.obs = reverterCorrupcaoTexto(v.obs);
-        
+      // BUG FIX: corrigido typo 'viajesDB' — era variável indefinida
+      viagensDB[dateKey] = viagensDB[dateKey].map(v => {
+        v.frota      = reverterCorrupcaoTexto(v.frota);
+        v.frotaAntiga= reverterCorrupcaoTexto(v.frotaAntiga);
+        v.placa      = reverterCorrupcaoTexto(v.placa);
+        v.carreta    = reverterCorrupcaoTexto(v.carreta);
+        v.motorista  = reverterCorrupcaoTexto(v.motorista);
+        v.rota       = reverterCorrupcaoTexto(v.rota);
+        v.origem     = reverterCorrupcaoTexto(v.origem);
+        v.destino    = reverterCorrupcaoTexto(v.destino);
+        v.obs        = reverterCorrupcaoTexto(v.obs);
         if(v.paradas && v.paradas.length) {
           v.paradas = v.paradas.map(p => {
             p.fornecedor = reverterCorrupcaoTexto(p.fornecedor);
-            p.cidade = reverterCorrupcaoTexto(p.cidade);
-            p.janela = reverterCorrupcaoTexto(p.janela);
-            p.pedido = reverterCorrupcaoTexto(p.pedido);
+            p.cidade     = reverterCorrupcaoTexto(p.cidade);
+            p.janela     = reverterCorrupcaoTexto(p.janela);
+            p.pedido     = reverterCorrupcaoTexto(p.pedido);
             return p;
           });
         }
         return v;
       });
     });
-    
-    notify("✓ Limpeza concluída! Gravando dados reparados na Nuvem...", "var(--green)");
+    notify('✓ Limpeza concluída! Gravando...','linear-gradient(135deg,#0f7a44,#065f33)');
     agendarSalvamento();
-    setTimeout(() => { f = gravarTudo(); updateDashboard(); }, 1200);
+    setTimeout(() => { gravarTudo(); updateDashboard(); }, 1200);
   } catch(err) {
     console.error(err);
-    alert("Erro na execução do reparo. Abra o console.");
+    notify('⚠ Erro no reparo. Veja o console.','linear-gradient(135deg,#7a1414,#5a0a0a)');
   } finally {
     setLoadingState(false);
   }
 }
 
-// ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
 //  BLOCO 3: DASHBOARD ENGINE
-// ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
 function updateDashboard() {
   if(!currentDate && availableDates.length) currentDate = availableDates[0];
   if(!currentDate) currentDate = new Date().toLocaleDateString('pt-BR').slice(0,5);
   if(!availableDates.includes(currentDate)) { availableDates.push(currentDate); availableDates.sort(); }
 
   const sub = document.getElementById('prog-date-subtitle');
-  if(sub) sub.textContent = `Emissões CTE e Janelas AVACORP — Dia Ativo: ${currentDate} (${obterNomeDiaSemana(currentDate)})`;
+  if(sub) sub.textContent = `CTE · AVACORP · Janelas — Dia Ativo: ${currentDate} (${obterNomeDiaSemana(currentDate)})`;
 
   renderDateNav();
   renderTable();
   renderStats();
   updateBadges();
+  atualizarFiltroMotoristas();
 
-  if(document.getElementById('page-disp').classList.contains('active'))    renderDisponibilidade();
-  if(document.getElementById('page-alertas').classList.contains('active')) renderAlertas();
-  if(document.getElementById('page-pedidos').classList.contains('active')) renderPedidos();
-  if(document.getElementById('page-pend').classList.contains('active'))    renderPend();
+  const pgDisp    = document.getElementById('page-disp');
+  const pgAlertas = document.getElementById('page-alertas');
+  const pgPedidos = document.getElementById('page-pedidos');
+  const pgPend    = document.getElementById('page-pend');
+  if(pgDisp    && pgDisp.classList.contains('active'))    renderDisponibilidade();
+  if(pgAlertas && pgAlertas.classList.contains('active')) renderAlertas();
+  if(pgPedidos && pgPedidos.classList.contains('active')) renderPedidos();
+  if(pgPend    && pgPend.classList.contains('active'))    renderPend();
 }
 
 function renderDateNav() {
@@ -780,21 +1179,101 @@ function renderDateNav() {
 
 function setDate(d) { currentDate=d; expanded=null; updateDashboard(); }
 
+// Mini donut SVG chart
+function donutSVG(pct, color, size=36, stroke=5) {
+  const r = (size-stroke)/2, circ = 2*Math.PI*r;
+  const dash = (pct/100)*circ, gap = circ-dash;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" class="stat-donut">
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--bg4)" stroke-width="${stroke}"/>
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${stroke}"
+      stroke-dasharray="${dash} ${gap}" stroke-linecap="round"
+      transform="rotate(-90 ${size/2} ${size/2})"/>
+  </svg>`;
+}
+
 function renderStats() {
   const vs = viagensDB[currentDate] || [];
+  const total  = vs.length;
+  const trucks = vs.filter(v => v.tipo==='TRUCK').length;
+  const conjs  = vs.filter(v => v.tipo==='CONJUNTO').length;
+  const prontos= vs.filter(v => avaSt(v)==='IMPORTADO'||avaSt(v)==='N/A').length;
+  const pendCte= vs.filter(v => v.cte==='PENDENTE').length;
+  const pctT   = total ? Math.round(trucks/total*100) : 0;
+  const pctC   = total ? Math.round(conjs/total*100) : 0;
+  const pctP   = total ? Math.round(prontos/total*100) : 0;
+  const pctCte = total ? Math.round((total-pendCte)/total*100) : 0;
+
   document.getElementById('stats-row').innerHTML =
-    `<div class="stat"><div class="stl">Total Viagens</div><div class="stv">${vs.length}</div></div>` +
-    `<div class="stat"><div class="stl">Trucks</div><div class="stv" style="color:var(--accent)">${vs.filter(v=>v.tipo==='TRUCK').length}</div></div>` +
-    `<div class="stat"><div class="stl">Conjuntos</div><div class="stv" style="color:var(--purple)">${vs.filter(v=>v.tipo==='CONJUNTO').length}</div></div>` +
-    `<div class="stat"><div class="stl">Prontos p/ CTE</div><div class="stv" style="color:var(--green)">${vs.filter(v=>avaSt(v)==='IMPORTADO'||avaSt(v)==='N/A').length}/${vs.length}</div></div>`;
+    `<div class="stat">
+      <div class="stl">Total Viagens</div>
+      <div class="stv">${total}</div>
+      ${donutSVG(100,'var(--accent)')}
+    </div>` +
+    `<div class="stat">
+      <div class="stl">Trucks</div>
+      <div class="stv" style="color:var(--accent)">${trucks}</div>
+      ${donutSVG(pctT,'var(--accent)')}
+    </div>` +
+    `<div class="stat">
+      <div class="stl">Conjuntos</div>
+      <div class="stv" style="color:var(--purple)">${conjs}</div>
+      ${donutSVG(pctC,'var(--purple)')}
+    </div>` +
+    `<div class="stat">
+      <div class="stl">Prontos p/ CTE</div>
+      <div class="stv" style="color:var(--green)">${prontos}<span style="font-size:12px;color:var(--text3)">/${total}</span></div>
+      ${donutSVG(pctP,'var(--green)')}
+    </div>` +
+    `<div class="stat">
+      <div class="stl">CTE Emitidos</div>
+      <div class="stv" style="color:var(--teal)">${total-pendCte}<span style="font-size:12px;color:var(--text3)">/${total}</span></div>
+      ${donutSVG(pctCte,'var(--teal)')}
+    </div>`;
+}
+
+function renderSkeletons() {
+  const tbody = document.getElementById('main-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = Array(6).fill(0).map(() =>
+    `<tr class="skeleton-row">
+      <td><div class="skel skel-sm" style="width:14px;height:14px;border-radius:50%"></div></td>
+      <td><div class="skel" style="width:80px"></div></td>
+      <td><div class="skel" style="width:70px"></div></td>
+      <td><div class="skel" style="width:90px"></div></td>
+      <td><div class="skel" style="width:120px"></div></td>
+      <td><div class="skel" style="width:60px"></div></td>
+      <td><div class="skel" style="width:50px;height:18px;border-radius:9px"></div></td>
+      <td><div class="skel" style="width:40px"></div></td>
+      <td><div class="skel" style="width:140px"></div></td>
+      <td><div class="skel" style="width:50px;height:18px;border-radius:4px"></div></td>
+      <td><div class="skel" style="width:60px;height:18px;border-radius:4px"></div></td>
+      <td><div class="skel" style="width:80px;height:5px;border-radius:3px"></div></td>
+      <td><div class="skel" style="width:70px"></div></td>
+      <td><div class="skel" style="width:50px"></div></td>
+      <td><div class="skel" style="width:80px"></div></td>
+    </tr>`
+  ).join('');
+}
+
+function atualizarFiltroMotoristas() {
+  const sel = document.getElementById('filter-motorista');
+  if(!sel) return;
+  const vs = viagensDB[currentDate] || [];
+  const motoristas = [...new Set(vs.map(v => v.motorista).filter(Boolean))].sort();
+  const atual = sel.value;
+  sel.innerHTML = '<option value="">Todos Motoristas</option>' +
+    motoristas.map(m => `<option value="${m}" ${m===atual?'selected':''}>${m}</option>`).join('');
 }
 
 function renderTable() {
+  if(_carregando) return;
   const s = fSearch.toLowerCase();
   const filtered = (viagensDB[currentDate]||[]).filter(v => {
-    if(s && !v.frota.toLowerCase().includes(s) && !v.motorista.toLowerCase().includes(s) && !v.rota.toLowerCase().includes(s)) return false;
-    if(fTipo && v.tipo !== fTipo) return false;
-    if(fCTE  && v.cte  !== fCTE)  return false;
+    if(!v || !v.frota) return false;
+    if(s && !v.frota.toLowerCase().includes(s) && !(v.motorista||'').toLowerCase().includes(s) && !(v.rota||'').toLowerCase().includes(s)) return false;
+    if(fTipo  && v.tipo  !== fTipo)  return false;
+    if(fCTE   && v.cte   !== fCTE)   return false;
+    if(fMotorista && v.motorista !== fMotorista) return false;
     return true;
   });
 
@@ -805,48 +1284,71 @@ function renderTable() {
   if(!tbody) return;
   tbody.innerHTML = '';
 
+  if(!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="15" style="text-align:center;color:var(--text3);padding:30px;font-size:12px;">
+      ${(viagensDB[currentDate]||[]).length === 0 ? '📋 Nenhuma viagem cadastrada para este dia.' : '🔍 Nenhum resultado para os filtros aplicados.'}
+    </td></tr>`;
+    return;
+  }
+
   filtered.forEach(v => {
     const ava  = avaSt(v);
     const prog = v.paradas.length ? Math.round(v.paradas.filter(p=>p.importado).length/v.paradas.length*100) : 100;
-    const tr   = document.createElement('tr');
+    const progColor = prog===100 ? 'var(--green)' : prog>0 ? 'var(--amber)' : 'var(--red)';
 
+    // Sanitizar valores antes de inserir no DOM
+    const esc = s => String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+    const tr = document.createElement('tr');
     tr.innerHTML =
-      `<td><span style="cursor:pointer;user-select:none;" onclick="toggleExp(${v.id})">${expanded===v.id?'▼':'▶'}</span></td>` +
-      `<td><strong>${v.frota}</strong><br><small style="color:var(--text3);font-size:10px">Antigo: ${v.frotaAntiga||'—'}</small></td>` +
-      `<td><strong style="color:var(--text2);font-family:var(--mono);font-size:11.5px">${v.placa}</strong></td>` +
-      `<td><small style="color:var(--purple);font-size:11px">${v.carreta}</small></td>` +
-      `<td>${v.motorista}</td>` +
-      `<td><strong>${v.rota}</strong></td>` +
-      `<td><span class="${v.tipo==='TRUCK'?'tipo-truck':'tipo-conj'}">${v.tipo}</span></td>` +
-      `<td>${v.saida}</td>` +
-      `<td><small style="color:var(--text2)">${v.origem} → ${v.destino}</small></td>` +
-      `<td>${v.paradas.map(p=>`<span class="pb p52" onclick="digitarPedidoPrompt(${v.id},'${p.id}','${p.pedido}')" style="cursor:pointer">${p.pedido}</span>`).join(' ')}</td>` +
+      `<td><span style="cursor:pointer;user-select:none;color:var(--text3);transition:color .12s;" onmouseenter="this.style.color='var(--accent)'" onmouseleave="this.style.color='var(--text3)'" onclick="toggleExp(${v.id})">${expanded===v.id?'▼':'▶'}</span></td>` +
+      `<td><strong style="color:var(--text)">${esc(v.frota)}</strong><br><small style="color:var(--text4);font-size:10px">Ant: ${esc(v.frotaAntiga||'—')}</small></td>` +
+      `<td><code style="color:var(--text2);font-family:var(--mono);font-size:11px">${esc(v.placa)}</code></td>` +
+      `<td><small style="color:var(--purple);font-size:10.5px">${esc(v.carreta)}</small></td>` +
+      `<td style="color:var(--text)">${esc(v.motorista)}</td>` +
+      `<td><strong style="color:var(--text)">${esc(v.rota)}</strong></td>` +
+      `<td><span class="${v.tipo==='TRUCK'?'tipo-truck':'tipo-conj'}">${esc(v.tipo)}</span></td>` +
+      `<td style="font-family:var(--mono);color:var(--teal)">${esc(v.saida)}</td>` +
+      `<td><small style="color:var(--text3)">${esc(v.origem)} <span style="color:var(--accent)">→</span> ${esc(v.destino)}</small></td>` +
+      `<td>${v.paradas.map(p=>`<span class="pb p52" onclick="abrirModalPedido(${v.id},'${p.id}',\`${esc(p.pedido)}\`)" title="Clique para editar">${esc(p.pedido)}</span>`).join(' ')}</td>` +
       `<td><span class="${ava==='IMPORTADO'?'ava-ok':ava==='PARCIAL'?'ava-par':'ava-pend'}">${ava}</span></td>` +
-      `<td><div class="prog-track"><div class="prog-fill" style="width:${prog}%;background:var(--green)"></div></div></td>` +
-      `<td><select class="ctesel" onchange="updateCTE(${v.id},this.value)"><option value="PENDENTE" ${v.cte==='PENDENTE'?'selected':''}>PENDENTE</option><option value="IMPRESSO" ${v.cte==='IMPRESSO'?'selected':''}>IMPRESSO</option><option value="NULA" ${v.cte==='NULA'?'selected':''}>NULA</option></select></td>` +
-      `<td><small style="color:var(--text3)">${v.obs||'—'}</small></td>`;
+      `<td><div title="${prog}% importado"><div class="prog-track"><div class="prog-fill" style="width:${prog}%;background:${progColor}"></div></div><small style="color:var(--text3);font-size:9px">${prog}%</small></div></td>` +
+      `<td><select class="ctesel" onchange="updateCTE(${v.id},this.value)">
+        <option value="PENDENTE" ${v.cte==='PENDENTE'?'selected':''}>PENDENTE</option>
+        <option value="IMPRESSO" ${v.cte==='IMPRESSO'?'selected':''}>IMPRESSO</option>
+        <option value="NULA" ${v.cte==='NULA'?'selected':''}>NULA</option>
+      </select></td>` +
+      `<td style="white-space:nowrap">
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="editarViagem(${v.id})" title="Editar viagem">✏️</button>
+      </td>` +
+      `<td><small style="color:var(--text3)">${esc(v.obs||'—')}</small></td>`;
 
     tbody.appendChild(tr);
 
     if(expanded === v.id) {
       const exp = document.createElement('tr');
       exp.className = 'erow';
-      exp.innerHTML = `<td colspan="14"><div class="econtent">
+      exp.innerHTML = `<td colspan="15"><div class="econtent">
+        <div class="esec">Coletas desta Rota</div>
         <table class="atbl">
-          <thead><tr><th>Fornecedor</th><th>Janela</th><th>Pedido / Solicitação</th><th>Status Janela</th><th>Ação</th></tr></thead>
+          <thead><tr>
+            <th>Fornecedor</th><th>Janela</th><th>Pedido / Solicitação</th>
+            <th>Status Janela</th><th>AVACORP</th>
+          </tr></thead>
           <tbody>${v.paradas.map(p => {
             const js = janelaStatus(p);
             return `<tr>
-              <td><strong>${p.fornecedor}</strong></td>
-              <td>${p.janela}</td>
-              <td><button class="btn btn-ghost btn-sm" onclick="digitarPedidoPrompt(${v.id},'${p.id}','${p.pedido}')">${p.pedido==='—'?'+ Vincular Pedido':p.pedido}</button></td>
+              <td><strong style="color:var(--text)">${esc(p.fornecedor)}</strong></td>
+              <td style="font-family:var(--mono);font-size:11px">${esc(p.janela)}</td>
+              <td><button class="btn btn-ghost btn-sm" onclick="abrirModalPedido(${v.id},'${p.id}',\`${esc(p.pedido)}\`)">${p.pedido==='—'?'+ Vincular':'✏ '+esc(p.pedido)}</button></td>
               <td><span class="${js.cls}">${js.txt}</span></td>
-              <td><button class="btn btn-ghost btn-sm" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'Desfazer Baixa':'✓ Baixar AVACORP'}</button></td>
+              <td><button class="btn btn-sm ${p.importado?'btn-danger':'btn-success'}" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'↩ Desfazer':'✓ Baixar AVACORP'}</button></td>
             </tr>`;
           }).join('')}</tbody>
         </table>
-        <div style="margin-top:10px;">
-          <button class="btn btn-sm" style="background:var(--red-bg);color:var(--red);" onclick="removerViagemMesa(${v.id})">Remover Rota do Dia</button>
+        <div style="margin-top:12px;display:flex;gap:8px;">
+          <button class="btn btn-danger btn-sm" onclick="removerViagemMesa(${v.id})">🗑 Remover Rota do Dia</button>
+          <button class="btn btn-ghost btn-sm" onclick="editarViagem(${v.id})">✏️ Editar Viagem</button>
         </div>
       </div></td>`;
       tbody.appendChild(exp);
@@ -861,30 +1363,30 @@ function toggleExp(id) {
 
 function updateBadges() {
   const vs = viagensDB[currentDate] || [];
-  const badgPend    = document.getElementById('badge-pend');
-  const badgAva     = document.getElementById('badge-ava');
-  const badgAlertas = document.getElementById('badge-alertas');
-  if(badgPend)    badgPend.textContent    = vs.filter(v => v.cte === 'PENDENTE').length;
-  if(badgAva)     badgAva.textContent     = vs.filter(v => avaSt(v)==='PENDENTE' || avaSt(v)==='PARCIAL').length;
+  const bPend = document.getElementById('badge-pend');
+  const bAva  = document.getElementById('badge-ava');
+  const bAlt  = document.getElementById('badge-alertas');
+  if(bPend) bPend.textContent = vs.filter(v => v.cte === 'PENDENTE').length;
+  if(bAva)  bAva.textContent  = vs.filter(v => avaSt(v)==='PENDENTE'||avaSt(v)==='PARCIAL').length;
   let urgentes = 0;
   vs.forEach(v => (v.paradas||[]).forEach(p => { if(!p.importado && janelaStatus(p).urgente) urgentes++; }));
-  if(badgAlertas) badgAlertas.textContent = urgentes;
+  if(bAlt) bAlt.textContent = urgentes;
 }
 
-// ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
 //  BLOCO 4: PÁGINAS SECUNDÁRIAS
-// ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
 function renderDisponibilidade() {
   const vs = viagensDB[currentDate] || [];
   const lblSub = document.getElementById('disp-date-subtitle');
-  if(lblSub) lblSub.textContent = `Frota ativa calculada para: ${currentDate} (${obterNomeDiaSemana(currentDate)})`;
+  if(lblSub) lblSub.textContent = `Cruzamento calculado para: ${currentDate} (${obterNomeDiaSemana(currentDate)})`;
 
   const frotasOcupadas = {};
   vs.forEach(v => {
-    if(v.frota) frotasOcupadas[v.frota] = { rota:v.rota, motorista:v.motorista };
+    if(v.frota) frotasOcupadas[v.frota] = {rota:v.rota, motorista:v.motorista};
     if(v.carreta && v.carreta !== '—') {
       const pref = v.carreta.split(' ')[0];
-      frotasOcupadas[pref] = { rota:v.rota, motorista:v.motorista };
+      frotasOcupadas[pref] = {rota:v.rota, motorista:v.motorista};
     }
   });
 
@@ -892,42 +1394,65 @@ function renderDisponibilidade() {
   const cO = document.getElementById('disp-ocupados-container');
   if(!cL || !cO) return;
 
-  let htmlL='', htmlO='', countL=0;
-
-  Object.keys(CONJUNTURA_VEICULOS).forEach(prefixo => {
-    const v = CONJUNTURA_VEICULOS[prefixo];
-    if(v.tipo === 'CARRETA') return;
-    const ocupado = frotasOcupadas[prefixo];
-    if(ocupado) {
-      htmlO += `<div class="disp-item" style="border-left:3px solid var(--red);">
-        <div><strong>${prefixo}</strong> — <span style="font-size:11px;color:var(--text2)">${v.placa}</span> [${v.tipo||'?'}]</div>
-        <div style="font-size:11px;text-align:right;color:var(--red);">🔒 ${ocupado.rota}</div>
+  let htmlL='', htmlO='', countL=0, countO=0;
+  Object.keys(CONJUNTURA_VEICULOS).forEach(pref => {
+    const v = CONJUNTURA_VEICULOS[pref];
+    if(v.tipo==='CARRETA') return;
+    const ocu = frotasOcupadas[pref];
+    const tipoTag = `<span class="tipo-${v.tipo==='TRUCK'?'truck':'conj'}" style="font-size:9px">${v.tipo||'?'}</span>`;
+    if(ocu) {
+      countO++;
+      htmlO += `<div class="disp-item" style="border-left:3px solid var(--red)">
+        <div class="disp-item-label">
+          <span class="disp-item-frota">${pref}</span>
+          <span class="disp-item-placa">${v.placa||'—'} · ${ocu.motorista||'?'}</span>
+        </div>
+        <div style="text-align:right">
+          ${tipoTag}
+          <div style="font-size:10.5px;color:var(--red);margin-top:2px">🔒 ${ocu.rota}</div>
+        </div>
       </div>`;
     } else {
       countL++;
-      htmlL += `<div class="disp-item" style="border-left:3px solid var(--green);">
-        <div><strong>${prefixo}</strong> — <span style="font-size:11px;color:var(--text2)">${v.placa}</span> [${v.tipo||'?'}]</div>
-        <div style="font-size:11px;color:var(--green);">✅ LIVRE</div>
+      htmlL += `<div class="disp-item" style="border-left:3px solid var(--green)">
+        <div class="disp-item-label">
+          <span class="disp-item-frota">${pref}</span>
+          <span class="disp-item-placa">${v.placa||'—'}</span>
+        </div>
+        <div style="text-align:right">
+          ${tipoTag}
+          <div style="font-size:10.5px;color:var(--green);margin-top:2px">✅ LIVRE</div>
+        </div>
       </div>`;
     }
   });
 
-  cL.innerHTML = htmlL || '<div style="color:var(--text3);font-size:11px;padding:8px;">Nenhum veículo livre cadastrado.</div>';
-  cO.innerHTML = htmlO || '<div style="color:var(--text3);font-size:11px;padding:8px;">Nenhum veículo em rota.</div>';
+  cL.innerHTML = htmlL || `<div style="color:var(--text3);font-size:11px;padding:12px;text-align:center">Nenhum veículo livre cadastrado.</div>`;
+  cO.innerHTML = htmlO || `<div style="color:var(--text3);font-size:11px;padding:12px;text-align:center">Nenhum veículo em rota.</div>`;
+
   const bDisp = document.getElementById('badge-disp');
   if(bDisp) bDisp.textContent = countL;
+
+  const lCount = document.getElementById('disp-livres-count');
+  const oCount = document.getElementById('disp-ocupados-count');
+  if(lCount) lCount.textContent = countL;
+  if(oCount) oCount.textContent = countO;
+
+  const bar = document.getElementById('disp-stats-bar');
+  const total = countL+countO;
+  if(bar) bar.innerHTML = total ? `
+    <div class="disp-stat-pill green">✓ ${countL} Livres</div>
+    <div class="disp-stat-pill red">🔒 ${countO} Em Rota</div>
+    <div style="margin-left:auto;font-size:11px;color:var(--text3)">Total frota: <strong style="color:var(--text)">${total}</strong> veículos</div>
+  ` : '';
 }
 
-function setAlertaSearch(v) { alertaSearch = v; renderAlertas(); }
-function setAlertaStatus(v) { alertaStatusFilter = v; renderAlertas(); }
+function setAlertaSearch(v) { alertaSearch=v; renderAlertas(); }
+function setAlertaStatus(v) { alertaStatusFilter=v; renderAlertas(); }
 
 function sortAlertas(col) {
-  if(alertaSort.col === col) {
-    alertaSort.dir = alertaSort.dir === 'asc' ? 'desc' : 'asc';
-  } else {
-    alertaSort.col = col;
-    alertaSort.dir = 'asc';
-  }
+  if(alertaSort.col===col) alertaSort.dir = alertaSort.dir==='asc'?'desc':'asc';
+  else { alertaSort.col=col; alertaSort.dir='asc'; }
   renderAlertas();
 }
 
@@ -942,14 +1467,14 @@ function renderAlertas() {
       if(!p.importado) {
         const js = janelaStatus(p);
         let statusOrder, statusKey;
-        if(js.cls === 'jdanger')      { statusOrder = 0; statusKey = 'ATRASADO'; }
-        else if(js.cls === 'jwarn')   { statusOrder = 1; statusKey = 'URGENTE'; }
-        else                           { statusOrder = 2; statusKey = 'NO_PRAZO'; }
+        if(js.cls==='jdanger')    { statusOrder=0; statusKey='ATRASADO'; }
+        else if(js.cls==='jwarn') { statusOrder=1; statusKey='URGENTE'; }
+        else                       { statusOrder=2; statusKey='NO_PRAZO'; }
         items.push({
-          vid: v.id, pid: p.id,
-          frota: v.frota || '', rota: v.rota || '',
-          fornecedor: p.fornecedor || '', motorista: v.motorista || '',
-          ji: p.ji || '00:00', janela: p.janela || `${p.ji||'--:--'}-${p.jf||'--:--'}`,
+          vid:v.id, pid:p.id,
+          frota:v.frota||'', rota:v.rota||'',
+          fornecedor:p.fornecedor||'', motorista:v.motorista||'',
+          ji:p.ji||'00:00', janela:p.janela||`${p.ji||'--:--'}-${p.jf||'--:--'}`,
           js, statusOrder, statusKey
         });
       }
@@ -957,200 +1482,242 @@ function renderAlertas() {
   });
 
   const s = alertaSearch.trim().toLowerCase();
-  if(s) {
-    items = items.filter(it =>
-      it.frota.toLowerCase().includes(s) ||
-      it.rota.toLowerCase().includes(s) ||
-      it.fornecedor.toLowerCase().includes(s) ||
-      it.motorista.toLowerCase().includes(s)
-    );
-  }
+  if(s) items = items.filter(it => it.frota.toLowerCase().includes(s)||it.rota.toLowerCase().includes(s)||it.fornecedor.toLowerCase().includes(s)||it.motorista.toLowerCase().includes(s));
+  if(alertaStatusFilter) items = items.filter(it => it.statusKey===alertaStatusFilter);
 
-  if(alertaStatusFilter) items = items.filter(it => it.statusKey === alertaStatusFilter);
-
-  const { col, dir } = alertaSort;
+  const {col, dir} = alertaSort;
   items.sort((a,b) => {
-    let va, vb;
-    if(col === 'status')   { va = a.statusOrder; vb = b.statusOrder; }
-    else if(col === 'ji')  { va = h2m(a.ji); vb = h2m(b.ji); }
-    else                    { va = (a[col]||'').toString().toLowerCase(); vb = (b[col]||'').toString().toLowerCase(); }
-    if(va < vb) return dir === 'asc' ? -1 : 1;
-    if(va > vb) return dir === 'asc' ? 1 : -1;
+    let va,vb;
+    if(col==='status') { va=a.statusOrder; vb=b.statusOrder; }
+    else if(col==='ji'){ va=h2m(a.ji); vb=h2m(b.ji); }
+    else               { va=(a[col]||'').toLowerCase(); vb=(b[col]||'').toLowerCase(); }
+    if(va<vb) return dir==='asc'?-1:1;
+    if(va>vb) return dir==='asc'?1:-1;
     return 0;
   });
 
   document.querySelectorAll('#page-alertas .sort-ind').forEach(el => {
-    el.textContent = (el.dataset.col === col) ? (dir === 'asc' ? '▲' : '▼') : '';
+    el.textContent = el.dataset.col===col ? (dir==='asc'?'▲':'▼') : '';
   });
+
+  const urgentes = items.filter(it => it.statusKey==='URGENTE'||it.statusKey==='ATRASADO');
+  const urgBar = document.getElementById('alerta-urgente-bar');
+  const urgTxt = document.getElementById('alerta-urgente-txt');
+  if(urgBar) {
+    if(urgentes.length > 0) {
+      urgBar.style.display='flex';
+      if(urgTxt) urgTxt.textContent = `${urgentes.length} coleta(s) atrasada(s) ou prestes a fechar! Ação imediata necessária.`;
+    } else {
+      urgBar.style.display='none';
+    }
+  }
 
   const rc = document.getElementById('alerta-rcount');
   if(rc) rc.textContent = `${items.length} alerta(s)`;
 
   if(!items.length) {
-    const msg = (alertaSearch || alertaStatusFilter)
-      ? 'Nenhum alerta encontrado para esse filtro.'
-      : '✓ Nenhuma coleta pendente para hoje.';
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:20px;">${msg}</td></tr>`;
+    const msg = (alertaSearch||alertaStatusFilter) ? 'Nenhum alerta para esse filtro.' : '✓ Nenhuma coleta pendente para hoje.';
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:30px;">${msg}</td></tr>`;
     return;
   }
 
   _alertaItensAtuais = items;
-
-  tbody.innerHTML = items.map((it,i) => {
-    return `<tr>
-    <td><strong>${it.frota}</strong></td>
+  tbody.innerHTML = items.map((it,i) => `<tr>
+    <td><strong style="color:var(--text)">${it.frota}</strong></td>
     <td>${it.rota}</td>
     <td>${it.fornecedor}</td>
     <td>${it.motorista}</td>
     <td style="font-family:var(--mono)">${it.janela}</td>
-    <td><span class="${it.js.cls}" style="font-weight:600;font-family:var(--mono)">${it.js.txt}</span></td>
-    <td style="white-space:nowrap;">
-      <button class="btn btn-ghost btn-sm" onclick="marcarParadaImportada(${it.vid},'${it.pid}')">✓ Baixar AVACORP</button>
-      <button class="btn btn-sm btn-whatsapp" onclick="enviarWhatsappMotorista(${i})" title="Enviar mensagem para o motorista">💬 WhatsApp</button>
+    <td><span class="${it.js.cls}" style="font-weight:700;font-family:var(--mono)">${it.js.txt}</span></td>
+    <td style="white-space:nowrap">
+      <button class="btn btn-success btn-sm" onclick="marcarParadaImportada(${it.vid},'${it.pid}')">✓ Baixar</button>
+      <button class="btn btn-whatsapp btn-sm" onclick="enviarWhatsappMotorista(${i})" title="Enviar WhatsApp">💬</button>
     </td>
-  </tr>`;
-  }).join('');
+  </tr>`).join('');
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  WHATSAPP DISPARO DIRETO DO APP DEEP LINK protocol FIX
-// ──────────────────────────────────────────────────────────────────────
+// WhatsApp
 function saudacaoAtual() {
   const h = new Date().getHours();
-  if(h >= 5 && h < 12)  return 'Bom dia';
-  if(h >= 12 && h < 18) return 'Boa tarde';
-  return 'Boa noite';
+  if(h>=5&&h<12) return 'Bom dia'; if(h>=12&&h<18) return 'Boa tarde'; return 'Boa noite';
 }
-
-function formatarPrimeiroNome(nomeCompleto) {
-  if(!nomeCompleto) return 'Motorista';
-  const primeira = nomeCompleto.trim().split(/\s+/)[0];
-  return primeira.charAt(0).toUpperCase() + primeira.slice(1).toLowerCase();
+function formatarPrimeiroNome(nome) {
+  if(!nome) return 'Motorista';
+  const p = nome.trim().split(/\s+/)[0];
+  return p.charAt(0).toUpperCase()+p.slice(1).toLowerCase();
 }
-
-function buscarWhatsappMotorista(nomeCompleto) {
-  if(!nomeCompleto) return null;
-  return MOTORISTAS_CONTATOS[nomeCompleto.trim().toUpperCase()] || null;
+function buscarWhatsappMotorista(nome) {
+  if(!nome) return null;
+  return MOTORISTAS_CONTATOS[nome.trim().toUpperCase()] || null;
 }
-
 function enviarWhatsappMotorista(idx) {
   const it = _alertaItensAtuais[idx];
   if(!it) return;
-
   const numero = buscarWhatsappMotorista(it.motorista);
   if(!numero) {
-    alert(`⚠ Nenhum número de WhatsApp cadastrado para "${it.motorista}".\n\nAdicione esse motorista no arquivo motoristas.json do repositório.`);
+    notify(`⚠ Sem WhatsApp cadastrado para "${it.motorista}".`, 'linear-gradient(135deg,#7a3f0f,#5a2d00)', 4000);
     return;
   }
-
-  const saud = saudacaoAtual();
-  const nome = formatarPrimeiroNome(it.motorista);
-
-  const msg = `${saud}!\n\nSr(a). ${nome}, tudo bem?\n\nA janela de coleta na *${it.fornecedor}* (${it.janela}) está chegando no limite.\n\nPoderia nos informar a situação:\n- Ainda não iniciou o carregamento?\n- Está carregando?\n- Já finalizou?\n\nPor favor responda para alinharmos com a equipe de transporte da MWM. Obrigado!`;
-
-  // FIX: Troca da API web pelo protocolo nativo que abre direto o aplicativo sem telas intermediárias
-  const urlDirectApp = `whatsapp://send?phone=${numero}&text=${encodeURIComponent(msg)}`;
-  window.location.href = urlDirectApp;
+  const msg = `${saudacaoAtual()}!\n\nSr(a). ${formatarPrimeiroNome(it.motorista)}, tudo bem?\n\nA janela de coleta na *${it.fornecedor}* (${it.janela}) está chegando no limite.\n\nPoderia nos informar a situação:\n- Ainda não iniciou o carregamento?\n- Está carregando?\n- Já finalizou?\n\nPor favor responda para alinharmos com a equipe de transporte da MWM. Obrigado!`;
+  window.location.href = `whatsapp://send?phone=${numero}&text=${encodeURIComponent(msg)}`;
 }
 
 function renderPedidos() {
   const vs = viagensDB[currentDate] || [];
   const container = document.getElementById('pedidos-list');
-  if(!vs.length) { container.innerHTML='<div style="color:var(--text3);padding:10px;text-align:center;">Nenhuma rota cadastrada.</div>'; return; }
+  if(!vs.length) { container.innerHTML=`<div style="color:var(--text3);padding:20px;text-align:center">📋 Nenhuma rota cadastrada.</div>`; return; }
   let html = '';
   vs.forEach(v => {
     (v.paradas||[]).forEach(p => {
-      const stAva = p.importado ? '<span class="ava-ok">IMPORTADO</span>' : '<span class="ava-pend">PENDENTE</span>';
-      html += `<div style="background:var(--bg2);padding:10px;border-radius:6px;margin-bottom:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+      const st = p.importado ? `<span class="ava-ok">IMPORTADO</span>` : `<span class="ava-pend">PENDENTE</span>`;
+      html += `<div class="pedido-card">
         <div>
-          <strong style="color:var(--accent)">Pedido: ${p.pedido}</strong> — Fornecedor: ${p.fornecedor}<br>
-          <small style="color:var(--text3)">Rota: ${v.rota} | Veículo: ${v.frota} | Motorista: ${v.motorista}</small>
+          <strong style="color:var(--accent)">Pedido: ${p.pedido}</strong> — <span style="color:var(--text2)">${p.fornecedor}</span><br>
+          <small style="color:var(--text3)">Rota: ${v.rota} · Veículo: ${v.frota} · Motorista: ${v.motorista}</small>
         </div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          ${stAva}
-          <button class="btn btn-ghost btn-sm" onclick="digitarPedidoPrompt(${v.id},'${p.id}','${p.pedido}')">✏️ Editar</button>
-          <button class="btn btn-primary btn-sm" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'Estornar':'✓ Baixar'}</button>
+        <div style="display:flex;gap:8px;align-items:center">
+          ${st}
+          <button class="btn btn-ghost btn-sm" onclick="abrirModalPedido(${v.id},'${p.id}',\`${p.pedido}\`)">✏️ Editar</button>
+          <button class="btn btn-sm ${p.importado?'btn-danger':'btn-success'}" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'↩ Estornar':'✓ Baixar'}</button>
         </div>
       </div>`;
     });
   });
-  container.innerHTML = html;
+  container.innerHTML = html || `<div style="color:var(--text3);padding:20px;text-align:center">Nenhuma parada com pedidos.</div>`;
 }
 
 function renderPend() {
   const vs = viagensDB[currentDate] || [];
   const container = document.getElementById('pend-apto');
-  const pendentes = vs.filter(v => v.cte === 'PENDENTE');
-  if(!pendentes.length) { container.innerHTML='<div style="color:var(--text3);padding:10px;text-align:center;">✓ Todos os CTEs do dia já foram emitidos.</div>'; return; }
+  const pendentes = vs.filter(v => v.cte==='PENDENTE');
+  if(!pendentes.length) { container.innerHTML=`<div style="color:var(--green);padding:20px;text-align:center">✓ Todos os CTEs do dia já foram emitidos.</div>`; return; }
   let html = '';
   pendentes.forEach(v => {
-    const stFat = avaSt(v);
-    const liberado = stFat === 'IMPORTADO' || stFat === 'N/A';
-    html += `<div style="background:var(--bg2);padding:12px;border-radius:6px;border:1px solid var(--border);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;">
+    const st = avaSt(v);
+    const ok = st==='IMPORTADO'||st==='N/A';
+    html += `<div style="background:var(--bg2);padding:13px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;">
       <div>
-        <strong>${v.frota} — [${v.rota}]</strong> — Motorista: ${v.motorista}<br>
-        <small style="color:var(--text3)">${v.origem} → ${v.destino} | AVACORP: ${stFat}</small>
+        <strong style="color:var(--text)">${v.frota} — [${v.rota}]</strong> — ${v.motorista}<br>
+        <small style="color:var(--text3)">${v.origem} → ${v.destino} · AVACORP: ${st}</small>
       </div>
-      <div>
-        ${liberado
-          ? `<button class="btn btn-success btn-sm" onclick="updateCTE(${v.id},'IMPRESSO')">⚙ Emitir CTE</button>`
-          : `<span style="color:var(--red);font-weight:600;font-size:11px;padding:4px 8px;background:var(--red-bg);border-radius:4px;">🔒 Bloqueado (Falta AVACORP)</span>`
-        }
-      </div>
+      <div>${ok
+        ? `<button class="btn btn-success btn-sm" onclick="updateCTE(${v.id},'IMPRESSO')">⚙ Emitir CTE</button>`
+        : `<span style="color:var(--red);font-weight:700;font-size:11px;padding:4px 10px;background:var(--red-bg);border-radius:4px;border:1px solid rgba(248,113,113,.2)">🔒 Falta AVACORP</span>`
+      }</div>
     </div>`;
   });
   container.innerHTML = html;
 }
 
-// ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
 //  BLOCO 5: AÇÕES OPERACIONAIS
-// ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
 function marcarParadaImportada(vid, pid) {
   const vs = viagensDB[currentDate] || [];
-  const v  = vs.find(x => x.id === vid);
+  const v  = vs.find(x => x.id===vid);
   if(v) {
-    const p = v.paradas.find(x => x.id === pid);
+    const p = v.paradas.find(x => x.id===pid);
     if(p) {
       p.importado = !p.importado;
-      notify(p.importado ? '✓ Baixa realizada!' : 'Baixa desfeita.', p.importado ? 'var(--green)' : 'var(--amber)');
+      notify(p.importado ? '✓ Baixa AVACORP realizada!' : 'Baixa desfeita.', p.importado ? 'linear-gradient(135deg,#0f7a44,#065f33)' : 'linear-gradient(135deg,#7a4a0f,#5a3300)');
       agendarSalvamento();
       updateDashboard();
     }
   }
 }
 
-function digitarPedidoPrompt(vid, pid, valAtual) {
-  const num = prompt('Digite o número do Pedido/Solicitação AVACORP:', valAtual === '—' ? '' : valAtual);
-  if(num === null) return;
-  const v = (viagensDB[currentDate]||[]).find(x => x.id === vid);
+// Modal de Pedido (substitui prompt nativo)
+function abrirModalPedido(vid, pid, valAtual) {
+  _pedidoCallbackVid = vid;
+  _pedidoCallbackPid = pid;
+  const input = document.getElementById('pedido-modal-input');
+  const info  = document.getElementById('pedido-modal-info');
+  // Encontrar fornecedor
+  const v = (viagensDB[currentDate]||[]).find(x=>x.id===vid);
+  const p = v ? v.paradas.find(x=>x.id===pid) : null;
+  if(info && p) info.textContent = `Informe o número do pedido/solicitação para "${p.fornecedor}":`;
+  if(input) {
+    input.value = (valAtual==='—' || !valAtual) ? '' : valAtual;
+    abrirModal('pedido');
+    setTimeout(() => input.focus(), 200);
+  }
+  // Enter confirma
+  input.onkeydown = (e) => { if(e.key==='Enter') confirmarPedidoModal(); };
+}
+
+function confirmarPedidoModal() {
+  const num = document.getElementById('pedido-modal-input').value;
+  const v = (viagensDB[currentDate]||[]).find(x => x.id===_pedidoCallbackVid);
   if(v) {
-    const p = v.paradas.find(x => x.id === pid);
+    const p = v.paradas.find(x => x.id===_pedidoCallbackPid);
     if(p) { p.pedido = num.trim() || '—'; agendarSalvamento(); updateDashboard(); }
   }
+  fecharModal('pedido');
+  notify('✓ Pedido atualizado!');
 }
 
 function removerViagemMesa(vid) {
   if(!confirm('Deseja excluir esta rota permanentemente?')) return;
-  viagensDB[currentDate] = (viagensDB[currentDate]||[]).filter(v => v.id !== vid);
-  notify('Viagem excluída.', 'var(--red)');
+  viagensDB[currentDate] = (viagensDB[currentDate]||[]).filter(v => v.id!==vid);
+  expanded = null;
+  notify('Viagem excluída.', 'linear-gradient(135deg,#7a1414,#5a0a0a)');
   agendarSalvamento();
   updateDashboard();
 }
 
 function updateCTE(id, val) {
-  const v = (viagensDB[currentDate]||[]).find(x => x.id === id);
-  if(v) { v.cte = val; agendarSalvamento(); notify('CTE atualizado!'); updateDashboard(); }
+  const v = (viagensDB[currentDate]||[]).find(x => x.id===id);
+  if(v) { v.cte=val; agendarSalvamento(); notify('CTE atualizado!'); updateDashboard(); }
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  BLOCO 6: FORMULÁRIO DE CADASTRO DE VIAGEM
-// ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+//  BLOCO 6: EXPORTAÇÃO XLSX
+// ══════════════════════════════════════════════════════════════════
+function exportarXLSX() {
+  const vs = viagensDB[currentDate] || [];
+  if(!vs.length) { notify('⚠ Nenhuma viagem para exportar.','linear-gradient(135deg,#7a3f0f,#5a2d00)'); return; }
+
+  const rows = [['Frota','Placa','Carreta','Motorista','Rota','Tipo','Saída CD','Origem','Destino','Pedidos','AVACORP','% Coletas','CTE','Observações']];
+  vs.forEach(v => {
+    const pedidos = v.paradas.map(p=>p.pedido).join(', ');
+    const pct = v.paradas.length ? Math.round(v.paradas.filter(p=>p.importado).length/v.paradas.length*100) : 100;
+    rows.push([
+      v.frota, v.placa, v.carreta, v.motorista, v.rota, v.tipo,
+      v.saida, v.origem, v.destino, pedidos, avaSt(v), `${pct}%`, v.cte, v.obs||''
+    ]);
+  });
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = rows[0].map((_,i) => ({wch: [12,10,18,20,14,8,8,16,16,20,10,10,10,20][i]||12}));
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, `MWM ${currentDate}`);
+
+  // Aba de paradas detalhadas
+  const rows2 = [['Frota','Rota','Motorista','Fornecedor','Janela Início','Janela Fim','Pedido','Status','Importado']];
+  vs.forEach(v => {
+    (v.paradas||[]).forEach(p => {
+      rows2.push([v.frota, v.rota, v.motorista, p.fornecedor, p.ji, p.jf, p.pedido, janelaStatus(p).txt, p.importado?'SIM':'NÃO']);
+    });
+  });
+  const ws2 = XLSX.utils.aoa_to_sheet(rows2);
+  XLSX.utils.book_append_sheet(wb, ws2, 'Coletas Detalhadas');
+
+  XLSX.writeFile(wb, `MWM_Programacao_${currentDate.replace('/','_')}.xlsx`);
+  notify('✓ XLSX exportado com sucesso!');
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  BLOCO 7: FORMULÁRIO DE CADASTRO / EDIÇÃO DE VIAGEM
+// ══════════════════════════════════════════════════════════════════
 function recalculasRotasDisponiveisNoDropdown() {
   const dia = document.getElementById('form-filtro-dia-semana').value;
   const sel = document.getElementById('form-macro-rota');
-  sel.innerHTML = '<option value="">-- Escolha uma rota padrão ou digite manual --</option>';
+  sel.innerHTML = '<option value="">-- Escolha uma rota padrão ou preencha manualmente --</option>';
   const rotasDia = ROTAS_MACRO_DATABASE[dia] || {};
-  Object.keys(rotasDia).forEach(rName => { sel.innerHTML += `<option value="${rName}">${rName}</option>`; });
+  Object.keys(rotasDia).forEach(rName => {
+    const r = rotasDia[rName];
+    sel.innerHTML += `<option value="${rName}">${rName} — ${r.origem} → ${r.destino} (${r.tipo})</option>`;
+  });
 }
 
 function verificarEAutoPreencherCamposRota() {
@@ -1159,12 +1726,12 @@ function verificarEAutoPreencherCamposRota() {
   if(!nome) return;
   const dados = (ROTAS_MACRO_DATABASE[dia]||{})[nome];
   if(!dados) return;
-
-  document.getElementById('form-tipo').value  = dados.tipo;
-  document.getElementById('form-rota').value  = nome;
-  document.getElementById('form-saida').value = dados.saida;
+  document.getElementById('form-tipo').value   = dados.tipo;
+  document.getElementById('form-rota').value   = nome;
+  document.getElementById('form-saida').value  = dados.saida;
+  document.getElementById('form-origem').value = dados.origem || '';
+  document.getElementById('form-destino').value= dados.destino || 'MWM STO AMARO';
   toggleFormCarreta();
-
   const container = document.getElementById('form-paradas-container');
   container.innerHTML = '';
   dados.paradas.forEach(p => adicionarCamposParadaForm(p.fornecedor, p.ji, p.jf));
@@ -1172,15 +1739,13 @@ function verificarEAutoPreencherCamposRota() {
 }
 
 function verificarSeFrotaEManual() {
-  const val  = document.getElementById('form-frota').value;
-  const bloco = document.getElementById('form-frota-manual-block');
-  bloco.style.display = val === 'MANUAL_AGREGADO' ? 'block' : 'none';
+  const val = document.getElementById('form-frota').value;
+  document.getElementById('form-frota-manual-block').style.display = val==='MANUAL_AGREGADO'?'block':'none';
 }
 
-// FIX DE CONJUNTO BRANCO: Garante que os dropdowns de carretas apareçam sem erros de renderização
 function toggleFormCarreta() {
   const tipo = document.getElementById('form-tipo').value;
-  document.getElementById('form-carreta-block').style.display = tipo === 'CONJUNTO' ? 'block' : 'none';
+  document.getElementById('form-carreta-block').style.display = tipo==='CONJUNTO'?'block':'none';
 }
 
 function adicionarCamposParadaForm(forn='', ji='08:00', jf='16:00') {
@@ -1190,121 +1755,217 @@ function adicionarCamposParadaForm(forn='', ji='08:00', jf='16:00') {
   div.innerHTML =
     `<button class="btn-del-parada" onclick="this.parentElement.remove()">×</button>` +
     `<div class="fg" style="grid-template-columns:2fr 1fr 1fr">` +
-      `<div><label class="fg-label">Local de Coleta (Fornecedor)</label><input type="text" class="f-p-forn" value="${forn}" placeholder="Ex: SEG AUTOMOTIVE" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:12px;"></div>` +
-      `<div><label class="fg-label">Início Janela</label><input type="time" class="f-p-ji" value="${ji}" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:12px;"></div>` +
-      `<div><label class="fg-label">Fim Janela</label><input type="time" class="f-p-jf" value="${jf}" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:6px 8px;font-family:var(--sans);font-size:12px;"></div>` +
+      `<div><label class="fg-label">Local de Coleta (Fornecedor)</label><input type="text" class="f-p-forn" value="${forn}" placeholder="Ex: SEG AUTOMOTIVE" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:7px 9px;font-family:var(--sans);font-size:12px;outline:none;"></div>` +
+      `<div><label class="fg-label">Início Janela</label><input type="time" class="f-p-ji" value="${ji}" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:7px 9px;font-family:var(--sans);font-size:12px;outline:none;"></div>` +
+      `<div><label class="fg-label">Fim Janela</label><input type="time" class="f-p-jf" value="${jf}" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:7px 9px;font-family:var(--sans);font-size:12px;outline:none;"></div>` +
     `</div>`;
   container.appendChild(div);
 }
 
-function abrirModalCadastroViagem() {
-  document.getElementById('cadastro-mtitle').textContent = 'Cadastrar Viagem';
-  const diaSemana = obterNomeDiaSemana(currentDate);
-  document.getElementById('lbl-info-dia-semana').textContent = `Calendário Ativo: ${diaSemana} (${currentDate})`;
-  document.getElementById('form-filtro-dia-semana').value = diaSemana;
-  recalculasRotasDisponiveisNoDropdown();
-
+function _popularSelectsFrota() {
   const selFrota   = document.getElementById('form-frota');
   const selCarreta = document.getElementById('form-carreta');
-
-  selFrota.innerHTML   = '<option value="">-- Escolha o Veículo --</option><option value="MANUAL_AGREGADO" style="color:var(--orange);font-weight:600;">--- DIGITAR MANUAL (AGREGADO) ---</option>';
+  selFrota.innerHTML   = '<option value="">-- Escolha o Veículo --</option><option value="MANUAL_AGREGADO" style="color:var(--orange);font-weight:600">--- DIGITAR MANUAL (AGREGADO) ---</option>';
   selCarreta.innerHTML = '<option value="">-- Nenhuma Carreta --</option>';
-
   Object.keys(CONJUNTURA_VEICULOS).forEach(key => {
     const v = CONJUNTURA_VEICULOS[key];
-    if(v.tipo === 'TRUCK' || v.tipo === 'CONJUNTO')
+    if(v.tipo==='TRUCK'||v.tipo==='CONJUNTO')
       selFrota.innerHTML += `<option value="${key}">${key} [${v.placa}] (${v.tipo})</option>`;
     else
       selCarreta.innerHTML += `<option value="${key}">${key} [${v.placa}]</option>`;
   });
+}
 
-  document.getElementById('form-rota').value              = '';
-  document.getElementById('form-motorista').value         = '';
-  document.getElementById('form-obs').value               = '';
+function abrirModalCadastroViagem() {
+  _editandoViagemId = null;
+  document.getElementById('cadastro-mtitle').textContent = '+ Cadastrar Nova Viagem';
+  document.getElementById('btn-salvar-viagem').textContent = 'Salvar no Banco';
+  const diaSemana = obterNomeDiaSemana(currentDate);
+  document.getElementById('lbl-info-dia-semana').textContent = `Calendário Ativo: ${diaSemana} (${currentDate})`;
+  document.getElementById('form-filtro-dia-semana').value = diaSemana;
+  recalculasRotasDisponiveisNoDropdown();
+  _popularSelectsFrota();
+  document.getElementById('form-rota').value      = '';
+  document.getElementById('form-motorista').value = '';
+  document.getElementById('form-saida').value     = '06:00';
+  document.getElementById('form-origem').value    = '';
+  document.getElementById('form-destino').value   = '';
+  document.getElementById('form-obs').value       = '';
+  document.getElementById('form-cte').value       = 'PENDENTE';
   document.getElementById('form-frota-manual-block').style.display = 'none';
   document.getElementById('form-frota-manual-input').value = '';
   document.getElementById('form-paradas-container').innerHTML = '';
   adicionarCamposParadaForm();
+  toggleFormCarreta();
+  abrirModal('cadastro');
+}
+
+function editarViagem(vid) {
+  const v = (viagensDB[currentDate]||[]).find(x => x.id===vid);
+  if(!v) return;
+  _editandoViagemId = vid;
+  document.getElementById('cadastro-mtitle').textContent = `✏️ Editando: ${v.frota} — ${v.rota}`;
+  document.getElementById('btn-salvar-viagem').textContent = 'Salvar Alterações';
+  const diaSemana = obterNomeDiaSemana(currentDate);
+  document.getElementById('lbl-info-dia-semana').textContent = `Editando viagem do dia: ${diaSemana} (${currentDate})`;
+  document.getElementById('form-filtro-dia-semana').value = diaSemana;
+  recalculasRotasDisponiveisNoDropdown();
+  _popularSelectsFrota();
+
+  // Preencher campos
+  document.getElementById('form-tipo').value      = v.tipo      || 'TRUCK';
+  document.getElementById('form-rota').value      = v.rota      || '';
+  document.getElementById('form-motorista').value = v.motorista || '';
+  document.getElementById('form-saida').value     = v.saida     || '06:00';
+  document.getElementById('form-origem').value    = v.origem    || '';
+  document.getElementById('form-destino').value   = v.destino   || '';
+  document.getElementById('form-obs').value       = v.obs       || '';
+  document.getElementById('form-cte').value       = v.cte       || 'PENDENTE';
+  toggleFormCarreta();
+
+  // Frota
+  const selFrota = document.getElementById('form-frota');
+  // Tenta selecionar; se não existir (agregado), usa manual
+  if([...selFrota.options].some(o=>o.value===v.frota)) {
+    selFrota.value = v.frota;
+    document.getElementById('form-frota-manual-block').style.display='none';
+  } else {
+    selFrota.value = 'MANUAL_AGREGADO';
+    document.getElementById('form-frota-manual-block').style.display='block';
+    document.getElementById('form-frota-manual-input').value = v.frota;
+  }
+
+  // Carreta
+  if(v.tipo==='CONJUNTO') {
+    const carretaKey = v.carreta ? v.carreta.split(' ')[0] : '';
+    const selCarreta = document.getElementById('form-carreta');
+    if([...selCarreta.options].some(o=>o.value===carretaKey)) selCarreta.value=carretaKey;
+  }
+
+  // Paradas
+  const container = document.getElementById('form-paradas-container');
+  container.innerHTML = '';
+  (v.paradas||[]).forEach(p => adicionarCamposParadaForm(p.fornecedor, p.ji, p.jf));
+  if(!v.paradas||!v.paradas.length) adicionarCamposParadaForm();
+
   abrirModal('cadastro');
 }
 
 function salvarFormViagem() {
-  const tipo = document.getElementById('form-tipo').value;
-  let frota  = document.getElementById('form-frota').value;
+  const tipo      = document.getElementById('form-tipo').value;
+  let frota       = document.getElementById('form-frota').value;
   const carreta   = document.getElementById('form-carreta').value;
   const rota      = document.getElementById('form-rota').value.trim();
   const motorista = document.getElementById('form-motorista').value.trim();
   const saida     = document.getElementById('form-saida').value;
+  const origem    = document.getElementById('form-origem').value.trim();
+  const destino   = document.getElementById('form-destino').value.trim();
   const cte       = document.getElementById('form-cte').value;
   const obs       = document.getElementById('form-obs').value.trim();
 
-  if(!frota || !rota) { alert('Frota e Rota são obrigatórios.'); return; }
+  if(!frota || !rota) { notify('⚠ Frota e Rota são obrigatórios!','linear-gradient(135deg,#7a1414,#5a0a0a)'); return; }
 
   let placaFinal='', antigoFinal='—';
-
-  if(frota === 'MANUAL_AGREGADO') {
+  if(frota==='MANUAL_AGREGADO') {
     const texto = document.getElementById('form-frota-manual-input').value.trim();
     frota       = texto ? texto.toUpperCase() : 'AGREGADO EXT';
     placaFinal  = 'Caminhão Terceiro';
     antigoFinal = 'Agregado Extra';
   } else {
-    const db   = CONJUNTURA_VEICULOS[frota] || { placa:'MANUAL', antigo:'—' };
+    const db   = CONJUNTURA_VEICULOS[frota] || {placa:'MANUAL', antigo:'—'};
     placaFinal  = db.placa;
     antigoFinal = db.antigo;
   }
 
   let carretaInfo = '—';
-  if(tipo === 'CONJUNTO') {
+  if(tipo==='CONJUNTO') {
     if(carreta) {
-      const dbC = CONJUNTURA_VEICULOS[carreta] || { placa:'—', antigo:'—' };
+      const dbC = CONJUNTURA_VEICULOS[carreta] || {placa:'—', antigo:'—'};
       carretaInfo = `${carreta} / Placa: ${dbC.placa} (Antigo: ${dbC.antigo})`;
     } else { carretaInfo = 'Faltando Carreta'; }
   }
 
-  const vid     = Date.now();
+  // Coletar paradas
   const paradas = [];
-  document.querySelectorAll('.parada-box').forEach((box, idx) => {
-    const forn = box.querySelector('.f-p-forn').value.trim();
-    const ji   = box.querySelector('.f-p-ji').value;
-    const jf   = box.querySelector('.f-p-jf').value;
-    if(forn) paradas.push({ id:`${vid}-${idx}`, fornecedor:forn, city:'SÃO PAULO', ji, jf, janela:`${ji}-${jf}`, pedido:'—', importado:false });
-  });
+  if(_editandoViagemId !== null) {
+    // Em modo edição, preservar IDs e dados de importação das paradas existentes
+    const vAtual = (viagensDB[currentDate]||[]).find(x => x.id===_editandoViagemId);
+    document.querySelectorAll('.parada-box').forEach((box, idx) => {
+      const forn = box.querySelector('.f-p-forn').value.trim();
+      const ji   = box.querySelector('.f-p-ji').value;
+      const jf   = box.querySelector('.f-p-jf').value;
+      if(forn) {
+        const pExist = vAtual && vAtual.paradas[idx];
+        paradas.push({
+          id: pExist ? pExist.id : `${_editandoViagemId}-${idx}`,
+          fornecedor:forn, cidade:'SÃO PAULO', ji, jf,
+          janela:`${ji}-${jf}`, pedido: pExist ? pExist.pedido : '—',
+          importado: pExist ? pExist.importado : false
+        });
+      }
+    });
+  } else {
+    const vid = Date.now();
+    document.querySelectorAll('.parada-box').forEach((box, idx) => {
+      const forn = box.querySelector('.f-p-forn').value.trim();
+      const ji   = box.querySelector('.f-p-ji').value;
+      const jf   = box.querySelector('.f-p-jf').value;
+      if(forn) paradas.push({id:`${vid}-${idx}`, fornecedor:forn, cidade:'SÃO PAULO', ji, jf, janela:`${ji}-${jf}`, pedido:'—', importado:false});
+    });
+  }
 
-  const novaViagem = {
-    id:vid, tipo, frota, frotaAntiga:antigoFinal, placa:placaFinal, carreta:carretaInfo,
-    motorista: motorista || 'MOTORISTA PADRÃO', rota, saida,
-    origem: paradas[0] ? paradas[0].fornecedor : 'CD SBC',
-    destino: 'MWM STO AMARO', cte, obs, paradas
-  };
+  if(_editandoViagemId !== null) {
+    // Modo edição: atualiza viagem existente
+    const idx = (viagensDB[currentDate]||[]).findIndex(x => x.id===_editandoViagemId);
+    if(idx !== -1) {
+      viagensDB[currentDate][idx] = {
+        ...viagensDB[currentDate][idx],
+        tipo, frota, frotaAntiga:antigoFinal, placa:placaFinal, carreta:carretaInfo,
+        motorista:motorista||'MOTORISTA PADRÃO', rota, saida,
+        origem: origem || (paradas[0]?paradas[0].fornecedor:'CD SBC'),
+        destino: destino || 'MWM STO AMARO', cte, obs, paradas
+      };
+    }
+    fecharModal('cadastro');
+    notify('✓ Viagem atualizada!');
+  } else {
+    // Novo cadastro
+    const vid = Date.now();
+    const novaViagem = {
+      id:vid, tipo, frota, frotaAntiga:antigoFinal, placa:placaFinal, carreta:carretaInfo,
+      motorista:motorista||'MOTORISTA PADRÃO', rota, saida,
+      origem: origem || (paradas[0]?paradas[0].fornecedor:'CD SBC'),
+      destino: destino || 'MWM STO AMARO', cte, obs, paradas
+    };
+    if(!viagensDB[currentDate]) viagensDB[currentDate] = [];
+    viagensDB[currentDate].push(novaViagem);
+    fecharModal('cadastro');
+    notify('✓ Viagem cadastrada!');
+  }
 
-  if(!viagensDB[currentDate]) viagensDB[currentDate] = [];
-  viagensDB[currentDate].push(novaViagem);
-  fecharModal('cadastro');
-  notify('✓ Viagem salva!');
+  _editandoViagemId = null;
   agendarSalvamento();
   updateDashboard();
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  BLOCO 7: CLONAGEM E CALENDÁRIO
-// ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+//  BLOCO 8: CLONAGEM E CALENDÁRIO
+// ══════════════════════════════════════════════════════════════════
 function abrirModalClonagemSemanal() {
   diaSelecionadoParaClonar = null;
   document.getElementById('lbl-data-destino').textContent = currentDate;
   document.getElementById('btn-confirmar-clone').disabled = true;
-
-  const container  = document.getElementById('clonagem-lista-dias');
+  const container = document.getElementById('clonagem-lista-dias');
   container.innerHTML = '';
-  const diasComDados = availableDates.filter(d => d !== currentDate && (viagensDB[d]||[]).length > 0);
-
+  const diasComDados = availableDates.filter(d => d!==currentDate && (viagensDB[d]||[]).length>0);
   if(!diasComDados.length) {
-    container.innerHTML = '<p style="font-size:11px;padding:10px;text-align:center;">Nenhum histórico encontrado para copiar.</p>';
+    container.innerHTML = `<p style="font-size:11px;padding:12px;text-align:center;color:var(--text3)">Nenhum histórico encontrado para copiar.</p>`;
   } else {
     [...diasComDados].reverse().forEach(d => {
       const div = document.createElement('div');
       div.className = 'clone-list-item';
       div.id = `item-clone-${d.replace('/','_')}`;
-      div.innerHTML = `<strong>Dia ${d} (${obterNomeDiaSemana(d)})</strong> <span style="font-size:11px;color:var(--text3)">${viagensDB[d].length} rotas</span>`;
+      div.innerHTML = `<div><strong style="color:var(--text)">Dia ${d}</strong> <span style="color:var(--text3);font-size:11px">(${obterNomeDiaSemana(d)})</span></div><span style="color:var(--text3);font-size:11px;font-family:var(--mono)">${viagensDB[d].length} rotas</span>`;
       div.onclick = () => selecionarDiaParaCopiar(d);
       container.appendChild(div);
     });
@@ -1320,7 +1981,8 @@ function selecionarDiaParaCopiar(dataOrigem) {
   document.getElementById('btn-confirmar-clone').disabled = false;
 }
 
-function ejecutarClonagemDiaCompleto() {
+// BUG FIX: corrigido nome de "ejecutarClonagemDiaCompleto" (espanhol) para "executarClonagemDiaCompleto"
+function executarClonagemDiaCompleto() {
   if(!diaSelecionadoParaClonar) return;
   const baseOrigem = viagensDB[diaSelecionadoParaClonar] || [];
   const clonesLimpos = baseOrigem.map((v, index) => {
@@ -1329,18 +1991,17 @@ function ejecutarClonagemDiaCompleto() {
       id:novoVid, tipo:v.tipo, frota:v.frota, frotaAntiga:v.frotaAntiga, placa:v.placa,
       carreta:v.carreta, motorista:v.motorista, rota:v.rota, saida:v.saida,
       origem:v.origem, destino:v.destino, cte:'PENDENTE', obs:v.obs||'',
-      paradas:(v.paradas||[]).map((p, i) => ({
+      paradas:(v.paradas||[]).map((p,i) => ({
         id:`${novoVid}-${i}`, fornecedor:p.fornecedor, cidade:p.cidade||'SÃO PAULO',
         ji:p.ji||'08:00', jf:p.jf||'18:00', janela:p.janela||'08:00-18:00',
         pedido:'—', importado:false
       }))
     };
   });
-
   if(!viagensDB[currentDate]) viagensDB[currentDate] = [];
   viagensDB[currentDate] = [...viagensDB[currentDate], ...clonesLimpos];
   fecharModal('clonagem');
-  notify(`✓ ${clonesLimpos.length} rotas copiadas!`);
+  notify(`✓ ${clonesLimpos.length} rotas copiadas de ${diaSelecionadoParaClonar}!`);
   agendarSalvamento();
   updateDashboard();
 }
@@ -1349,15 +2010,15 @@ function abrirModalCalendario() { abrirModal('data'); }
 
 function criarOuMudarDataAtiva() {
   const d = document.getElementById('form-nova-data').value.trim();
-  if(!d.match(/^\d{2}\/\d{2}$/)) { alert('Use o formato DD/MM. Ex: 15/06'); return; }
+  if(!d.match(/^\d{2}\/\d{2}$/)) { notify('⚠ Use o formato DD/MM. Ex: 15/06','linear-gradient(135deg,#7a3f0f,#5a2d00)'); return; }
   currentDate = d;
   fecharModal('data');
   updateDashboard();
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  BLOCO 8: NAVEGAÇÃO E PERSISTÊNCIA
-// ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+//  BLOCO 9: NAVEGAÇÃO E PERSISTÊNCIA
+// ══════════════════════════════════════════════════════════════════
 function navTo(id, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
@@ -1367,48 +2028,79 @@ function navTo(id, el) {
 }
 
 function salvarCache() {
-  localStorage.setItem('mwm_v5_cache', JSON.stringify({ viagens:viagensDB, dates:availableDates }));
+  try { localStorage.setItem('mwm_v6_cache', JSON.stringify({viagens:viagensDB, dates:availableDates})); }
+  catch(e) { console.warn('Cache cheio, não foi possível salvar localmente.'); }
 }
 
 function carregarCache() {
-  const s = localStorage.getItem('mwm_v5_cache');
-  if(s) { const d=JSON.parse(s); viagensDB=d.viagens||{}; availableDates=d.dates||[]; }
+  try {
+    const s = localStorage.getItem('mwm_v6_cache') || localStorage.getItem('mwm_v5_cache');
+    if(s) { const d=JSON.parse(s); viagensDB=d.viagens||{}; availableDates=d.dates||[]; }
+  } catch(e) { viagensDB={}; availableDates=[]; }
 }
 
 function salvarConfiguracoesGitHub() {
   localStorage.setItem('mwm_gh_token',  document.getElementById('cfg-token').value.trim());
   localStorage.setItem('mwm_gh_repo',   document.getElementById('cfg-repo').value.trim());
   localStorage.setItem('mwm_gh_branch', document.getElementById('cfg-branch').value.trim());
-  notify('✓ Conexão configurada!', 'var(--green)');
+  notify('✓ Configurações salvas! Conectando...','linear-gradient(135deg,#0f7a44,#065f33)');
   carregarTodos();
 }
 
-// ──────────────────────────────────────────────────────────────────────
-//  BLOCO 9: INICIALIZAÇÃO
-// ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+//  BLOCO 10: INICIALIZAÇÃO
+// ══════════════════════════════════════════════════════════════════
 function updateClock() {
   const el = document.getElementById('tclock');
   if(el) el.textContent = new Date().toLocaleTimeString('pt-BR');
 }
 
+// Aviso ao fechar a aba com dados não salvos
+window.addEventListener('beforeunload', (e) => {
+  if(_saveTimeout) {
+    e.preventDefault();
+    e.returnValue = 'Existem alterações não salvas. Tem certeza que deseja sair?';
+  }
+});
+
+// Fechar modal ao clicar no overlay
+document.querySelectorAll('.overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => {
+    if(e.target === overlay) {
+      const id = overlay.id.replace('modal-','');
+      fecharModal(id);
+    }
+  });
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   updateClock();
   setInterval(updateClock, 1000);
 
+  // Preencher campos de config com valores salvos
   const cfgToken  = document.getElementById('cfg-token');
   const cfgRepo   = document.getElementById('cfg-repo');
   const cfgBranch = document.getElementById('cfg-branch');
-  if(cfgToken)  cfgToken.value  = localStorage.getItem('mwm_gh_token')   || '';
-  if(cfgRepo)   cfgRepo.value   = localStorage.getItem('mwm_gh_repo')    || 'elivancarvalho/mwm-sistema';
-  if(cfgBranch) cfgBranch.value = localStorage.getItem('mwm_gh_branch')  || 'main';
+  if(cfgToken)  cfgToken.value  = localStorage.getItem('mwm_gh_token')  || '';
+  if(cfgRepo)   cfgRepo.value   = localStorage.getItem('mwm_gh_repo')   || 'elivancarvalho/mwm-sistema';
+  if(cfgBranch) cfgBranch.value = localStorage.getItem('mwm_gh_branch') || 'main';
 
   carregarCache();
   carregarTodos();
 
+  // Atualizar badges e alertas a cada 30 segundos
   setInterval(() => {
     updateBadges();
-    if(document.getElementById('page-alertas').classList.contains('active')) renderAlertas();
+    const pgAlertas = document.getElementById('page-alertas');
+    if(pgAlertas && pgAlertas.classList.contains('active')) renderAlertas();
   }, 30000);
+
+  // Sincronização periódica a cada 5 minutos (quando aba ativa)
+  setInterval(() => {
+    if(document.visibilityState === 'visible') {
+      carregarTodos();
+    }
+  }, 5 * 60 * 1000);
 });
 </script>
 </body>
