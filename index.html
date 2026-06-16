@@ -1169,14 +1169,12 @@ function updateDashboard() {
   updateBadges();
   atualizarFiltroMotoristas();
 
-  const pgDisp    = document.getElementById('page-disp');
-  const pgAlertas = document.getElementById('page-alertas');
-  const pgPedidos = document.getElementById('page-pedidos');
-  const pgPend    = document.getElementById('page-pend');
-  if(pgDisp    && pgDisp.classList.contains('active'))    renderDisponibilidade();
-  if(pgAlertas && pgAlertas.classList.contains('active')) renderAlertas();
-  if(pgPedidos && pgPedidos.classList.contains('active')) renderPedidos();
-  if(pgPend    && pgPend.classList.contains('active'))    renderPend();
+  // Renderiza sempre todas as páginas secundárias para manter
+  // sincronismo com currentDate, independente de qual está visível.
+  renderDisponibilidade();
+  renderAlertas();
+  renderPedidos();
+  renderPend();
 }
 
 function renderDateNav() {
@@ -2114,10 +2112,11 @@ document.addEventListener('DOMContentLoaded', () => {
   carregarTodos();
 
   // Atualizar badges e alertas a cada 30 segundos
+  // renderAlertas roda sempre (sem guard de página ativa) para manter
+  // o badge e os dados sincronizados com currentDate em qualquer aba.
   setInterval(() => {
     updateBadges();
-    const pgAlertas = document.getElementById('page-alertas');
-    if(pgAlertas && pgAlertas.classList.contains('active')) renderAlertas();
+    renderAlertas();
   }, 30000);
 
   // Sincronização periódica a cada 5 minutos (quando aba ativa)
