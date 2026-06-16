@@ -638,7 +638,17 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
 
   <!-- ══════════ ALERTAS ══════════ -->
   <div class="page" id="page-alertas">
-    <div class="ph"><div><div class="pt">Alertas de Janela</div><div class="ps">Prazos de Fechamento de Coleta — Tempo Real</div></div></div>
+    <div class="ph">
+      <div>
+        <div class="pt">Alertas de Janela</div>
+        <div class="ps" id="alerta-date-subtitle">Prazos de Fechamento de Coleta — Tempo Real</div>
+      </div>
+      <!-- Pill mostrando a data ativa herdada da Programação -->
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <span style="font-size:10px;color:var(--text3)">Exibindo data:</span>
+        <span id="alerta-date-pill" style="font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent);background:var(--accent3);border:1px solid rgba(91,156,246,.25);padding:3px 12px;border-radius:20px">--/--</span>
+      </div>
+    </div>
     <div class="alerta-urgente-bar" id="alerta-urgente-bar" style="display:none">
       ⚡ <span id="alerta-urgente-txt">Coletas urgentes detectadas!</span>
     </div>
@@ -1456,7 +1466,17 @@ function sortAlertas(col) {
   renderAlertas();
 }
 
+function renderAlertaDateNav() {
+  // Apenas atualiza os indicadores de data — sem barra de seleção.
+  // A data ativa é sempre a mesma escolhida na página de Programação.
+  const sub = document.getElementById('alerta-date-subtitle');
+  if(sub) sub.textContent = `Coletas pendentes de ${obterNomeDiaSemana(currentDate)} (${currentDate})`;
+  const pill = document.getElementById('alerta-date-pill');
+  if(pill) pill.textContent = currentDate;
+}
+
 function renderAlertas() {
+  renderAlertaDateNav();
   const vs = viagensDB[currentDate] || [];
   const tbody = document.getElementById('alerta-tbody');
   if(!tbody) return;
@@ -1470,11 +1490,16 @@ function renderAlertas() {
         if(js.cls==='jdanger')    { statusOrder=0; statusKey='ATRASADO'; }
         else if(js.cls==='jwarn') { statusOrder=1; statusKey='URGENTE'; }
         else                       { statusOrder=2; statusKey='NO_PRAZO'; }
+        // Sempre reconstruir a janela a partir de ji e jf para evitar
+        // o bug de concatenação sem separador (ex: "05:0017:00")
+        const ji = p.ji || '--:--';
+        const jf = p.jf || '--:--';
+        const janela = `${ji} – ${jf}`;
         items.push({
           vid:v.id, pid:p.id,
           frota:v.frota||'', rota:v.rota||'',
           fornecedor:p.fornecedor||'', motorista:v.motorista||'',
-          ji:p.ji||'00:00', janela:p.janela||`${p.ji||'--:--'}-${p.jf||'--:--'}`,
+          ji, janela,
           js, statusOrder, statusKey
         });
       }
