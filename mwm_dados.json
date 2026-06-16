@@ -2614,33 +2614,6 @@
             "importado": false
           }
         ]
-      },
-      {
-        "id": 1781647635155,
-        "tipo": "TRUCK",
-        "frota": "R3021",
-        "frotaAntiga": "3247",
-        "placa": "TBA3C65",
-        "carreta": "-",
-        "motorista": "ANDREIA MARTINS DE ANDRADE",
-        "rota": "ROTA 21",
-        "saida": "10:00",
-        "origem": "CINPAL",
-        "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
-        "obs": "",
-        "paradas": [
-          {
-            "id": "1781647635155-0",
-            "fornecedor": "CINPAL",
-            "cidade": "SÃO PAULO",
-            "ji": "13:30",
-            "jf": "15:30",
-            "janela": "13:3015:30",
-            "pedido": "—",
-            "importado": false
-          }
-        ]
       }
     ]
   },
