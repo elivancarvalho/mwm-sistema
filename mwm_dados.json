@@ -563,53 +563,6 @@
         ]
       },
       {
-        "id": 1781647095027,
-        "tipo": "CONJUNTO",
-        "frota": "TL2015",
-        "frotaAntiga": "3242",
-        "placa": "FPK9I21",
-        "carreta": "S3079 / Placa: EKU7A68 (Antigo: 2532)",
-        "motorista": "FERNANDO DE OLIVEIRA",
-        "rota": "ROTA 02",
-        "saida": "05:00",
-        "origem": "METAL 2",
-        "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
-        "obs": "",
-        "paradas": [
-          {
-            "id": "1781647095027-0",
-            "fornecedor": "METAL 2",
-            "cidade": "SÃO PAULO",
-            "ji": "10:00",
-            "jf": "11:00",
-            "janela": "10:0011:00",
-            "pedido": "—",
-            "importado": false
-          },
-          {
-            "id": "1781647095027-1",
-            "fornecedor": "MAHLE FILTROS",
-            "cidade": "SÃO PAULO",
-            "ji": "14:40",
-            "jf": "17:00",
-            "janela": "14:4017:00",
-            "pedido": "—",
-            "importado": false
-          },
-          {
-            "id": "1781647095027-2",
-            "fornecedor": "MAHLE PISTÕES",
-            "cidade": "SÃO PAULO",
-            "ji": "15:00",
-            "jf": "17:00",
-            "janela": "15:0017:00",
-            "pedido": "—",
-            "importado": false
-          }
-        ]
-      },
-      {
         "id": 1781647095490,
         "tipo": "TRUCK",
         "frota": "JOI2796",
