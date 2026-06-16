@@ -882,6 +882,7 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
 //  BLOCO 0: ESTADO GLOBAL
 // ══════════════════════════════════════════════════════════════════
 let viagensDB = {};
+let dbOriginal = {};
 let availableDates = [];
 let currentDate = '';
 let fSearch = '';
@@ -1087,6 +1088,7 @@ async function carregarTodos() {
       const d = JSON.parse(content);
       viagensDB = d.viagens || {};
       availableDates = d.dates || Object.keys(viagensDB).sort();
+      dbOriginal = JSON.parse(JSON.stringify(viagensDB));
       salvarCache();
       setSyncOk();
       notify('✓ Dados carregados da nuvem');
@@ -1114,18 +1116,167 @@ function agendarSalvamento() {
   _saveTimeout = setTimeout(() => gravarTudo(), 2500);
 }
 
+function mesclarBancos(local, remote, original) {
+  const merged = {};
+  const allDates = [...new Set([...Object.keys(local), ...Object.keys(remote), ...Object.keys(original || {})])];
+  
+  allDates.forEach(date => {
+    const localTrips = local[date] || [];
+    const remoteTrips = remote[date] || [];
+    const originalTrips = (original && original[date]) || [];
+    
+    const localMap = new Map(localTrips.map(v => [v.id, v]));
+    const remoteMap = new Map(remoteTrips.map(v => [v.id, v]));
+    const originalMap = new Map(originalTrips.map(v => [v.id, v]));
+    
+    const allTripIds = [...new Set([...localMap.keys(), ...remoteMap.keys(), ...originalMap.keys()])];
+    const finalTrips = [];
+    
+    allTripIds.forEach(id => {
+      const lv = localMap.get(id);
+      const rv = remoteMap.get(id);
+      const ov = originalMap.get(id);
+      
+      // Caso 1: Viagem excluída localmente
+      if (ov && rv && !lv) return;
+      
+      // Caso 2: Viagem excluída remotamente
+      if (ov && lv && !rv) return;
+      
+      // Caso 3: Viagem criada localmente
+      if (lv && !rv && !ov) { finalTrips.push(lv); return; }
+      
+      // Caso 4: Viagem criada remotamente
+      if (rv && !lv && !ov) { finalTrips.push(rv); return; }
+      
+      // Caso 5: Viagem existe em ambos
+      if (lv && rv) {
+        const mergedTrip = { ...rv };
+        
+        // Mesclar campos de nível superior
+        const fields = ['frota', 'frotaAntiga', 'placa', 'carreta', 'motorista', 'rota', 'tipo', 'saida', 'origem', 'destino', 'cte', 'obs'];
+        fields.forEach(f => {
+          const valLocal = lv[f];
+          const valRemote = rv[f];
+          const valOrig = ov ? ov[f] : undefined;
+          
+          if (valLocal !== valOrig) {
+            mergedTrip[f] = valLocal;
+          } else {
+            mergedTrip[f] = valRemote;
+          }
+        });
+        
+        // Mesclar paradas
+        const lpList = lv.paradas || [];
+        const rpList = rv.paradas || [];
+        const opList = (ov && ov.paradas) || [];
+        
+        const lpMap = new Map(lpList.map(p => [p.id, p]));
+        const rpMap = new Map(rpList.map(p => [p.id, p]));
+        const opMap = new Map(opList.map(p => [p.id, p]));
+        
+        const allParadaIds = [...new Set([...lpMap.keys(), ...rpMap.keys(), ...opMap.keys()])];
+        const finalParadas = [];
+        
+        allParadaIds.forEach(pid => {
+          const lp = lpMap.get(pid);
+          const rp = rpMap.get(pid);
+          const op = opMap.get(pid);
+          
+          if (op && rp && !lp) return;
+          if (op && lp && !rp) return;
+          if (lp && !rp && !op) { finalParadas.push(lp); return; }
+          if (rp && !lp && !op) { finalParadas.push(rp); return; }
+          
+          if (lp && rp) {
+            const mergedParada = { ...rp };
+            const pFields = ['fornecedor', 'ji', 'jf', 'janela', 'pedido', 'importado'];
+            pFields.forEach(pf => {
+              const vLocal = lp[pf];
+              const vRemote = rp[pf];
+              const vOrig = op ? op[pf] : undefined;
+              
+              if (vLocal !== vOrig) {
+                mergedParada[pf] = vLocal;
+              } else {
+                mergedParada[pf] = vRemote;
+              }
+            });
+            finalParadas.push(mergedParada);
+          }
+        });
+        
+        mergedTrip.paradas = finalParadas;
+        finalTrips.push(mergedTrip);
+      }
+    });
+    
+    merged[date] = finalTrips;
+  });
+  
+  return merged;
+}
+
 async function gravarTudo() {
   const c = obterGHCredenciais();
   if(!c.token) return;
   try {
-    const url = `https://api.github.com/repos/${c.ownerRepo}/contents/${c.file}`;
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify({viagens:viagensDB, dates:availableDates}, null, 2))));
-    const body = {message:'Sincronismo mestre MWM estável', content, branch:c.branch};
+    // 1. Obter arquivo mais recente do GitHub para merge e SHA atualizado
+    const getUrl = `https://api.github.com/repos/${c.ownerRepo}/contents/${c.file}?ref=${c.branch}&t=${Date.now()}`;
+    const getResp = await fetchComTimeout(getUrl, { headers:{Authorization:`token ${c.token}`, Accept:'application/vnd.github.v3+json'} });
+    
+    let remoteDB = {};
+    let remoteDates = [];
+    if(getResp.status === 200) {
+      const meta = await getResp.json();
+      _fileSha = meta.sha;
+      const remoteContent = decodeURIComponent(escape(atob(meta.content.replace(/\n/g,''))));
+      const parsedRemote = JSON.parse(remoteContent);
+      remoteDB = parsedRemote.viagens || {};
+      remoteDates = parsedRemote.dates || [];
+    } else {
+      console.warn('Não foi possível obter dados para merge. Prosseguindo.');
+      remoteDB = viagensDB;
+      remoteDates = availableDates;
+    }
+    
+    // 2. Realizar o merge de 3 vias
+    const mergedDB = mesclarBancos(viagensDB, remoteDB, dbOriginal);
+    const mergedDates = [...new Set([...availableDates, ...remoteDates])].sort();
+    
+    viagensDB = mergedDB;
+    availableDates = mergedDates;
+    salvarCache();
+    
+    // 3. Gravar na nuvem
+    const putUrl = `https://api.github.com/repos/${c.ownerRepo}/contents/${c.file}`;
+    const newContent = btoa(unescape(encodeURIComponent(JSON.stringify({viagens:viagensDB, dates:availableDates}, null, 2))));
+    const body = {message:'Sincronismo mestre MWM estável (Merge)', content: newContent, branch:c.branch};
     if(_fileSha) body.sha = _fileSha;
-    const resp = await fetchComTimeout(url, {method:'PUT', headers:{Authorization:`token ${c.token}`, Accept:'application/vnd.github.v3+json'}, body:JSON.stringify(body)}, 15000);
-    if(resp.ok) { const r=await resp.json(); _fileSha=r.content.sha; setSyncOk(); notify('✓ Alterações gravadas na nuvem'); }
-    else { setSyncErr(); notify('⚠ Falha ao gravar na nuvem.','linear-gradient(135deg,#7a1414,#5a0a0a)'); }
-  } catch(e) { setSyncErr(); notify('⚠ Sem conexão. Tentando novamente...','linear-gradient(135deg,#7a3f0f,#5a2d00)'); }
+    
+    const putResp = await fetchComTimeout(putUrl, {
+      method:'PUT', 
+      headers:{Authorization:`token ${c.token}`, Accept:'application/vnd.github.v3+json'}, 
+      body:JSON.stringify(body)
+    }, 15000);
+    
+    if(putResp.ok) { 
+      const r = await putResp.json(); 
+      _fileSha = r.content.sha; 
+      dbOriginal = JSON.parse(JSON.stringify(viagensDB)); // Lock da nova versão base
+      setSyncOk(); 
+      notify('✓ Alterações mescladas e gravadas na nuvem'); 
+      updateDashboard();
+    } else { 
+      setSyncErr(); 
+      notify('⚠ Erro de conflito ao gravar na nuvem. Recarregue a página.','linear-gradient(135deg,#7a1414,#5a0a0a)'); 
+    }
+  } catch(e) { 
+    console.error('Erro de persistência:', e);
+    setSyncErr(); 
+    notify('⚠ Sem conexão para salvar na nuvem. Tentando novamente...','linear-gradient(135deg,#7a3f0f,#5a2d00)'); 
+  }
 }
 
 async function testarConexao() {
@@ -2108,6 +2259,7 @@ function carregarCache() {
     const s = localStorage.getItem('mwm_v6_cache') || localStorage.getItem('mwm_v5_cache');
     if(s) { const d=JSON.parse(s); viagensDB=d.viagens||{}; availableDates=d.dates||[]; }
   } catch(e) { viagensDB={}; availableDates=[]; }
+  dbOriginal = JSON.parse(JSON.stringify(viagensDB));
 }
 
 function salvarConfiguracoesGitHub() {
