@@ -1635,7 +1635,7 @@
             "jf": "09:00",
             "janela": "08:00-09:00",
             "pedido": "—",
-            "importado": false
+            "importado": true
           }
         ]
       }
