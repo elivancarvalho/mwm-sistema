@@ -1399,7 +1399,13 @@ function updateBadges() {
   const bPend = document.getElementById('badge-pend');
   const bAva  = document.getElementById('badge-ava');
   const bAlt  = document.getElementById('badge-alertas');
-  if(bPend) bPend.textContent = vs.filter(v => v.cte === 'PENDENTE').length;
+  if(bPend) {
+    bPend.textContent = vs.filter(v => {
+      if (v.cte !== 'PENDENTE') return false;
+      const st = avaSt(v);
+      return st === 'IMPORTADO' || st === 'N/A';
+    }).length;
+  }
   if(bAva)  bAva.textContent  = vs.filter(v => avaSt(v)==='PENDENTE'||avaSt(v)==='PARCIAL').length;
   let urgentes = 0;
   vs.forEach(v => (v.paradas||[]).forEach(p => { if(!p.importado && janelaStatus(p).urgente) urgentes++; }));
@@ -1637,21 +1643,34 @@ function renderPedidos() {
 function renderPend() {
   const vs = viagensDB[currentDate] || [];
   const container = document.getElementById('pend-apto');
+  if (!container) return;
+
   const pendentes = vs.filter(v => v.cte==='PENDENTE');
-  if(!pendentes.length) { container.innerHTML=`<div style="color:var(--green);padding:20px;text-align:center">✓ Todos os CTEs do dia já foram emitidos.</div>`; return; }
-  let html = '';
-  pendentes.forEach(v => {
+  const aptos = pendentes.filter(v => {
     const st = avaSt(v);
-    const ok = st==='IMPORTADO'||st==='N/A';
+    return st === 'IMPORTADO' || st === 'N/A';
+  });
+
+  if(!aptos.length) {
+    if (pendentes.length > 0) {
+      container.innerHTML = `<div style="color:var(--text3);padding:20px;text-align:center">Aguardando a conclusão das coletas no AVACORP para liberar a emissão do CTE.</div>`;
+    } else {
+      container.innerHTML = `<div style="color:var(--green);padding:20px;text-align:center">✓ Todos os CTEs do dia já foram emitidos.</div>`;
+    }
+    return;
+  }
+
+  let html = '';
+  aptos.forEach(v => {
+    const st = avaSt(v);
     html += `<div style="background:var(--bg2);padding:13px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;">
       <div>
         <strong style="color:var(--text)">${v.frota} — [${v.rota}]</strong> — ${v.motorista}<br>
         <small style="color:var(--text3)">${v.origem} → ${v.destino} · AVACORP: ${st}</small>
       </div>
-      <div>${ok
-        ? `<button class="btn btn-success btn-sm" onclick="updateCTE(${v.id},'IMPRESSO')">⚙ Emitir CTE</button>`
-        : `<span style="color:var(--red);font-weight:700;font-size:11px;padding:4px 10px;background:var(--red-bg);border-radius:4px;border:1px solid rgba(248,113,113,.2)">🔒 Falta AVACORP</span>`
-      }</div>
+      <div>
+        <button class="btn btn-success btn-sm" onclick="updateCTE(${v.id},'IMPRESSO')">⚙ Emitir CTE</button>
+      </div>
     </div>`;
   });
   container.innerHTML = html;
