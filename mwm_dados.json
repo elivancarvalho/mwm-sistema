@@ -2198,7 +2198,7 @@
         "frota": "JOI2796",
         "frotaAntiga": "Agregado Extra",
         "placa": "Caminhão Terceiro",
-        "carreta": "-",
+        "carreta": "—",
         "motorista": "ANDERSON MACENA MELENDRE",
         "rota": "ROTA 02",
         "saida": "06:00",
@@ -2213,27 +2213,17 @@
             "cidade": "SÃO PAULO",
             "ji": "11:00",
             "jf": "12:00",
-            "janela": "11:0012:00",
+            "janela": "11:00-12:00",
             "pedido": "52972",
             "importado": true
           },
           {
             "id": "1781653782670-1",
-            "fornecedor": "MAHLE FILTROS",
-            "cidade": "SÃO PAULO",
-            "ji": "14:30",
-            "jf": "17:00",
-            "janela": "14:3017:00",
-            "pedido": "52972",
-            "importado": false
-          },
-          {
-            "id": "1781653782670-2",
             "fornecedor": "MAHLE PISTOES",
             "cidade": "SÃO PAULO",
             "ji": "15:00",
             "jf": "18:00",
-            "janela": "15:0018:00",
+            "janela": "15:00-18:00",
             "pedido": "52972",
             "importado": false
           }
