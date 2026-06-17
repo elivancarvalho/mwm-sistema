@@ -2702,7 +2702,7 @@
             "jf": "12:00",
             "janela": "07:00-12:00",
             "pedido": "52986",
-            "importado": false
+            "importado": true
           }
         ]
       }
