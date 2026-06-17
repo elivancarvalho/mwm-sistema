@@ -2072,53 +2072,6 @@
       {
         "id": 1781647103577,
         "tipo": "TRUCK",
-        "frota": "R3026",
-        "frotaAntiga": "3254",
-        "placa": "TBB6A14",
-        "carreta": "-",
-        "motorista": "TULIO DOS SANTOS CORDEIRO",
-        "rota": "ROTA 09",
-        "saida": "07:00",
-        "origem": "LEPE",
-        "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
-        "obs": "",
-        "paradas": [
-          {
-            "id": "1781647103577-0",
-            "fornecedor": "LEPE",
-            "cidade": "SÃO PAULO",
-            "ji": "11:00",
-            "jf": "12:00",
-            "janela": "11:0012:00",
-            "pedido": "—",
-            "importado": false
-          },
-          {
-            "id": "1781647103577-1",
-            "fornecedor": "CIP",
-            "cidade": "SÃO PAULO",
-            "ji": "13:00",
-            "jf": "14:00",
-            "janela": "13:0014:00",
-            "pedido": "—",
-            "importado": false
-          },
-          {
-            "id": "1781647103577-2",
-            "fornecedor": "DELGA",
-            "cidade": "SÃO PAULO",
-            "ji": "15:00",
-            "jf": "16:00",
-            "janela": "15:0016:00",
-            "pedido": "—",
-            "importado": false
-          }
-        ]
-      },
-      {
-        "id": 1781647103577,
-        "tipo": "TRUCK",
         "frota": "OKZ6B54",
         "frotaAntiga": "Agregado Extra",
         "placa": "Caminhão Terceiro",
@@ -2214,7 +2167,7 @@
             "ji": "10:00",
             "jf": "11:00",
             "janela": "10:0011:00",
-            "pedido": "—",
+            "pedido": "52971",
             "importado": false
           },
           {
@@ -2224,7 +2177,7 @@
             "ji": "13:00",
             "jf": "14:00",
             "janela": "13:0014:00",
-            "pedido": "—",
+            "pedido": "52971",
             "importado": false
           },
           {
