@@ -2573,7 +2573,7 @@
             "ji": "15:00",
             "jf": "16:00",
             "janela": "15:00-16:00",
-            "pedido": "—",
+            "pedido": "52980",
             "importado": false
           },
           {
@@ -2583,7 +2583,7 @@
             "ji": "09:30",
             "jf": "10:30",
             "janela": "09:30-10:30",
-            "pedido": "—",
+            "pedido": "52980",
             "importado": false
           },
           {
@@ -2593,7 +2593,7 @@
             "ji": "11:00",
             "jf": "12:00",
             "janela": "11:00-12:00",
-            "pedido": "—",
+            "pedido": "52980",
             "importado": false
           }
         ]
