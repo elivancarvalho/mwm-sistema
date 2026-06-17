@@ -2656,24 +2656,24 @@
         "id": 1781653782511,
         "tipo": "CONJUNTO",
         "frota": "B10021",
-        "frotaAntiga": "-",
+        "frotaAntiga": "—",
         "placa": "OWN8B50",
         "carreta": "SL3022 / Placa: FWF5I52 (Antigo: 2522)",
         "motorista": "LUCIANO LEMES DA SILVA",
         "rota": "ROTA 2B",
         "saida": "19:00",
-        "origem": "MGK",
+        "origem": "CD",
         "destino": "MWM STO AMARO",
         "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
             "id": "1781653782511-0",
-            "fornecedor": "MGK",
+            "fornecedor": "GW",
             "cidade": "SÃÂO PAULO",
             "ji": "20:00",
             "jf": "00:00",
-            "janela": "20:0000:00",
+            "janela": "20:00-00:00",
             "pedido": "—",
             "importado": false
           }
