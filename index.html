@@ -657,7 +657,7 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
       <div class="ttoolbar">
         <div class="swrap">
           <svg class="sico" width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"/></svg>
-          <input type="text" placeholder="Buscar frota, motorista, rota, fornecedor..." oninput="setAlertaSearch(this.value)">
+          <input type="text" placeholder="Buscar placa, pedido, rota, fornecedor, motorista..." oninput="setAlertaSearch(this.value)">
         </div>
         <select class="fsel" onchange="setAlertaStatus(this.value)">
           <option value="">Todos os status</option>
@@ -669,7 +669,8 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
       </div>
       <table>
         <thead><tr>
-          <th class="sortable" onclick="sortAlertas('frota')">Frota <span class="sort-ind" data-col="frota"></span></th>
+          <th class="sortable" onclick="sortAlertas('placa')">Placa <span class="sort-ind" data-col="placa"></span></th>
+          <th class="sortable" onclick="sortAlertas('pedido')">Pedido <span class="sort-ind" data-col="pedido"></span></th>
           <th class="sortable" onclick="sortAlertas('rota')">Rota <span class="sort-ind" data-col="rota"></span></th>
           <th class="sortable" onclick="sortAlertas('fornecedor')">Fornecedor <span class="sort-ind" data-col="fornecedor"></span></th>
           <th class="sortable" onclick="sortAlertas('motorista')">Motorista <span class="sort-ind" data-col="motorista"></span></th>
@@ -1495,7 +1496,7 @@ function renderTable() {
       `<td><span class="${v.tipo==='TRUCK'?'tipo-truck':'tipo-conj'}">${esc(v.tipo)}</span></td>` +
       `<td style="font-family:var(--mono);color:var(--teal)">${esc(v.saida)}</td>` +
       `<td><small style="color:var(--text3)">${esc(v.origem)} <span style="color:var(--accent)">→</span> ${esc(v.destino)}</small></td>` +
-      `<td>${v.paradas.map(p=>`<span class="pb p52" onclick="abrirModalPedido(${v.id},'${p.id}',\`${esc(p.pedido)}\`)" title="Clique para editar">${esc(p.pedido)}</span>`).join(' ')}</td>` +
+      `<td>${v.paradas.map(p=>`<span class="pb p52">${esc(p.pedido)}</span>`).join(' ')}</td>` +
       `<td><span class="${ava==='IMPORTADO'?'ava-ok':ava==='PARCIAL'?'ava-par':'ava-pend'}">${ava}</span></td>` +
       `<td><div title="${prog}% importado"><div class="prog-track"><div class="prog-fill" style="width:${prog}%;background:${progColor}"></div></div><small style="color:var(--text3);font-size:9px">${prog}%</small></div></td>` +
       `<td><select class="ctesel" onchange="updateCTE(${v.id},this.value)">
@@ -1562,9 +1563,14 @@ function updateBadges() {
     }).length;
   }
   if(bAva)  bAva.textContent  = vs.filter(v => avaSt(v)==='PENDENTE'||avaSt(v)==='PARCIAL').length;
-  let urgentes = 0;
-  vs.forEach(v => (v.paradas||[]).forEach(p => { if(!p.importado && janelaStatus(p).urgente) urgentes++; }));
-  if(bAlt) bAlt.textContent = urgentes;
+  let criticas = 0;
+  vs.forEach(v => (v.paradas||[]).forEach(p => {
+    if(!p.importado) {
+      const js = janelaStatus(p);
+      if(js.cls === 'jdanger' || js.cls === 'jwarn') criticas++;
+    }
+  }));
+  if(bAlt) bAlt.textContent = criticas;
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -1681,7 +1687,8 @@ function renderAlertas() {
         const janela = `${ji} – ${jf}`;
         items.push({
           vid:v.id, pid:p.id,
-          frota:v.frota||'', rota:v.rota||'',
+          placa:v.placa||'', pedido:p.pedido||'',
+          rota:v.rota||'',
           fornecedor:p.fornecedor||'', motorista:v.motorista||'',
           ji, janela,
           js, statusOrder, statusKey
@@ -1691,7 +1698,7 @@ function renderAlertas() {
   });
 
   const s = alertaSearch.trim().toLowerCase();
-  if(s) items = items.filter(it => it.frota.toLowerCase().includes(s)||it.rota.toLowerCase().includes(s)||it.fornecedor.toLowerCase().includes(s)||it.motorista.toLowerCase().includes(s));
+  if(s) items = items.filter(it => it.placa.toLowerCase().includes(s)||it.pedido.toLowerCase().includes(s)||it.rota.toLowerCase().includes(s)||it.fornecedor.toLowerCase().includes(s)||it.motorista.toLowerCase().includes(s));
   if(alertaStatusFilter) items = items.filter(it => it.statusKey===alertaStatusFilter);
 
   const {col, dir} = alertaSort;
@@ -1726,17 +1733,18 @@ function renderAlertas() {
 
   if(!items.length) {
     const msg = (alertaSearch||alertaStatusFilter) ? 'Nenhum alerta para esse filtro.' : '✓ Nenhuma coleta pendente para hoje.';
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:30px;">${msg}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:30px;">${msg}</td></tr>`;
     return;
   }
 
   _alertaItensAtuais = items;
   tbody.innerHTML = items.map((it,i) => `<tr>
-    <td><strong style="color:var(--text)">${it.frota}</strong></td>
+    <td><code style="color:var(--text2);font-family:var(--mono);font-size:11px">${it.placa}</code></td>
+    <td><span class="pb p52">${it.pedido}</span></td>
     <td>${it.rota}</td>
     <td>${it.fornecedor}</td>
     <td>${it.motorista}</td>
-    <td style="font-family:var(--mono)">${it.janela}</td>
+    <td style="font-family:var(--mono);font-size:11px">${it.janela}</td>
     <td><span class="${it.js.cls}" style="font-weight:700;font-family:var(--mono)">${it.js.txt}</span></td>
     <td style="white-space:nowrap">
       <button class="btn btn-success btn-sm" onclick="marcarParadaImportada(${it.vid},'${it.pid}')">✓ NF Importada</button>
@@ -1767,7 +1775,7 @@ function enviarWhatsappMotorista(idx) {
     notify(`⚠ Sem WhatsApp cadastrado para "${it.motorista}".`, 'linear-gradient(135deg,#7a3f0f,#5a2d00)', 4000);
     return;
   }
-  const msg = `${saudacaoAtual()}!\n\n ${formatarPrimeiroNome(it.motorista)}, tudo bem?\n\nA janela de coleta na *${it.fornecedor}* (${it.janela}) está chegando no limite.\n\nPoderia nos informar a situação:\n- Ainda não iniciou o carregamento?\n- Está carregando?\n- Já finalizou?\n\nPor favor responda para alinharmos com a equipe de transporte da MWM. Obrigado!`;
+  const msg = `${saudacaoAtual()}!\n\nSr(a). ${formatarPrimeiroNome(it.motorista)}, tudo bem?\n\nA janela de coleta na *${it.fornecedor}* (${it.janela}) está chegando no limite.\n\nPoderia nos informar a situação:\n- Ainda não iniciou o carregamento?\n- Está carregando?\n- Já finalizou?\n\nPor favor responda para alinharmos com a equipe de transporte da MWM. Obrigado!`;
   window.location.href = `whatsapp://send?phone=${numero}&text=${encodeURIComponent(msg)}`;
 }
 
