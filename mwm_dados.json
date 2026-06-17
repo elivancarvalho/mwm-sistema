@@ -2632,7 +2632,7 @@
         "frotaAntiga": "3242",
         "placa": "FPK9I21",
         "carreta": "S3079 / Placa: EKU7A68 (Antigo: 2532)",
-        "motorista": "FERNANDO DE OLIVEIRA",
+        "motorista": "CELSO SOARES",
         "rota": "ROTA 21",
         "saida": "08:00",
         "origem": "IDEAL",
@@ -2646,7 +2646,7 @@
             "cidade": "SÃO PAULO",
             "ji": "10:00",
             "jf": "11:30",
-            "janela": "10:0011:30",
+            "janela": "10:00-11:30",
             "pedido": "—",
             "importado": false
           }
