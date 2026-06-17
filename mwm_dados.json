@@ -2547,7 +2547,7 @@
         "frota": "R3023",
         "frotaAntiga": "3251",
         "placa": "TBB6A15",
-        "carreta": "-",
+        "carreta": "—",
         "motorista": "IVAN LEONILDO",
         "rota": "ROTA 14",
         "saida": "10:00",
@@ -2562,7 +2562,7 @@
             "cidade": "SÃO PAULO",
             "ji": "13:00",
             "jf": "14:00",
-            "janela": "13:0014:00",
+            "janela": "13:00-14:00",
             "pedido": "—",
             "importado": false
           },
@@ -2572,7 +2572,27 @@
             "cidade": "SÃO PAULO",
             "ji": "15:00",
             "jf": "16:00",
-            "janela": "15:0016:00",
+            "janela": "15:00-16:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781653782711-2",
+            "fornecedor": "PASCHOAL",
+            "cidade": "SÃO PAULO",
+            "ji": "09:30",
+            "jf": "10:30",
+            "janela": "09:30-10:30",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781653782711-3",
+            "fornecedor": "KONDOR",
+            "cidade": "SÃO PAULO",
+            "ji": "11:00",
+            "jf": "12:00",
+            "janela": "11:00-12:00",
             "pedido": "—",
             "importado": false
           }
