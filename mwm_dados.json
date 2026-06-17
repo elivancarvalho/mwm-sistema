@@ -2282,7 +2282,7 @@
             "jf": "13:00",
             "janela": "12:0013:00",
             "pedido": "52973",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781653783011-3",
@@ -2433,7 +2433,7 @@
             "jf": "12:00",
             "janela": "11:0012:00",
             "pedido": "52976",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1781653782975-1",
