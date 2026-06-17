@@ -2688,7 +2688,7 @@
         "carreta": "SL3021 / Placa: DPL0E52 (Antigo: 2521)",
         "motorista": "MARCELO DIAS",
         "rota": "CONSOLIDADO",
-        "saida": "12:00",
+        "saida": "05:00",
         "origem": "FILIAL SBC (EMBALAGEM)",
         "destino": "MWM STO AMARO",
         "cte": "PENDENTE",
@@ -2698,9 +2698,9 @@
             "id": "1781653782878-0",
             "fornecedor": "FILIAL SBC (EMBALAGEM)",
             "cidade": "SÃO PAULO",
-            "ji": "05:00",
-            "jf": "17:00",
-            "janela": "05:0017:00",
+            "ji": "07:00",
+            "jf": "12:00",
+            "janela": "07:00-12:00",
             "pedido": "52986",
             "importado": false
           }
