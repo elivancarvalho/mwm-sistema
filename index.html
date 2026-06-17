@@ -1767,7 +1767,7 @@ function enviarWhatsappMotorista(idx) {
     notify(`⚠ Sem WhatsApp cadastrado para "${it.motorista}".`, 'linear-gradient(135deg,#7a3f0f,#5a2d00)', 4000);
     return;
   }
-  const msg = `${saudacaoAtual()}!\n\nSr(a). ${formatarPrimeiroNome(it.motorista)}, tudo bem?\n\nA janela de coleta na *${it.fornecedor}* (${it.janela}) está chegando no limite.\n\nPoderia nos informar a situação:\n- Ainda não iniciou o carregamento?\n- Está carregando?\n- Já finalizou?\n\nPor favor responda para alinharmos com a equipe de transporte da MWM. Obrigado!`;
+  const msg = `${saudacaoAtual()}!\n\n ${formatarPrimeiroNome(it.motorista)}, tudo bem?\n\nA janela de coleta na *${it.fornecedor}* (${it.janela}) está chegando no limite.\n\nPoderia nos informar a situação:\n- Ainda não iniciou o carregamento?\n- Está carregando?\n- Já finalizou?\n\nPor favor responda para alinharmos com a equipe de transporte da MWM. Obrigado!`;
   window.location.href = `whatsapp://send?phone=${numero}&text=${encodeURIComponent(msg)}`;
 }
 
