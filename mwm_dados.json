@@ -2973,7 +2973,7 @@
             "jf": "15:00",
             "janela": "12:30-15:00",
             "pedido": "52994",
-            "importado": false
+            "importado": true
           }
         ]
       },
