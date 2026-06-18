@@ -2902,6 +2902,43 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781779423679,
+        "tipo": "TRUCK",
+        "frota": "R3019",
+        "frotaAntiga": "3245",
+        "placa": "TBA3C89",
+        "carreta": "—",
+        "motorista": "GILMAR PEREIRA SILVA",
+        "rota": "ROTA 11",
+        "saida": "06:00",
+        "origem": "CD SBC",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781779423679-0",
+            "fornecedor": "TECNOCURVA",
+            "cidade": "SÃO PAULO",
+            "ji": "08:00",
+            "jf": "09:00",
+            "janela": "08:00-09:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781779423679-1",
+            "fornecedor": "REAL MECANICA",
+            "cidade": "SÃO PAULO",
+            "ji": "14:00",
+            "jf": "15:00",
+            "janela": "14:00-15:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
