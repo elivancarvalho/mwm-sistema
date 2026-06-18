@@ -2976,6 +2976,33 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781781175375,
+        "tipo": "CONJUNTO",
+        "frota": "TL2017",
+        "frotaAntiga": "3244",
+        "placa": "SWT3J11",
+        "carreta": "SL3023 / Placa: FUD1D17 (Antigo: 2523)",
+        "motorista": "AGNALDO PEREIRA DE JESUS",
+        "rota": "ROTA 15",
+        "saida": "15:00",
+        "origem": "CD SBC",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781781175375-0",
+            "fornecedor": "VOSKI",
+            "cidade": "SÃO PAULO",
+            "ji": "19:00",
+            "jf": "21:00",
+            "janela": "19:00-21:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
