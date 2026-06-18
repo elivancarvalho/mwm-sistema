@@ -2880,6 +2880,26 @@
             "janela": "08:00-09:00",
             "pedido": "—",
             "importado": false
+          },
+          {
+            "id": "1781779317038-1",
+            "fornecedor": "LEPE",
+            "cidade": "SÃO PAULO",
+            "ji": "11:00",
+            "jf": "12:00",
+            "janela": "11:00-12:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781779317038-2",
+            "fornecedor": "DELGA",
+            "cidade": "SÃO PAULO",
+            "ji": "15:00",
+            "jf": "16:00",
+            "janela": "15:00-16:00",
+            "pedido": "—",
+            "importado": false
           }
         ]
       }
