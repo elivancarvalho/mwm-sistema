@@ -2443,7 +2443,7 @@
             "jf": "18:00",
             "janela": "17:0018:00",
             "pedido": "52976",
-            "importado": false
+            "importado": true
           }
         ]
       },
@@ -2665,7 +2665,7 @@
             "jf": "19:00",
             "janela": "15:00-19:00",
             "pedido": "52965",
-            "importado": false
+            "importado": true
           }
         ]
       },
