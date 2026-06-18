@@ -2855,6 +2855,33 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781779317038,
+        "tipo": "TRUCK",
+        "frota": "R3026",
+        "frotaAntiga": "3254",
+        "placa": "TBB6A14",
+        "carreta": "—",
+        "motorista": "TULIO DOS SANTOS CORDEIRO",
+        "rota": "ROTA 09",
+        "saida": "06:00",
+        "origem": "CD SBC",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781779317038-0",
+            "fornecedor": "BUZAS",
+            "cidade": "SÃO PAULO",
+            "ji": "08:00",
+            "jf": "09:00",
+            "janela": "08:00-09:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
