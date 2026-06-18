@@ -110,26 +110,27 @@
         { "fornecedor": "CIP", "ji": "13:00", "jf": "14:00" },
         { "fornecedor": "DELGA", "ji": "15:00", "jf": "16:00" }
       ]
-  },
-  "ROTA 13": {
+    },
+    "ROTA 13": {
       "origem": "THYSSENKRUPP", "destino": "MWM STO AMARO", "saida": "05:00", "tipo": "TRUCK",
       "paradas": [
         { "fornecedor": "THYSSENKRUPP", "ji": "08:00", "jf": "09:30" },
         { "fornecedor": "MWM STO AMARO", "ji": "12:30", "jf": "18:00" }
       ]
-  },
-"ROTA 15": {
+    },
+    "ROTA 15": {
       "origem": "MANN HUMMEL", "destino": "MWM STO AMARO", "saida": "11:00", "tipo": "TRUCK",
       "paradas": [
         { "fornecedor": "MANN HUMMEL", "ji": "14:30", "jf": "15:30" },
         { "fornecedor": "VOSKI", "ji": "19:00", "jf": "21:00" }
       ]
-  },
+    },
     "ROTA 20": {
       "origem": "RESIPLASTIC", "destino": "CARGOLIFT SBC", "saida": "11:00", "tipo": "TRUCK",
       "paradas": [
         { "fornecedor": "VOSKI", "ji": "19:00", "jf": "21:00" }
       ]
+    }
   },
   "Quarta-feira": {
     "ROTA 01": {
@@ -158,6 +159,7 @@
       "paradas": [
         { "fornecedor": "FILIAL SBC (EMBALAGEM)", "ji": "07:00", "jf": "12:00" }
       ]
+    }
   },
   "Quinta-feira": {
     "ROTA 02": {
