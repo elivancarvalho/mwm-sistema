@@ -2771,6 +2771,43 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781779110499,
+        "tipo": "TRUCK",
+        "frota": "DPC1D11",
+        "frotaAntiga": "Agregado Extra",
+        "placa": "Caminhão Terceiro",
+        "carreta": "—",
+        "motorista": "ROBERTO",
+        "rota": "ROTA 04",
+        "saida": "06:00",
+        "origem": "CD SBC",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781779110499-0",
+            "fornecedor": "ENGRECON",
+            "cidade": "SÃO PAULO",
+            "ji": "13:00",
+            "jf": "14:00",
+            "janela": "13:00-14:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781779110499-1",
+            "fornecedor": "COFIBAN",
+            "cidade": "SÃO PAULO",
+            "ji": "15:30",
+            "jf": "16:00",
+            "janela": "15:30-16:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
