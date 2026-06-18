@@ -2936,7 +2936,7 @@
             "jf": "15:00",
             "janela": "14:00-15:00",
             "pedido": "52992",
-            "importado": false
+            "importado": true
           }
         ]
       },
