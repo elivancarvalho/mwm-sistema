@@ -278,6 +278,8 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
 .btn-danger:hover{background:rgba(248,113,113,.1);}
 .btn-whatsapp{background:#25D366;color:#fff;}
 .btn-whatsapp:hover{background:#1ebe5a;box-shadow:0 0 12px rgba(37,211,102,.35);}
+.btn-email{background:#ea4335;color:#fff;}
+.btn-email:hover{background:#c5221f;box-shadow:0 0 12px rgba(234,67,53,.35);}
 .btn-icon{padding:6px;border-radius:var(--radius-sm);}
 .btn-export{background:var(--teal-bg);color:var(--teal);border:1px solid rgba(34,211,238,.25);}
 .btn-export:hover{background:rgba(34,211,238,.1);}
@@ -712,6 +714,15 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
         </div>
       </div>
       <div class="config-section">
+        <div class="config-section-title">💾 Backup e Restauração</div>
+        <p style="font-size:11.5px;color:var(--text2);margin-bottom:12px;line-height:1.6;">Baixe uma cópia completa do banco de dados local ou restaure a partir de um arquivo de backup (.json).</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+          <button class="btn btn-ghost" style="color:var(--teal);border-color:var(--teal);" onclick="exportarBackupJSON()">📥 Exportar Backup (JSON)</button>
+          <button class="btn btn-ghost" style="color:var(--purple);border-color:var(--purple);" onclick="document.getElementById('import-backup-file').click()">📤 Importar Backup (JSON)</button>
+          <input type="file" id="import-backup-file" accept=".json" style="display:none;" onchange="importarBackupJSON(event)">
+        </div>
+      </div>
+      <div class="config-section">
         <div class="config-section-title">🔧 Manutenção</div>
         <p style="font-size:11.5px;color:var(--text2);margin-bottom:12px;line-height:1.6;">Use as ferramentas abaixo caso o banco de dados apresente caracteres corrompidos ou inconsistências.</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
@@ -903,6 +914,7 @@ let CONJUNTURA_VEICULOS = {};
 let MAPA_REVERSO_PLACAS = {};
 let ROTAS_MACRO_DATABASE = {};
 let MOTORISTAS_CONTATOS = {};
+let FORNECEDORES_CONTATOS = {};
 
 let alertaSearch = '';
 let alertaStatusFilter = '';
@@ -920,7 +932,8 @@ function obterGHCredenciais() {
     file:       'mwm_dados.json',
     fleetFile:  'frota.json',
     routesFile: 'rotas_padrao.json',
-    driversFile:'motoristas.json'
+    driversFile:'motoristas.json',
+    suppliersFile:'fornecedores.json'
   };
 }
 
@@ -1046,14 +1059,18 @@ async function carregarDicionariosRemotosGitHub() {
   const loadFile = async (fname) => {
     try {
       const r = await fetchComTimeout(`https://api.github.com/repos/${c.ownerRepo}/contents/${fname}?ref=${c.branch}&t=${Date.now()}`, { headers:hdrs });
-      if(!r.ok) return null;
-      const d = await r.json();
-      return JSON.parse(decodeB64(d.content));
+      if(r.ok) {
+        const d = await r.json();
+        return JSON.parse(decodeB64(d.content));
+      }
+      const rLoc = await fetch(fname);
+      if(rLoc.ok) return await rLoc.json();
+      return null;
     } catch(e) { console.warn(`Erro ao carregar ${fname}:`, e); return null; }
   };
 
-  const [frota, rotas, motoristas] = await Promise.all([
-    loadFile(c.fleetFile), loadFile(c.routesFile), loadFile(c.driversFile)
+  const [frota, rotas, motoristas, fornecedores] = await Promise.all([
+    loadFile(c.fleetFile), loadFile(c.routesFile), loadFile(c.driversFile), loadFile(c.suppliersFile)
   ]);
 
   if(frota) {
@@ -1068,6 +1085,14 @@ async function carregarDicionariosRemotosGitHub() {
     MOTORISTAS_CONTATOS = {};
     Object.keys(motoristas).forEach(n => {
       MOTORISTAS_CONTATOS[n.trim().toUpperCase()] = String(motoristas[n]).replace(/\D/g,'');
+    });
+  }
+  if(fornecedores && Array.isArray(fornecedores)) {
+    FORNECEDORES_CONTATOS = {};
+    fornecedores.forEach(f => {
+      if(f.Fornecedor && f['E-mail (Contato)']) {
+        FORNECEDORES_CONTATOS[f.Fornecedor.trim().toUpperCase()] = f['E-mail (Contato)'];
+      }
     });
   }
   return true;
@@ -1289,6 +1314,45 @@ async function testarConexao() {
     if(r.ok) { const d=await r.json(); notify(`✓ Conectado! Repo: ${d.full_name}`,'linear-gradient(135deg,#0f7a44,#065f33)'); }
     else notify(`⚠ Erro ${r.status} — verifique token/repositório.`,'linear-gradient(135deg,#7a1414,#5a0a0a)', 4000);
   } catch(e) { notify('⚠ Timeout ou sem conexão.','linear-gradient(135deg,#7a1414,#5a0a0a)'); }
+}
+
+function exportarBackupJSON() {
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({viagens:viagensDB, dates:availableDates}, null, 2));
+  const downloadAnchor = document.createElement('a');
+  downloadAnchor.setAttribute("href", dataStr);
+  downloadAnchor.setAttribute("download", `mwm_backup_${new Date().toISOString().slice(0,10)}.json`);
+  document.body.appendChild(downloadAnchor);
+  downloadAnchor.click();
+  downloadAnchor.remove();
+  notify('✓ Backup JSON exportado com sucesso!');
+}
+
+function importarBackupJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data && data.viagens) {
+        if (confirm('Atenção: Isso substituirá o banco de dados local com as informações deste backup. Deseja prosseguir?')) {
+          viagensDB = data.viagens;
+          availableDates = data.dates || Object.keys(viagensDB).sort();
+          salvarCache();
+          agendarSalvamento(); // Salva na nuvem também
+          notify('✓ Backup importado e agendado para salvamento remoto!');
+          updateDashboard();
+        }
+      } else {
+        notify('⚠ Arquivo de backup inválido (formato incompatível).', 'linear-gradient(135deg,#7a1414,#5a0a0a)');
+      }
+    } catch(err) {
+      notify('⚠ Erro ao ler arquivo de backup JSON.', 'linear-gradient(135deg,#7a1414,#5a0a0a)');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = ''; // Limpa input
 }
 
 function repararMojibakeBancoCompleto() {
@@ -1749,6 +1813,7 @@ function renderAlertas() {
     <td style="white-space:nowrap">
       <button class="btn btn-success btn-sm" onclick="marcarParadaImportada(${it.vid},'${it.pid}')">✓ NF Importada</button>
       <button class="btn btn-whatsapp btn-sm" onclick="enviarWhatsappMotorista(${i})" title="${it.statusKey==='NO_PRAZO'?'No prazo · Envio desnecessário':'Enviar WhatsApp'}" ${it.statusKey==='NO_PRAZO'?'disabled':''}>💬</button>
+      ${it.statusKey==='ATRASADO' ? `<button class="btn btn-email btn-sm" onclick="enviarEmailFornecedor(${i})" title="Enviar E-mail de Atraso">✉️</button>` : ''}
     </td>
   </tr>`).join('');
 }
@@ -1777,6 +1842,41 @@ function enviarWhatsappMotorista(idx) {
   }
   const msg = `${saudacaoAtual()}!\n\nSr(a). ${formatarPrimeiroNome(it.motorista)}, tudo bem?\n\nA janela de coleta na *${it.fornecedor}* (${it.janela}) está chegando no limite.\n\nPoderia nos informar a situação:\n- Ainda não iniciou o carregamento?\n- Está carregando?\n- Já finalizou?\n\nPor favor responda para alinharmos com a equipe de transporte da MWM. Obrigado!`;
   window.location.href = `whatsapp://send?phone=${numero}&text=${encodeURIComponent(msg)}`;
+}
+
+function enviarEmailFornecedor(idx) {
+  const it = _alertaItensAtuais[idx];
+  if(!it) return;
+  const v = viagensDB[currentDate] && viagensDB[currentDate][it.vid];
+  if(!v || !v.paradas) return;
+
+  const emailAtual = FORNECEDORES_CONTATOS[it.fornecedor.trim().toUpperCase()];
+  if(!emailAtual) {
+    notify(`⚠ Sem e-mail cadastrado para "${it.fornecedor}".`, 'linear-gradient(135deg,#7a3f0f,#5a2d00)', 4000);
+    return;
+  }
+
+  let pIndex = v.paradas.findIndex(p => p.id === it.pid);
+  let proxFornecedor = null;
+  let emailProx = null;
+  if(pIndex !== -1 && pIndex < v.paradas.length - 1) {
+    proxFornecedor = v.paradas[pIndex+1].fornecedor;
+    if(proxFornecedor) emailProx = FORNECEDORES_CONTATOS[proxFornecedor.trim().toUpperCase()];
+  }
+
+  let destinatarios = emailAtual;
+  if(emailProx) destinatarios += `, ${emailProx}`;
+
+  const assunto = `ATRASO NA COLETA - MWM - ROTA ${v.rota || ''} / VEÍCULO ${v.frota || ''}`;
+  let corpo = `${saudacaoAtual()}!\n\nGostaríamos de informar que a coleta programada na ${it.fornecedor} (Janela: ${it.janela}) encontra-se em atraso.\n\nMotorista: ${it.motorista || 'N/A'}\nVeículo: ${v.frota || 'N/A'}\n\n`;
+  
+  if(proxFornecedor && emailProx) {
+    corpo += `Aviso ao próximo fornecedor da rota (${proxFornecedor}): Este atraso pode impactar o horário previsto para a sua coleta.\n\n`;
+  }
+  
+  corpo += `Atenciosamente,\nEquipe Logística MWM`;
+
+  window.location.href = `mailto:${destinatarios}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
 }
 
 function renderPedidos() {
