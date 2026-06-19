@@ -3227,9 +3227,9 @@
             "id": "1781867472359-0",
             "fornecedor": "CONSOLIDADO JUNDIAI",
             "cidade": "SÃO PAULO",
-            "ji": "15:00",
-            "jf": "16:00",
-            "janela": "15:00-16:00",
+            "ji": "08:00",
+            "jf": "11:00",
+            "janela": "08:00-11:00",
             "pedido": "—",
             "importado": false
           },
@@ -3237,9 +3237,9 @@
             "id": "1781867472359-1",
             "fornecedor": "EMBALAGEM",
             "cidade": "SÃO PAULO",
-            "ji": "16:00",
-            "jf": "22:00",
-            "janela": "16:00-22:00",
+            "ji": "11:00",
+            "jf": "15:00",
+            "janela": "11:00-15:00",
             "pedido": "53157",
             "importado": false
           }
