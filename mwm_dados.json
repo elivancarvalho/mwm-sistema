@@ -3207,6 +3207,43 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781867472359,
+        "tipo": "TRUCK",
+        "frota": "JMK6F83",
+        "frotaAntiga": "Agregado Extra",
+        "placa": "Caminhão Terceiro",
+        "carreta": "—",
+        "motorista": "FELIPE DE SOUZA SARAIVA",
+        "rota": "CONSOLIDADO JND",
+        "saida": "11:00",
+        "origem": "CD SBC",
+        "destino": "MWM JUNDIAI",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781867472359-0",
+            "fornecedor": "CONSOLIDADO JUNDIAI",
+            "cidade": "SÃO PAULO",
+            "ji": "15:00",
+            "jf": "16:00",
+            "janela": "15:00-16:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781867472359-1",
+            "fornecedor": "EMBALAGEM",
+            "cidade": "SÃO PAULO",
+            "ji": "16:00",
+            "jf": "22:00",
+            "janela": "16:00-22:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
