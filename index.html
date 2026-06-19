@@ -1867,14 +1867,22 @@ function enviarEmailFornecedor(idx) {
   let destinatarios = emailAtual;
   if(emailProx) destinatarios += `, ${emailProx}`;
 
-  const assunto = `ATRASO NA COLETA - MWM - ROTA ${v.rota || ''} / VEÍCULO ${v.frota || ''}`;
-  let corpo = `${saudacaoAtual()}!\n\nGostaríamos de informar que a coleta programada na ${it.fornecedor} (Janela: ${it.janela}) encontra-se em atraso.\n\nMotorista: ${it.motorista || 'N/A'}\nVeículo: ${v.frota || 'N/A'}\n\n`;
+  const assunto = `ATRASO NA COLETA - MWM - ROTA ${v.rota || ''} / VEÍCULO ${v.frota || ''} - ${it.fornecedor}`;
+  
+  const fimJanela = it.janela.includes('–') ? it.janela.split('–')[1].trim() : it.janela;
+  const nomeMot = it.motorista ? formatarPrimeiroNome(it.motorista) : 'N/A';
+
+  let corpo = `${saudacaoAtual()} a todos,\n\n`;
+  corpo += `Informamos que o veículo ${v.frota || 'N/A'} (Motorista: ${nomeMot}) encontra-se posicionado no fornecedor ${it.fornecedor}, porém ainda aguarda a finalização do carregamento/descarga.\n\n`;
+  corpo += `A janela limite de coleta se encerra (ou encerrou) às ${fimJanela}hs.\n\n`;
+  corpo += `Peço a ajuda dos prezados para verificar a situação e agilizar a liberação, a fim de não gerarmos atrasos no restante da ROTA`;
   
   if(proxFornecedor && emailProx) {
-    corpo += `Aviso ao próximo fornecedor da rota (${proxFornecedor}): Este atraso pode impactar o horário previsto para a sua coleta.\n\n`;
+    corpo += ` (próximo fornecedor: ${proxFornecedor})`;
   }
-  
-  corpo += `Atenciosamente,\nEquipe Logística MWM`;
+  corpo += ` e na descarga final na MWM.\n\n`;
+  corpo += `[ Caso haja um motivo específico, você pode digitá-lo aqui antes de enviar o e-mail ]\n\n`;
+  corpo += `Atenciosamente,`;
 
   window.location.href = `mailto:${destinatarios}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
 }
