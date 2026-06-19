@@ -3042,6 +3042,53 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781865373482,
+        "tipo": "TRUCK",
+        "frota": "R3022",
+        "frotaAntiga": "3249",
+        "placa": "TBB5J94",
+        "carreta": "—",
+        "motorista": "ELSON VIEIRA BORGES",
+        "rota": "ROTA 04",
+        "saida": "05:00",
+        "origem": "FILIAL SBC",
+        "destino": "FILIAL SBC",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781865373481-0",
+            "fornecedor": "ZF CV",
+            "cidade": "SÃO PAULO",
+            "ji": "09:30",
+            "jf": "10:30",
+            "janela": "09:30-10:30",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781865373481-1",
+            "fornecedor": "FERRAMENTARIA AMERICA",
+            "cidade": "SÃO PAULO",
+            "ji": "11:30",
+            "jf": "12:30",
+            "janela": "11:30-12:30",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781865373481-2",
+            "fornecedor": "MANN HUMMEL",
+            "cidade": "SÃO PAULO",
+            "ji": "13:00",
+            "jf": "14:00",
+            "janela": "13:00-14:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
