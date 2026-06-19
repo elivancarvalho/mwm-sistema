@@ -3271,6 +3271,22 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781869052831,
+        "tipo": "CONJUNTO",
+        "frota": "TL2012",
+        "frotaAntiga": "3239",
+        "placa": "SWK5B42",
+        "carreta": "SL3020 / Placa: FAW3H34 (Antigo: 2520)",
+        "motorista": "JOSE AMAURY",
+        "rota": "VP",
+        "saida": "06:00",
+        "origem": "CD SBC",
+        "destino": "MWM JUNDIAI",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": []
       }
     ]
   },
