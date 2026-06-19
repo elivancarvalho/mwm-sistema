@@ -3089,6 +3089,43 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781865486076,
+        "tipo": "TRUCK",
+        "frota": "DPC1D11",
+        "frotaAntiga": "Agregado Extra",
+        "placa": "Caminhão Terceiro",
+        "carreta": "—",
+        "motorista": "ROBERTO",
+        "rota": "ROTA 18",
+        "saida": "05:00",
+        "origem": "CD SBC",
+        "destino": "MWM JUNDIAI",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781865486076-0",
+            "fornecedor": "ARLINGTON THERMAL",
+            "cidade": "SÃO PAULO",
+            "ji": "08:00",
+            "jf": "09:00",
+            "janela": "08:00-09:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1781865486076-1",
+            "fornecedor": "MAHLE PISTÕES",
+            "cidade": "SÃO PAULO",
+            "ji": "11:00",
+            "jf": "12:00",
+            "janela": "11:00-12:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
