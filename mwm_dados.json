@@ -3180,6 +3180,33 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781867255971,
+        "tipo": "CONJUNTO",
+        "frota": "TL2013",
+        "frotaAntiga": "3240",
+        "placa": "SUQ1I07",
+        "carreta": "SL3021 / Placa: DPL0E52 (Antigo: 2521)",
+        "motorista": "MARCELO DIAS",
+        "rota": "CONSOLIDADO",
+        "saida": "05:00",
+        "origem": "MWM STO AMARO",
+        "destino": "CD SBC",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781867255971-0",
+            "fornecedor": "MWM STO AMARO (EMBALAGEM)",
+            "cidade": "SÃO PAULO",
+            "ji": "07:00",
+            "jf": "12:00",
+            "janela": "07:00-12:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
