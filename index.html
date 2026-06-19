@@ -1847,7 +1847,7 @@ function enviarWhatsappMotorista(idx) {
 function enviarEmailFornecedor(idx) {
   const it = _alertaItensAtuais[idx];
   if(!it) return;
-  const v = viagensDB[currentDate] && viagensDB[currentDate][it.vid];
+  const v = (viagensDB[currentDate]||[]).find(x => x.id === it.vid);
   if(!v || !v.paradas) return;
 
   const emailAtual = FORNECEDORES_CONTATOS[it.fornecedor.trim().toUpperCase()];
