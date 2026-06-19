@@ -3153,6 +3153,33 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781865752096,
+        "tipo": "CONJUNTO",
+        "frota": "TL2014",
+        "frotaAntiga": "3241",
+        "placa": "SST1D31",
+        "carreta": "SL3031 / Placa: GJV6J42 (Antigo: 2531)",
+        "motorista": "CELSO SOARES",
+        "rota": "ROTA 22",
+        "saida": "07:00",
+        "origem": "IDEAL",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781865752096-0",
+            "fornecedor": "IDEAL",
+            "cidade": "SÃO PAULO",
+            "ji": "10:00",
+            "jf": "11:30",
+            "janela": "10:00-11:30",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
