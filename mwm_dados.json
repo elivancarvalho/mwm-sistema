@@ -3244,6 +3244,33 @@
             "importado": false
           }
         ]
+      },
+      {
+        "id": 1781868028408,
+        "tipo": "CONJUNTO",
+        "frota": "TL2017",
+        "frotaAntiga": "3244",
+        "placa": "SWT3J11",
+        "carreta": "SL3023 / Placa: FUD1D17 (Antigo: 2523)",
+        "motorista": "ALTINO VIANA DA COSTA",
+        "rota": "MOTOR",
+        "saida": "10:00",
+        "origem": "MWM STO AMARO",
+        "destino": "CARGOLIFT SBC",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1781868028408-0",
+            "fornecedor": "MWM STO AMARO",
+            "cidade": "SÃO PAULO",
+            "ji": "13:00",
+            "jf": "17:00",
+            "janela": "13:00-17:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
       }
     ]
   },
