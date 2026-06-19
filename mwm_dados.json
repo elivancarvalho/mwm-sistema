@@ -3220,7 +3220,7 @@
         "saida": "11:00",
         "origem": "CD SBC",
         "destino": "MWM JUNDIAI",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -3257,7 +3257,7 @@
         "saida": "10:00",
         "origem": "MWM STO AMARO",
         "destino": "CARGOLIFT SBC",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
