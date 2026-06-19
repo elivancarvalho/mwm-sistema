@@ -3112,7 +3112,7 @@
             "ji": "08:00",
             "jf": "09:00",
             "janela": "08:00-09:00",
-            "pedido": "—",
+            "pedido": "53003",
             "importado": false
           },
           {
@@ -3122,7 +3122,7 @@
             "ji": "11:00",
             "jf": "12:00",
             "janela": "11:00-12:00",
-            "pedido": "—",
+            "pedido": "53003",
             "importado": false
           }
         ]
