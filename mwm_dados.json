@@ -13,7 +13,7 @@
         "saida": "06:00",
         "origem": "SEG AUTOMOTIVE",
         "destino": "MWM STO AMARO",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -60,7 +60,7 @@
         "saida": "05:00",
         "origem": "MANGOTEX",
         "destino": "MWM STO AMARO",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -117,7 +117,7 @@
         "saida": "06:00",
         "origem": "ABR",
         "destino": "MWM STO AMARO",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -164,7 +164,7 @@
         "saida": "07:00",
         "origem": "CARTEC",
         "destino": "MWM STO AMARO",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -211,7 +211,7 @@
         "saida": "07:00",
         "origem": "ZF CV",
         "destino": "MWM STO AMARO",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -248,7 +248,7 @@
         "saida": "09:00",
         "origem": "ELRING KLINGER",
         "destino": "MWM STO AMARO",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -295,7 +295,7 @@
         "saida": "10:00",
         "origem": "VOSS",
         "destino": "MWM STO AMARO",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -342,7 +342,7 @@
         "saida": "05:00",
         "origem": "BAYCO POWER (MUVIQ)",
         "destino": "MWM STO AMARO",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -399,7 +399,7 @@
         "saida": "05:00",
         "origem": "THYSSENKRUPP",
         "destino": "MWM STO AMARO",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -436,7 +436,7 @@
         "saida": "06:00",
         "origem": "PASCHOAL",
         "destino": "MWM STO AMARO",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -493,7 +493,7 @@
         "saida": "11:00",
         "origem": "CINPAL",
         "destino": "MWM STO AMARO",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -520,7 +520,7 @@
         "saida": "05:00",
         "origem": "FILIAL SBC (EMBALAGEM)",
         "destino": "MWM STO AMARO",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -547,7 +547,7 @@
         "saida": "19:00",
         "origem": "MGK",
         "destino": "MWM STO AMARO",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -2757,7 +2757,7 @@
         "saida": "05:00",
         "origem": "CD SBC",
         "destino": "CARGOLIFT SBC",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -2879,7 +2879,7 @@
             "jf": "09:00",
             "janela": "08:00-09:00",
             "pedido": "18713",
-            "importado": true
+            "importado": false
           },
           {
             "id": "1781779317038-1",
@@ -2889,7 +2889,7 @@
             "jf": "12:00",
             "janela": "11:00-12:00",
             "pedido": "52991",
-            "importado": true
+            "importado": false
           },
           {
             "id": "1781779317038-2",
@@ -2899,7 +2899,7 @@
             "jf": "16:00",
             "janela": "15:00-16:00",
             "pedido": "52991",
-            "importado": true
+            "importado": false
           }
         ]
       },
@@ -2952,7 +2952,7 @@
         "saida": "05:00",
         "origem": "CD SBC",
         "destino": "MWM STO AMARO",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -3055,7 +3055,7 @@
         "saida": "05:00",
         "origem": "FILIAL SBC",
         "destino": "FILIAL SBC",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -3102,7 +3102,7 @@
         "saida": "05:00",
         "origem": "CD SBC",
         "destino": "MWM JUNDIAI",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -3139,7 +3139,7 @@
         "saida": "11:00",
         "origem": "CINPAL",
         "destino": "CD SBC",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -3166,7 +3166,7 @@
         "saida": "07:00",
         "origem": "IDEAL",
         "destino": "MWM STO AMARO",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -3193,7 +3193,7 @@
         "saida": "05:00",
         "origem": "MWM STO AMARO",
         "destino": "CD SBC",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -3220,7 +3220,7 @@
         "saida": "11:00",
         "origem": "CD SBC",
         "destino": "MWM JUNDIAI",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -3257,7 +3257,7 @@
         "saida": "10:00",
         "origem": "MWM STO AMARO",
         "destino": "CARGOLIFT SBC",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -3284,7 +3284,7 @@
         "saida": "06:00",
         "origem": "CD SBC",
         "destino": "MWM JUNDIAI",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": []
       }
