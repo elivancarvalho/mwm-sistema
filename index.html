@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="MWM Sistema de Programação Operacional — Painel de controle de frota, rotas, CTE e AVACORP da MWM Sulista.">
-<title>MWM · Sistema de Programação</title>
+<meta name="description" content="Sistema de Programação Operacional — Painel de controle de frota, rotas, CTE e AVACORP Sulista.">
+<title>Sistema de Programação</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
@@ -504,7 +504,7 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
   <span class="tlabel">Sistema de Programação Mestre</span>
   <div class="topbar-right">
     <span class="tclock" id="tclock">--:--:--</span>
-    <div class="sync-dot sync-off" id="sync-indicator" title="Status de sincronização"></div>
+    <div class="sync-dot sync-off" id="sync-indicator" title="Clique para sincronizar agora" onclick="sincronizarForcar()" style="cursor:pointer;"></div>
     <div class="avatar" title="Painel Operacional">PS</div>
     <span style="font-size:11.5px;color:var(--text2)">Painel Operacional</span>
   </div>
@@ -937,8 +937,8 @@ function obterGHCredenciais() {
   };
 }
 
-function setSyncOk()      { const s=document.getElementById('sync-indicator'); if(s){s.className='sync-dot sync-ok';s.title='Sincronizado com a nuvem';} }
-function setSyncErr()     { const s=document.getElementById('sync-indicator'); if(s){s.className='sync-dot sync-err';s.title='Erro de conexão';} }
+function setSyncOk()      { const s=document.getElementById('sync-indicator'); if(s){s.className='sync-dot sync-ok';s.title='Sincronizado (Clique para atualizar)';} }
+function setSyncErr()     { const s=document.getElementById('sync-indicator'); if(s){s.className='sync-dot sync-err';s.title='Erro (Clique para tentar)';} }
 function setSyncPending() { const s=document.getElementById('sync-indicator'); if(s){s.className='sync-dot sync-pend';s.title='Salvando...';} }
 function setSyncOff()     { const s=document.getElementById('sync-indicator'); if(s){s.className='sync-dot sync-off';s.title='Sem token configurado';} }
 
@@ -1098,13 +1098,27 @@ async function carregarDicionariosRemotosGitHub() {
   return true;
 }
 
-async function carregarTodos() {
-  const c = obterGHCredenciais();
-  if(!c.token) { carregarCache(); setSyncOff(); updateDashboard(); return; }
+async function carregarTodos(isAuto = false) {
+  if (isAuto) {
+    if (typeof _saveTimeout !== 'undefined' && _saveTimeout) return;
+    const modals = ['modal-viagem', 'modal-pedido', 'modal-nova-viagem', 'modal-relatorio'];
+    for(let m of modals) {
+      const el = document.getElementById(m);
+      if(el && el.style.display === 'flex') return;
+    }
+    const act = document.activeElement;
+    if(act && (act.tagName==='INPUT'||act.tagName==='SELECT'||act.tagName==='TEXTAREA')) return;
+  }
 
-  setLoadingState(true, 'Conectando à nuvem...');
+  const c = obterGHCredenciais();
+  if(!c.token) { 
+    if(!isAuto) { carregarCache(); setSyncOff(); updateDashboard(); }
+    return; 
+  }
+
+  if(!isAuto) setLoadingState(true, 'Conectando à nuvem...');
   try {
-    await carregarDicionariosRemotosGitHub();
+    if(!isAuto) await carregarDicionariosRemotosGitHub();
     const url = `https://api.github.com/repos/${c.ownerRepo}/contents/${c.file}?ref=${c.branch}&t=${Date.now()}`;
     const resp = await fetchComTimeout(url, { headers:{Authorization:`token ${c.token}`, Accept:'application/vnd.github.v3+json'} });
     if(resp.status === 200) {
@@ -1117,23 +1131,21 @@ async function carregarTodos() {
       dbOriginal = JSON.parse(JSON.stringify(viagensDB));
       salvarCache();
       setSyncOk();
-      notify('✓ Dados carregados da nuvem');
+      if(!isAuto) notify('✓ Dados carregados da nuvem');
     } else {
       setSyncErr();
-      carregarCache();
-      notify('⚠ Falha ao carregar nuvem. Exibindo cache local.', 'linear-gradient(135deg,#7a3f0f,#5a2d00)');
+      if(!isAuto) { carregarCache(); notify('⚠ Falha ao carregar nuvem. Exibindo cache local.', 'linear-gradient(135deg,#7a3f0f,#5a2d00)'); }
     }
   } catch(e) {
     setSyncErr();
-    carregarCache();
-    notify('⚠ Sem conexão. Exibindo dados locais.', 'linear-gradient(135deg,#7a3f0f,#5a2d00)');
+    if(!isAuto) { carregarCache(); notify('⚠ Sem conexão. Exibindo dados locais.', 'linear-gradient(135deg,#7a3f0f,#5a2d00)'); }
   } finally {
-    setLoadingState(false);
+    if(!isAuto) setLoadingState(false);
     updateDashboard();
   }
 }
 
-function sincronizarForcar() { carregarTodos(); }
+function sincronizarForcar() { carregarTodos(false); }
 
 function agendarSalvamento() {
   clearTimeout(_saveTimeout);
@@ -1398,7 +1410,7 @@ function repararMojibakeBancoCompleto() {
 //  BLOCO 3: DASHBOARD ENGINE
 // ══════════════════════════════════════════════════════════════════
 function updateDashboard() {
-  if(!currentDate && availableDates.length) currentDate = availableDates[0];
+  if(!currentDate && availableDates.length) currentDate = availableDates[availableDates.length - 1];
   if(!currentDate) currentDate = new Date().toLocaleDateString('pt-BR').slice(0,5);
   if(!availableDates.includes(currentDate)) { availableDates.push(currentDate); availableDates.sort(); }
 
@@ -1841,20 +1853,38 @@ function renderAlertas() {
   }
 
   _alertaItensAtuais = items;
-  tbody.innerHTML = items.map((it,i) => `<tr>
-    <td><code style="color:var(--text2);font-family:var(--mono);font-size:11px">${it.placa}</code></td>
-    <td><span class="pb p52">${it.pedido}</span></td>
-    <td>${it.rota}</td>
-    <td>${it.fornecedor}</td>
-    <td>${it.motorista}</td>
-    <td style="font-family:var(--mono);font-size:11px">${it.janela}</td>
-    <td><span class="${it.js.cls}" style="font-weight:700;font-family:var(--mono)">${it.js.txt}</span></td>
-    <td style="white-space:nowrap">
-      <button class="btn btn-success btn-sm" onclick="marcarParadaImportada(${it.vid},'${it.pid}')">✓ NF Importada</button>
-      <button class="btn btn-whatsapp btn-sm" onclick="enviarWhatsappMotorista(${i})" title="${it.statusKey==='NO_PRAZO'?'No prazo · Envio desnecessário':'Enviar WhatsApp'}" ${it.statusKey==='NO_PRAZO'?'disabled':''}>💬</button>
-      ${it.statusKey==='ATRASADO' ? `<button class="btn btn-email btn-sm" onclick="enviarEmailFornecedor(${i})" title="Enviar E-mail de Atraso">✉️</button>` : ''}
-    </td>
-  </tr>`).join('');
+  tbody.innerHTML = items.map((it,i) => {
+    let waDisabled = it.statusKey==='NO_PRAZO';
+    let title = waDisabled ? 'No prazo · Envio desnecessário' : 'Enviar WhatsApp';
+    
+    if(!waDisabled) {
+      const lockKey = `mwm_wa_lock_${it.vid}_${it.pid}`;
+      const lockTime = localStorage.getItem(lockKey);
+      if(lockTime) {
+        const diff = Date.now() - parseInt(lockTime);
+        if(diff < 10 * 60 * 1000) {
+          waDisabled = true;
+          const minRest = Math.ceil((10 * 60 * 1000 - diff) / 60000);
+          title = `Aguarde ${minRest} min para reenviar`;
+        }
+      }
+    }
+
+    return `<tr>
+      <td><code style="color:var(--text2);font-family:var(--mono);font-size:11px">${it.placa}</code></td>
+      <td><span class="pb p52">${it.pedido}</span></td>
+      <td>${it.rota}</td>
+      <td>${it.fornecedor}</td>
+      <td>${it.motorista}</td>
+      <td style="font-family:var(--mono);font-size:11px">${it.janela}</td>
+      <td><span class="${it.js.cls}" style="font-weight:700;font-family:var(--mono)">${it.js.txt}</span></td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-success btn-sm" onclick="marcarParadaImportada(${it.vid},'${it.pid}')">✓ NF Importada</button>
+        <button class="btn btn-whatsapp btn-sm" onclick="enviarWhatsappMotorista(${i})" title="${title}" ${waDisabled?'disabled':''}>💬</button>
+        ${it.statusKey==='ATRASADO' ? `<button class="btn btn-email btn-sm" onclick="enviarEmailFornecedor(${i})" title="Enviar E-mail de Atraso">✉️</button>` : ''}
+      </td>
+    </tr>`;
+  }).join('');
 }
 
 // WhatsApp
@@ -1880,6 +1910,10 @@ function enviarWhatsappMotorista(idx) {
     return;
   }
   const msg = `${saudacaoAtual()}!\n\nSr(a). ${formatarPrimeiroNome(it.motorista)}, tudo bem?\n\nA janela de coleta na *${it.fornecedor}* (${it.janela}) está chegando no limite.\n\nPoderia nos informar a situação:\n- Ainda não iniciou o carregamento?\n- Está carregando?\n- Já finalizou?\n\nPor favor responda para alinharmos com a equipe de transporte da MWM. Obrigado!`;
+  
+  localStorage.setItem(`mwm_wa_lock_${it.vid}_${it.pid}`, Date.now().toString());
+  renderAlertas();
+
   window.location.href = `whatsapp://send?phone=${numero}&text=${encodeURIComponent(msg)}`;
 }
 
@@ -1913,17 +1947,30 @@ function enviarEmailFornecedor(idx) {
 
   let corpo = `${saudacaoAtual()} a todos,\n\n`;
   corpo += `Informamos que o veículo ${v.frota || 'N/A'} (Motorista: ${nomeMot}) encontra-se posicionado no fornecedor ${it.fornecedor}, porém ainda aguarda a finalização do carregamento/descarga.\n\n`;
-  corpo += `A janela limite de coleta se encerra (ou encerrou) às ${fimJanela}hs.\n\n`;
-  corpo += `Peço a ajuda dos prezados para verificar a situação e agilizar a liberação, a fim de não gerarmos atrasos no restante da ROTA`;
+  corpo += `A janela de coleta encerrou às ${fimJanela}hs.\n\n`;
+  corpo += `Peço a ajuda dos prezados para verificar a situação e agilizar a liberação, pois já estamos em atraso e isso impactará as próximas coletas da ROTA`;
   
   if(proxFornecedor && emailProx) {
-    corpo += ` (próximo fornecedor: ${proxFornecedor})`;
+    corpo += ` (como o próximo fornecedor: ${proxFornecedor})`;
   }
-  corpo += ` e na descarga final na MWM.\n\n`;
+  corpo += ` e a descarga final na MWM.\n\n`;
   corpo += `[ Caso haja um motivo específico, você pode digitá-lo aqui antes de enviar o e-mail ]\n\n`;
   corpo += `Atenciosamente,`;
 
-  window.location.href = `mailto:${destinatarios}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+  let ccEmails = ['transporteSP@mwm.com.br', 'trafego.mwm@sulista.com.br'];
+  
+  if(!proxFornecedor) {
+    ccEmails.push('RecebimentoSP@mwm.com.br');
+  }
+
+  if(v.destino && v.destino.toUpperCase().includes('JUNDIAI')) {
+    ccEmails.push('zanandrea.oliveira@mwm.com.br');
+    ccEmails.push('geraljnd@sulista.com.br');
+  }
+
+  const ccParams = ccEmails.length > 0 ? `&cc=${ccEmails.join(',')}` : '';
+
+  window.location.href = `mailto:${destinatarios}?subject=${encodeURIComponent(assunto)}${ccParams}&body=${encodeURIComponent(corpo)}`;
 }
 
 function renderPedidos() {
@@ -2507,12 +2554,12 @@ document.addEventListener('DOMContentLoaded', () => {
     renderAlertas();
   }, 30000);
 
-  // Sincronização periódica a cada 5 minutos (quando aba ativa)
+  // Sincronização periódica a cada 1 minuto (quando aba ativa)
   setInterval(() => {
     if(document.visibilityState === 'visible') {
-      carregarTodos();
+      carregarTodos(true);
     }
-  }, 5 * 60 * 1000);
+  }, 60 * 1000);
 });
 </script>
 </body>
