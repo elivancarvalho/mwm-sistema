@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Sistema de Programação Operacional — Painel de controle de frota, rotas, CTE e AVACORP da Sulista.">
-<title>Sistema de Programação ROTA SP</title>
+<meta name="description" content="MWM Sistema de Programação Operacional — Painel de controle de frota, rotas, CTE e AVACORP da MWM Sulista.">
+<title>MWM · Sistema de Programação</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
@@ -1447,7 +1447,25 @@ function renderStats() {
   const trucks = vs.filter(v => v.tipo==='TRUCK').length;
   const conjs  = vs.filter(v => v.tipo==='CONJUNTO').length;
   const prontos= vs.filter(v => avaSt(v)==='IMPORTADO'||avaSt(v)==='N/A').length;
-  const pendCte= vs.filter(v => v.cte==='PENDENTE').length;
+  let pendCteCount = 0;
+  vs.forEach(v => {
+    if(!v.paradas) return;
+    let pedMap = {};
+    v.paradas.forEach(p => {
+      const ped = p.pedido && p.pedido.trim()!=='—' ? p.pedido.trim() : null;
+      if(!ped) return;
+      if(!pedMap[ped]) pedMap[ped] = { tot:0, imp:0 };
+      pedMap[ped].tot++;
+      if(p.importado || p.fornecedor==='N/A') pedMap[ped].imp++;
+    });
+    Object.keys(pedMap).forEach(ped => {
+      if(pedMap[ped].tot === pedMap[ped].imp) {
+         const st = v.ctePorPedido && v.ctePorPedido[ped] ? v.ctePorPedido[ped] : 'PENDENTE';
+         if(st === 'PENDENTE') pendCteCount++;
+      }
+    });
+  });
+  const pendCte = pendCteCount;
   const pctT   = total ? Math.round(trucks/total*100) : 0;
   const pctC   = total ? Math.round(conjs/total*100) : 0;
   const pctP   = total ? Math.round(prontos/total*100) : 0;
@@ -1546,6 +1564,21 @@ function renderTable() {
     const prog = v.paradas.length ? Math.round(v.paradas.filter(p=>p.importado).length/v.paradas.length*100) : 100;
     const progColor = prog===100 ? 'var(--green)' : prog>0 ? 'var(--amber)' : 'var(--red)';
 
+    let cteResumo = 'N/A';
+    if(v.paradas.length) {
+      let pedMap = {};
+      v.paradas.forEach(p => { const pd = p.pedido&&p.pedido.trim()!=='—'?p.pedido.trim():null; if(pd) pedMap[pd]=true; });
+      const uniquePeds = Object.keys(pedMap);
+      if(uniquePeds.length) {
+        let ctes = uniquePeds.map(ped => v.ctePorPedido && v.ctePorPedido[ped] ? v.ctePorPedido[ped] : 'PENDENTE');
+        if(ctes.every(c => c==='IMPRESSO')) cteResumo = 'IMPRESSO';
+        else if(ctes.every(c => c==='PENDENTE' || c==='NULA')) cteResumo = 'PENDENTE';
+        else cteResumo = 'PARCIAL';
+      }
+    }
+    v.cte = cteResumo !== 'N/A' ? cteResumo : 'PENDENTE';
+    const cteBadgeCls = v.cte === 'IMPRESSO' ? 'ava-ok' : v.cte === 'PARCIAL' ? 'ava-par' : 'ava-pend';
+
     // Sanitizar valores antes de inserir no DOM
     const esc = s => String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
@@ -1563,11 +1596,7 @@ function renderTable() {
       `<td>${v.paradas.map(p=>`<span class="pb p52">${esc(p.pedido)}</span>`).join(' ')}</td>` +
       `<td><span class="${ava==='IMPORTADO'?'ava-ok':ava==='PARCIAL'?'ava-par':'ava-pend'}">${ava}</span></td>` +
       `<td><div title="${prog}% importado"><div class="prog-track"><div class="prog-fill" style="width:${prog}%;background:${progColor}"></div></div><small style="color:var(--text3);font-size:9px">${prog}%</small></div></td>` +
-      `<td><select class="ctesel" onchange="updateCTE(${v.id},this.value)">
-        <option value="PENDENTE" ${v.cte==='PENDENTE'?'selected':''}>PENDENTE</option>
-        <option value="IMPRESSO" ${v.cte==='IMPRESSO'?'selected':''}>IMPRESSO</option>
-        <option value="NULA" ${v.cte==='NULA'?'selected':''}>NULA</option>
-      </select></td>` +
+      `<td><span class="${cteBadgeCls}">${v.cte}</span></td>` +
       `<td style="white-space:nowrap">
         <button class="btn btn-ghost btn-sm btn-icon" onclick="editarViagem(${v.id})" title="Editar viagem">✏️</button>
       </td>` +
@@ -1583,18 +1612,28 @@ function renderTable() {
         <table class="atbl">
           <thead><tr>
             <th>Fornecedor</th><th>Janela</th><th>Pedido / Solicitação</th>
-            <th>Status Janela</th><th>AVACORP</th>
+            <th>Status Janela</th><th>CTE</th><th>AVACORP</th>
           </tr></thead>
           <tbody>${v.paradas.map(p => {
             const js = janelaStatus(p);
             const ji = p.ji || '--:--';
             const jf = p.jf || '--:--';
             const janelaStr = (p.ji && p.jf) ? `${ji} – ${jf}` : (p.janela || '--:--');
+
+            const ped = p.pedido&&p.pedido.trim()!=='—' ? p.pedido.trim() : null;
+            const cteVal = ped && v.ctePorPedido && v.ctePorPedido[ped] ? v.ctePorPedido[ped] : 'PENDENTE';
+            const cteSel = ped ? `<select class="ctesel ${cteVal==='IMPRESSO'?'jimported':cteVal==='NULA'?'jdanger':'jpend'}" onchange="updateCtePorPedido(${v.id}, '${esc(ped)}', this.value)">
+              <option value="PENDENTE" ${cteVal==='PENDENTE'?'selected':''}>PENDENTE</option>
+              <option value="IMPRESSO" ${cteVal==='IMPRESSO'?'selected':''}>IMPRESSO</option>
+              <option value="NULA" ${cteVal==='NULA'?'selected':''}>NULA</option>
+            </select>` : `<span style="color:var(--text3);font-size:11px">N/A</span>`;
+
             return `<tr>
               <td><strong style="color:var(--text)">${esc(p.fornecedor)}</strong></td>
               <td style="font-family:var(--mono);font-size:11px">${esc(janelaStr)}</td>
               <td><button class="btn btn-ghost btn-sm" onclick="abrirModalPedido(${v.id},'${p.id}',\`${esc(p.pedido)}\`)">${p.pedido==='—'?'+ Vincular':'✏ '+esc(p.pedido)}</button></td>
               <td><span class="${js.cls}">${js.txt}</span></td>
+              <td>${cteSel}</td>
               <td><button class="btn btn-sm ${p.importado?'btn-danger':'btn-success'}" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'↩ Desfazer':'✓ NF Importada'}</button></td>
             </tr>`;
           }).join('')}</tbody>
@@ -1916,14 +1955,36 @@ function renderPend() {
   const container = document.getElementById('pend-apto');
   if (!container) return;
 
-  const pendentes = vs.filter(v => v.cte==='PENDENTE');
-  const aptos = pendentes.filter(v => {
-    const st = avaSt(v);
-    return st === 'IMPORTADO' || st === 'N/A';
+  let pendentesList = [];
+  let hasPending = false;
+
+  vs.forEach(v => {
+    if(!v.paradas || !v.paradas.length) return;
+    let pedMap = {};
+    v.paradas.forEach(p => {
+      const ped = p.pedido && p.pedido.trim() !== '—' ? p.pedido.trim() : null;
+      if(!ped) return;
+      if(!pedMap[ped]) pedMap[ped] = { paradas: [], importados: 0, nfs: [] };
+      pedMap[ped].paradas.push(p);
+      if(p.importado || p.fornecedor==='N/A') pedMap[ped].importados++;
+      if(!pedMap[ped].nfs.includes(p.fornecedor)) pedMap[ped].nfs.push(p.fornecedor);
+    });
+    
+    Object.keys(pedMap).forEach(ped => {
+      const info = pedMap[ped];
+      const cteStatus = (v.ctePorPedido && v.ctePorPedido[ped]) ? v.ctePorPedido[ped] : 'PENDENTE';
+      
+      if(cteStatus === 'PENDENTE') {
+        hasPending = true;
+        if(info.importados === info.paradas.length) {
+          pendentesList.push({ v, ped, nfs: info.nfs.join(', ') });
+        }
+      }
+    });
   });
 
-  if(!aptos.length) {
-    if (pendentes.length > 0) {
+  if(!pendentesList.length) {
+    if (hasPending) {
       container.innerHTML = `<div style="color:var(--text3);padding:20px;text-align:center">Aguardando a conclusão das coletas no AVACORP para liberar a emissão do CTE.</div>`;
     } else {
       container.innerHTML = `<div style="color:var(--green);padding:20px;text-align:center">✓ Todos os CTEs do dia já foram emitidos.</div>`;
@@ -1932,19 +1993,30 @@ function renderPend() {
   }
 
   let html = '';
-  aptos.forEach(v => {
-    const st = avaSt(v);
+  pendentesList.forEach(item => {
+    const v = item.v;
     html += `<div style="background:var(--bg2);padding:13px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;">
       <div>
-        <strong style="color:var(--text)">${v.frota} — [${v.rota}]</strong> — ${v.motorista}<br>
-        <small style="color:var(--text3)">${v.origem} → ${v.destino} · AVACORP: ${st}</small>
+        <strong style="color:var(--text)">${v.frota} — [${v.rota}]</strong> — <span style="color:var(--accent)">Pedido: ${item.ped}</span><br>
+        <small style="color:var(--text3)">${v.origem} → ${v.destino} · Fornecedores: ${item.nfs}</small>
       </div>
       <div>
-        <button class="btn btn-success btn-sm" onclick="updateCTE(${v.id},'IMPRESSO')">⚙ Emitir CTE</button>
+        <button class="btn btn-success btn-sm" onclick="updateCtePorPedido(${v.id}, '${item.ped}', 'IMPRESSO')">⚙ Emitir CTE</button>
       </div>
     </div>`;
   });
   container.innerHTML = html;
+}
+
+function updateCtePorPedido(vid, pedido, novoStatus) {
+  const v = (viagensDB[currentDate]||[]).find(x => x.id === vid);
+  if(v && pedido) {
+    if(!v.ctePorPedido) v.ctePorPedido = {};
+    v.ctePorPedido[pedido] = novoStatus;
+    agendarSalvamento();
+    notify('CTE do Pedido atualizado!');
+    updateDashboard();
+  }
 }
 
 // ══════════════════════════════════════════════════════════════════
