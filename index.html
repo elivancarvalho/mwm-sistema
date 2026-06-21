@@ -790,8 +790,11 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
         </div>
       </div>
       <div id="form-frota-manual-block" style="display:none;margin-top:10px;">
-        <label class="fg-label" style="color:var(--orange)">Identificação / Placa do Agregado:</label>
-        <input type="text" id="form-frota-manual-input" placeholder="Ex: Placa ABC1D23 ou Nome do Dono">
+        <label class="fg-label" style="color:var(--orange)">Dados do Agregado / Terceiro:</label>
+        <div style="display:flex;gap:10px;">
+          <input type="text" id="form-frota-manual-input" placeholder="Frota / Identif. (Ex: DUO2539)" style="flex:1;">
+          <input type="text" id="form-frota-manual-placa" placeholder="Placa (Ex: ABC1D23)" style="width:160px;text-transform:uppercase;font-family:var(--mono);">
+        </div>
       </div>
     </div>
     <div class="msec">
@@ -2261,6 +2264,8 @@ function abrirModalCadastroViagem() {
   document.getElementById('form-cte').value       = 'PENDENTE';
   document.getElementById('form-frota-manual-block').style.display = 'none';
   document.getElementById('form-frota-manual-input').value = '';
+  const inpPlaca = document.getElementById('form-frota-manual-placa');
+  if(inpPlaca) inpPlaca.value = '';
   document.getElementById('form-paradas-container').innerHTML = '';
   adicionarCamposParadaForm();
   toggleFormCarreta();
@@ -2300,6 +2305,8 @@ function editarViagem(vid) {
     selFrota.value = 'MANUAL_AGREGADO';
     document.getElementById('form-frota-manual-block').style.display='block';
     document.getElementById('form-frota-manual-input').value = v.frota;
+    const inpPlaca = document.getElementById('form-frota-manual-placa');
+    if(inpPlaca) inpPlaca.value = (v.placa && !v.placa.toUpperCase().includes('TERCEIRO')) ? v.placa : '';
   }
 
   // Carreta
@@ -2334,9 +2341,12 @@ function salvarFormViagem() {
 
   let placaFinal='', antigoFinal='—';
   if(frota==='MANUAL_AGREGADO') {
-    const texto = document.getElementById('form-frota-manual-input').value.trim();
-    frota       = texto ? texto.toUpperCase() : 'AGREGADO EXT';
-    placaFinal  = 'Caminhão Terceiro';
+    const textoFrota = document.getElementById('form-frota-manual-input').value.trim();
+    const inpPlaca = document.getElementById('form-frota-manual-placa');
+    const textoPlaca = inpPlaca ? inpPlaca.value.trim() : '';
+
+    frota       = textoFrota ? textoFrota.toUpperCase() : 'AGREGADO EXT';
+    placaFinal  = textoPlaca ? textoPlaca.toUpperCase() : 'Caminhão Terceiro';
     antigoFinal = 'Agregado Extra';
   } else {
     const db   = CONJUNTURA_VEICULOS[frota] || {placa:'MANUAL', antigo:'—'};
