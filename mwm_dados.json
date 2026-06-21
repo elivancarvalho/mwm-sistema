@@ -3018,7 +3018,7 @@
         "saida": "09:00",
         "origem": "V.S DE LIMA",
         "destino": "FILIAL SBC",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -3055,7 +3055,7 @@
         "saida": "05:00",
         "origem": "FILIAL SBC",
         "destino": "FILIAL SBC",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -3102,7 +3102,7 @@
         "saida": "05:00",
         "origem": "CD SBC",
         "destino": "MWM JUNDIAI",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -3139,7 +3139,7 @@
         "saida": "11:00",
         "origem": "CINPAL",
         "destino": "CD SBC",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -3166,7 +3166,7 @@
         "saida": "07:00",
         "origem": "IDEAL",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -3193,7 +3193,7 @@
         "saida": "05:00",
         "origem": "MWM STO AMARO",
         "destino": "CD SBC",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -3220,7 +3220,7 @@
         "saida": "11:00",
         "origem": "CD SBC",
         "destino": "MWM JUNDIAI",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -3257,7 +3257,7 @@
         "saida": "10:00",
         "origem": "MWM STO AMARO",
         "destino": "CARGOLIFT SBC",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
