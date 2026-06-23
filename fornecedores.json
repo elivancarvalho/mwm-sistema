@@ -55,7 +55,7 @@
     "E-mail (Contato)": "marcelo@almar.com.br"
   },
   {
-    "Fornecedor": "ALPINO IND. METALÚRGICA LTDA.",
+    "Fornecedor": "ALPINO",
     "Cód. Fornecedor": "1476",
     "E-mail (Contato)": "giulia.gravena@alpino.com.br;  andre.teixeira@alpino.com.br; rafael.quiterio@alpino.com.br"
   },
@@ -65,7 +65,7 @@
     "E-mail (Contato)": "vendas@ampgroup.com.br"
   },
   {
-    "Fornecedor": "ANELBRAS COMPONENTES",
+    "Fornecedor": "ANELBRAS",
     "Cód. Fornecedor": "12393",
     "E-mail (Contato)": "mzomignan@anelbras.com.br"
   },
@@ -95,7 +95,7 @@
     "E-mail (Contato)": "Ana Caroline <ACaroline@boellhoff.com>"
   },
   {
-    "Fornecedor": "BORG WARNER ITATIBA",
+    "Fornecedor": "BORGWAGNER (PHINIA)",
     "Cód. Fornecedor": "748",
     "E-mail (Contato)": "holiveira@borgwarner.com / jdutra@borgwarner.com / expedicao@borgwarner.com"
   },
@@ -250,18 +250,13 @@
     "E-mail (Contato)": "guilherme.nunes@dana.com"
   },
   {
-    "Fornecedor": "DAYCO POWER",
+    "Fornecedor": "DAYCO POWER (MUVIQ)",
     "Cód. Fornecedor": "14862",
     "E-mail (Contato)": "Kelly.Conter@muviqofficial.com"
   },
   {
     "Fornecedor": "DELGA",
     "Cód. Fornecedor": "14151",
-    "E-mail (Contato)": "maria.santos@delga.com.br"
-  },
-  {
-    "Fornecedor": "DELGA INDUSTRIA E COMERCIO S/A",
-    "Cód. Fornecedor": "139",
     "E-mail (Contato)": "maria.santos@delga.com.br"
   },
   {
@@ -290,7 +285,7 @@
     "E-mail (Contato)": "gsilva@ejotfey.com.br"
   },
   {
-    "Fornecedor": "Elring Klinger",
+    "Fornecedor": "ELRING KLINGER",
     "Cód. Fornecedor": "2837",
     "E-mail (Contato)": "jose.mondini@elringklinger.com"
   },
@@ -330,17 +325,17 @@
     "E-mail (Contato)": "flavia@chavetas.com.br"
   },
   {
-    "Fornecedor": "FEDERAL MOGUL SISTEMAS",
+    "Fornecedor": "TENNECO",
     "Cód. Fornecedor": "13111",
     "E-mail (Contato)": "MATHEUS.HENRIQUE1@TENNECO.COM"
   },
   {
-    "Fornecedor": "FEDERAL MOGUL VALVULAS",
+    "Fornecedor": "TENNECO",
     "Cód. Fornecedor": "14192",
     "E-mail (Contato)": "Caique.Ferreira@tenneco.com"
   },
   {
-    "Fornecedor": "Ferramentaria América Latina EIRELI",
+    "Fornecedor": "FERRAMENTARIA AMERICA",
     "Cód. Fornecedor": "14872",
     "E-mail (Contato)": "logistica01@americalatina.ind.br"
   },
@@ -370,7 +365,7 @@
     "E-mail (Contato)": "nbl@fnst.com"
   },
   {
-    "Fornecedor": "FUNDIMISA FUNDIÇÃO",
+    "Fornecedor": "FUNDIMISA",
     "Cód. Fornecedor": "4208",
     "E-mail (Contato)": "fernandopaz@fundimisa.com.br/ biancawagner@fundimisa.com.br"
   },
@@ -430,7 +425,7 @@
     "E-mail (Contato)": "saulo@guanandiautomotivesa.com.br"
   },
   {
-    "Fornecedor": "GW METAL",
+    "Fornecedor": "GW",
     "Cód. Fornecedor": "14766",
     "E-mail (Contato)": "vendas3@gwmetal.com.br"
   },
@@ -510,7 +505,7 @@
     "E-mail (Contato)": "ana@mrs.ind.br"
   },
   {
-    "Fornecedor": "INDÚSTRIA MECÂNICA KONDOR LTDA",
+    "Fornecedor": "KONDOR",
     "Cód. Fornecedor": "259",
     "E-mail (Contato)": "julio@kondor.com.br / francine@kondor.com.br"
   },
@@ -525,7 +520,7 @@
     "E-mail (Contato)": "logistica@fanandri.com.br"
   },
   {
-    "Fornecedor": "INDUSTRIAS MANGOTEX LTDA",
+    "Fornecedor": "MANGOTEX",
     "Cód. Fornecedor": "223",
     "E-mail (Contato)": "sandro.santos@mangotex.com.br  ; fernando.fernandes@mangotex.com.br"
   },
@@ -540,7 +535,7 @@
     "E-mail (Contato)": "lucimara@inescap.com.br"
   },
   {
-    "Fornecedor": "INTER ALLOY FUNDIÇÃO E USINAGE",
+    "Fornecedor": "INTER ALLOY",
     "Cód. Fornecedor": "5453",
     "E-mail (Contato)": "pcp@interalloy.com.br"
   },
@@ -605,7 +600,7 @@
     "E-mail (Contato)": "vendas1@lampauto.com.br"
   },
   {
-    "Fornecedor": "LEPE INDÚSTRIA E COMÉRCIO LTD",
+    "Fornecedor": "LEPE",
     "Cód. Fornecedor": "266",
     "E-mail (Contato)": "fagner.borges@lepe.com.br"
   },
@@ -645,7 +640,7 @@
     "E-mail (Contato)": "sandra.pollettini@br.mahle.com"
   },
   {
-    "Fornecedor": "MANN-HUMMEL",
+    "Fornecedor": "MANN HUMMEL",
     "Cód. Fornecedor": "156",
     "E-mail (Contato)": "erick.ferreira@mann-hummel.com"
   },
@@ -710,17 +705,17 @@
     "E-mail (Contato)": "alessandro@metalurgicanunes.com.br"
   },
   {
-    "Fornecedor": "MET. SUPRENS",
+    "Fornecedor": "SUPRENS",
     "Cód. Fornecedor": "373",
     "E-mail (Contato)": "logistica@suprens.com.br"
   },
   {
-    "Fornecedor": "METAL DOIS IND COMERCIO",
+    "Fornecedor": "METAL 2",
     "Cód. Fornecedor": "360",
     "E-mail (Contato)": "susy.villasboas@metal2.com.br"
   },
   {
-    "Fornecedor": "METALAC SPS IND. E COM. LTDA",
+    "Fornecedor": "METALAC",
     "Cód. Fornecedor": "2717",
     "E-mail (Contato)": "Tamires.Prado@pccairframe.com; larissa.goncalves@metalac.com.br"
   },
@@ -740,12 +735,12 @@
     "E-mail (Contato)": "vera.bossolani@metalpo.com.br"
   },
   {
-    "Fornecedor": "METALTORK INDÚSTRIA E COMÉRCIO",
+    "Fornecedor": "METALTORK",
     "Cód. Fornecedor": "4864",
     "E-mail (Contato)": "natasha.rocha@metaltork.com.br / joseane.silva@metaltork.com.br"
   },
   {
-    "Fornecedor": "METALÚRGICA CARTEC LTDA",
+    "Fornecedor": "CARTEC",
     "Cód. Fornecedor": "366",
     "E-mail (Contato)": "matheus.silveira@cartec.ind.br"
   },
@@ -755,7 +750,7 @@
     "E-mail (Contato)": "amanda.brasil@fey.com.br"
   },
   {
-    "Fornecedor": "METALURGICA IRBAS",
+    "Fornecedor": "IRBAS",
     "Cód. Fornecedor": "228",
     "E-mail (Contato)": "ivan.campos@irbas.com.br"
   },
@@ -765,7 +760,7 @@
     "E-mail (Contato)": "expedicao@knif.com.br"
   },
   {
-    "Fornecedor": "METALURGICA PASCHOAL LTDA",
+    "Fornecedor": "PASCHOAL",
     "Cód. Fornecedor": "14996",
     "E-mail (Contato)": "monica.souza@paschoal.com.br"
   },
@@ -780,14 +775,9 @@
     "E-mail (Contato)": "alexandre.siqueira@methalcompany.com.br"
   },
   {
-    "Fornecedor": "MGK (DIDE)",
+    "Fornecedor": "MGK",
     "Cód. Fornecedor": "14698",
     "E-mail (Contato)": "c.oliveira@dide.com.br"
-  },
-  {
-    "Fornecedor": "MGK (DIDE)",
-    "Cód. Fornecedor": "14698",
-    "E-mail (Contato)": "c.oliveira@mgkgroup.com.br"
   },
   {
     "Fornecedor": "MGL",
@@ -905,7 +895,7 @@
     "E-mail (Contato)": "comercial.pellacani@gmail.com"
   },
   {
-    "Fornecedor": "PHINIA (MOTORES DE PARTIDA)",
+    "Fornecedor": "BORGWAGNER (PHINIA)",
     "Cód. Fornecedor": "2611",
     "E-mail (Contato)": "fzink@borgwarner.com"
   },
@@ -950,7 +940,7 @@
     "E-mail (Contato)": "free@prenflex.com.br"
   },
   {
-    "Fornecedor": "PRESMAK TECNICA EM INJETADOS L",
+    "Fornecedor": "PRESMAK",
     "Cód. Fornecedor": "13786",
     "E-mail (Contato)": "pcp1@presmak.com.br"
   },
@@ -965,7 +955,7 @@
     "E-mail (Contato)": "pcp@progeral.com.br"
   },
   {
-    "Fornecedor": "PROTURBO USINAGEM DE PRECISÃO",
+    "Fornecedor": "PROTURBO",
     "Cód. Fornecedor": "14916",
     "E-mail (Contato)": "kbeatriz@proturbo.com.br"
   },
@@ -1020,12 +1010,12 @@
     "E-mail (Contato)": "sara@rudolph.com.br"
   },
   {
-    "Fornecedor": "S RIKO",
+    "Fornecedor": "S-RIKO",
     "Cód. Fornecedor": "5484",
     "E-mail (Contato)": "Gilson Vicente <gilson.vicente@br.s-riko.com>"
   },
   {
-    "Fornecedor": "SABO (RETENTOR)",
+    "Fornecedor": "SABO",
     "Cód. Fornecedor": "13674",
     "E-mail (Contato)": "nfsantos@sabo.com.br"
   },
@@ -1040,7 +1030,7 @@
     "E-mail (Contato)": "jeferson.gregorio@schadek.com.br"
   },
   {
-    "Fornecedor": "SCHAEFFLER BRASIL LTDA",
+    "Fornecedor": "SCHAEFFLER",
     "Cód. Fornecedor": "1349",
     "E-mail (Contato)": "amanda.vieira@schaeffler.com"
   },
@@ -1060,7 +1050,7 @@
     "E-mail (Contato)": "quenia.rente@skf.com"
   },
   {
-    "Fornecedor": "SOFAPE FABRICANTE DE FILTROS S",
+    "Fornecedor": "SOFAPE",
     "Cód. Fornecedor": "14578",
     "E-mail (Contato)": "joyce.ferreira@tecfil.com.br  /  jessika.carneiro@tecfil.com.br"
   },
@@ -1100,7 +1090,7 @@
     "E-mail (Contato)": "carina.oliveira@te.com"
   },
   {
-    "Fornecedor": "TEC. DE BOMBAS (TBA_EVAMO)",
+    "Fornecedor": "TBA - EVAMO",
     "Cód. Fornecedor": "14961",
     "E-mail (Contato)": "margarida.lefloch@pump-ts.com"
   },
@@ -1135,12 +1125,7 @@
     "E-mail (Contato)": "antonia.moura@thermansol.com>"
   },
   {
-    "Fornecedor": "THYSSENKRUPP (BIELAS)",
-    "Cód. Fornecedor": "265",
-    "E-mail (Contato)": "william.brandao@thyssenkrupp.com"
-  },
-  {
-    "Fornecedor": "THYSSENKRUPP (VIRABREQUINS)",
+    "Fornecedor": "THYSSENKRUPP",
     "Cód. Fornecedor": "265",
     "E-mail (Contato)": "jessica.foganholi@thyssenkrupp.com / expedicao.exportacao@thyssenkrupp.com"
   },
@@ -1267,7 +1252,7 @@
   {
     "Fornecedor": "WURTH SW INDUSTRY PEÇAS DE FIX",
     "Cód. Fornecedor": "476",
-    "E-mail (Contato)": "alexandrapiola@wurthindustry.com.br;  AmauriTenorio@wurthindustry.com.br"
+    "E-mail (Contato)": "alexandrapiola@wurthindustry.com.br; AmauriTenorio@wurthindustry.com.br"
   },
   {
     "Fornecedor": "YANMAR",
@@ -1275,14 +1260,14 @@
     "E-mail (Contato)": "gustavo_moraes@yanmar.com"
   },
   {
-    "Fornecedor": "ZAKLAD METARLUGICZNY",
+    "Fornecedor": "ZAKLAD",
     "Cód. Fornecedor": "14388",
     "E-mail (Contato)": "logistica7@zmdobrasil.com.br"
   },
   {
-    "Fornecedor": "ZEPPINI COMERCIAL S/A",
+    "Fornecedor": "ZEPPINI",
     "Cód. Fornecedor": "4661",
-    "E-mail (Contato)": "fernando.foramilio@grupozeppini.com.br"
+    "E-mail (Contato)": "diogo.vasconcelos@grupozeppini.com.br; daniel.soares@grupozeppini.com.br"
   },
   {
     "Fornecedor": "ZF DO BRASIL",
