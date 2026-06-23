@@ -4774,7 +4774,7 @@
         "saida": "07:00",
         "origem": "THYSSENKRUPP",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "PARCIAL",
         "obs": "",
         "paradas": [
           {
@@ -4798,7 +4798,9 @@
             "importado": false
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {
+          "53269": "IMPRESSO"
+        }
       },
       {
         "id": 1782211329488,
