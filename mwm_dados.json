@@ -4610,7 +4610,7 @@
         "saida": "05:00",
         "origem": "PROGERAL",
         "destino": "MWM STO AMARO",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -4621,7 +4621,7 @@
             "jf": "10:00",
             "janela": "09:00-10:00",
             "pedido": "53266",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1782211329191-1",
@@ -4645,7 +4645,7 @@
           }
         ],
         "ctePorPedido": {
-          "53266": "IMPRESSO"
+          "53266": "PENDENTE"
         }
       },
       {
