@@ -4649,10 +4649,10 @@
       {
         "id": 1782211328790,
         "tipo": "TRUCK",
-        "frota": "OKZ6B54",
+        "frota": "C10019",
         "frotaAntiga": "Agregado Extra",
-        "placa": "Caminhão Terceiro",
-        "carreta": "-",
+        "placa": "OKZ6B54",
+        "carreta": "—",
         "motorista": "SEBASTIAO MIGUEL",
         "rota": "ROTA 13",
         "saida": "07:00",
@@ -4667,7 +4667,7 @@
             "cidade": "SÃO PAULO",
             "ji": "08:00",
             "jf": "09:30",
-            "janela": "08:0009:30",
+            "janela": "08:00-09:30",
             "pedido": "—",
             "importado": false
           },
@@ -4677,7 +4677,7 @@
             "cidade": "SÃO PAULO",
             "ji": "12:30",
             "jf": "18:00",
-            "janela": "12:3018:00",
+            "janela": "12:30-18:00",
             "pedido": "—",
             "importado": false
           }
