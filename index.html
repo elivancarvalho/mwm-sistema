@@ -890,6 +890,26 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
 </div>
 </div>
 
+<div class="overlay" id="modal-emitir-cte">
+<div class="modal" style="width:420px;">
+  <div class="mhdr">
+    <div class="mtitle">🧾 Emitir CTE</div>
+    <button class="mx" onclick="cancelarEmitirCte()">×</button>
+  </div>
+  <div class="mbody">
+    <p style="color:var(--text2);font-size:13px;margin-bottom:6px;">
+      Deseja seguir para a página de emissão do CTE no LATROMI com o pedido
+      <strong style="color:var(--accent)" id="emitir-cte-pedido-label">—</strong>?
+    </p>
+    <p style="color:var(--text3);font-size:11px;">Uma nova aba será aberta já com o pedido pronto para filtrar.</p>
+  </div>
+  <div class="mftr">
+    <button class="btn btn-ghost" onclick="cancelarEmitirCte()">Cancelar</button>
+    <button class="btn btn-primary" onclick="confirmarEmitirCte()" id="btn-confirmar-emitir-cte">Seguir para emissão</button>
+  </div>
+</div>
+</div>
+
 <div class="notif" id="notif"></div>
 
 <script>
@@ -1665,7 +1685,7 @@ function renderTable() {
 
             const ped = p.pedido&&p.pedido.trim()!=='—' ? p.pedido.trim() : null;
             const cteVal = ped && v.ctePorPedido && v.ctePorPedido[ped] ? v.ctePorPedido[ped] : 'PENDENTE';
-            const cteSel = ped ? `<select class="ctesel ${cteVal==='IMPRESSO'?'jimported':cteVal==='NULA'?'jdanger':'jpend'}" onchange="updateCtePorPedido(${v.id}, '${esc(ped)}', this.value)">
+            const cteSel = ped ? `<select class="ctesel ${cteVal==='IMPRESSO'?'jimported':cteVal==='NULA'?'jdanger':'jpend'}" onchange="updateCtePorPedido(${v.id}, '${esc(ped)}', this.value, this)">
               <option value="PENDENTE" ${cteVal==='PENDENTE'?'selected':''}>PENDENTE</option>
               <option value="IMPRESSO" ${cteVal==='IMPRESSO'?'selected':''}>IMPRESSO</option>
               <option value="NULA" ${cteVal==='NULA'?'selected':''}>NULA</option>
@@ -2086,7 +2106,30 @@ function renderPend() {
   container.innerHTML = html;
 }
 
-function updateCtePorPedido(vid, pedido, novoStatus) {
+// ══════════════════════════════════════════════════════════════════
+//  EMISSÃO DE CTE NO LATROMI (Sulista AVAConCloud)
+// ══════════════════════════════════════════════════════════════════
+const LATROMI_URL = 'https://sulista.avaconcloud.com/web/ped_coleta_sulista/';
+let _emitirCteVid = null;
+let _emitirCtePedido = null;
+let _emitirCteSelEl = null;
+
+function updateCtePorPedido(vid, pedido, novoStatus, selEl) {
+  // Para o status IMPRESSO (clique em "Emitir CTE" ou seleção manual),
+  // confirma antes de gravar e oferece seguir direto para a emissão no LATROMI.
+  if(novoStatus === 'IMPRESSO') {
+    _emitirCteVid = vid;
+    _emitirCtePedido = pedido;
+    _emitirCteSelEl = selEl || null;
+    const lbl = document.getElementById('emitir-cte-pedido-label');
+    if(lbl) lbl.textContent = pedido || '—';
+    abrirModal('emitir-cte');
+    return;
+  }
+  _aplicarCtePorPedido(vid, pedido, novoStatus);
+}
+
+function _aplicarCtePorPedido(vid, pedido, novoStatus) {
   const v = (viagensDB[currentDate]||[]).find(x => x.id === vid);
   if(v && pedido) {
     if(!v.ctePorPedido) v.ctePorPedido = {};
@@ -2095,6 +2138,34 @@ function updateCtePorPedido(vid, pedido, novoStatus) {
     notify('CTE do Pedido atualizado!');
     updateDashboard();
   }
+}
+
+function cancelarEmitirCte() {
+  // Se a troca veio do <select> de status, reverte visualmente para
+  // PENDENTE/NULA (o valor real não chegou a ser alterado em memória).
+  if(_emitirCteSelEl) {
+    const v = (viagensDB[currentDate]||[]).find(x => x.id === _emitirCteVid);
+    const valorAtual = (v && v.ctePorPedido && v.ctePorPedido[_emitirCtePedido]) || 'PENDENTE';
+    _emitirCteSelEl.value = valorAtual;
+  }
+  fecharModal('emitir-cte');
+  _emitirCteVid = null;
+  _emitirCtePedido = null;
+  _emitirCteSelEl = null;
+}
+
+function confirmarEmitirCte() {
+  const vid = _emitirCteVid, pedido = _emitirCtePedido;
+  fecharModal('emitir-cte');
+  if(vid === null || !pedido) return;
+  _aplicarCtePorPedido(vid, pedido, 'IMPRESSO');
+  // Abre o LATROMI já com o pedido na URL — o userscript do Tampermonkey
+  // lê esse parâmetro e preenche/filtra automaticamente na outra ponta.
+  const url = LATROMI_URL + '?pedido=' + encodeURIComponent(pedido);
+  window.open(url, '_blank');
+  _emitirCteVid = null;
+  _emitirCtePedido = null;
+  _emitirCteSelEl = null;
 }
 
 // ══════════════════════════════════════════════════════════════════
