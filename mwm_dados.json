@@ -4641,7 +4641,7 @@
             "jf": "14:30",
             "janela": "13:30-14:30",
             "pedido": "53266",
-            "importado": false
+            "importado": true
           }
         ],
         "ctePorPedido": {}
@@ -4699,7 +4699,7 @@
             "jf": "14:30",
             "janela": "13:30-14:30",
             "pedido": "53267",
-            "importado": false
+            "importado": true
           }
         ],
         "ctePorPedido": {}
