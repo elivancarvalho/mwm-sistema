@@ -4660,7 +4660,7 @@
         "saida": "07:30",
         "origem": "PRODUFLEX",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -4704,7 +4704,9 @@
             "importado": true
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {
+          "53267": "IMPRESSO"
+        }
       },
       {
         "id": 1782211329086,
