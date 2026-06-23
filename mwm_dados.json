@@ -4739,9 +4739,9 @@
             "id": "1782213540230-0",
             "fornecedor": "RESIPLASTIC",
             "cidade": "SÃO PAULO",
-            "ji": "19:00",
-            "jf": "21:00",
-            "janela": "19:00-21:00",
+            "ji": "16:00",
+            "jf": "18:00",
+            "janela": "16:00-18:00",
             "pedido": "53272",
             "importado": false
           }
