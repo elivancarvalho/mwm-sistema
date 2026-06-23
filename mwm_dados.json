@@ -4548,9 +4548,9 @@
         "frota": "R3020",
         "frotaAntiga": "3246",
         "placa": "TBA3C87",
-        "carreta": "-",
+        "carreta": "—",
         "motorista": "JOSE APARECIDO",
-        "rota": "rota 06",
+        "rota": "ROTA 06",
         "saida": "07:30",
         "origem": "PRODUFLEX",
         "destino": "MWM STO AMARO",
@@ -4563,7 +4563,7 @@
             "cidade": "SÃO PAULO",
             "ji": "09:00",
             "jf": "10:00",
-            "janela": "09:0010:00",
+            "janela": "09:00-10:00",
             "pedido": "53267",
             "importado": false
           },
@@ -4573,7 +4573,7 @@
             "cidade": "SÃO PAULO",
             "ji": "10:00",
             "jf": "11:00",
-            "janela": "10:0011:00",
+            "janela": "10:00-11:00",
             "pedido": "53267",
             "importado": false
           },
@@ -4583,7 +4583,7 @@
             "cidade": "SÃO PAULO",
             "ji": "12:00",
             "jf": "13:00",
-            "janela": "12:0013:00",
+            "janela": "12:00-13:00",
             "pedido": "53267",
             "importado": false
           },
@@ -4593,7 +4593,7 @@
             "cidade": "SÃO PAULO",
             "ji": "13:30",
             "jf": "14:30",
-            "janela": "13:3014:30",
+            "janela": "13:30-14:30",
             "pedido": "53267",
             "importado": false
           }
