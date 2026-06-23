@@ -4491,7 +4491,7 @@
             "jf": "09:00",
             "janela": "08:00-09:00",
             "pedido": "53265",
-            "importado": false
+            "importado": true
           }
         ]
       },
