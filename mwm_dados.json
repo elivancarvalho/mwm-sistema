@@ -4480,7 +4480,7 @@
         "saida": "05:00",
         "origem": "MODINE",
         "destino": "MWM STO AMARO",
-        "cte": "IMPRESSO",
+        "cte": "PENDENTE",
         "obs": "",
         "paradas": [
           {
@@ -4658,7 +4658,7 @@
         "saida": "07:00",
         "origem": "THYSSENKRUPP",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "PARCIAL",
         "obs": "",
         "paradas": [
           {
