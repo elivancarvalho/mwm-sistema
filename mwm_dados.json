@@ -4501,8 +4501,8 @@
         "frota": "R3022",
         "frotaAntiga": "3249",
         "placa": "TBB5J94",
-        "carreta": "-",
-        "motorista": "ELSON VIEIRA BORGES",
+        "carreta": "—",
+        "motorista": "GILMAR PEREIRA SILVA",
         "rota": "ROTA 04",
         "saida": "05:00",
         "origem": "PROGERAL",
@@ -4516,7 +4516,7 @@
             "cidade": "SÃO PAULO",
             "ji": "09:00",
             "jf": "10:00",
-            "janela": "09:0010:00",
+            "janela": "09:00-10:00",
             "pedido": "—",
             "importado": false
           },
@@ -4526,7 +4526,7 @@
             "cidade": "SÃO PAULO",
             "ji": "11:30",
             "jf": "12:30",
-            "janela": "11:3012:30",
+            "janela": "11:30-12:30",
             "pedido": "—",
             "importado": false
           },
@@ -4536,7 +4536,7 @@
             "cidade": "SÃO PAULO",
             "ji": "13:30",
             "jf": "14:30",
-            "janela": "13:3014:30",
+            "janela": "13:30-14:30",
             "pedido": "—",
             "importado": false
           }
