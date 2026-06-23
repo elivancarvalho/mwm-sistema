@@ -1018,7 +1018,7 @@ function janelaStatus(p) {
 
   const n=now(), fim=h2m(p.jf||'23:59'), restam=fim-n;
   if(n>fim)      return { cls:'jdanger', txt:'ATRASADO', urgente:false };
-  if(restam<=20) return { cls:'jwarn',   txt:`Fecha em ${restam}m!`, urgente:true };
+  if(restam<=30) return { cls:'jwarn',   txt:`Fecha em ${restam}m!`, urgente:true };
   return { cls:'jok', txt:'No prazo', urgente:false };
 }
 
@@ -1969,7 +1969,7 @@ function enviarEmailFornecedor(idx) {
   }
 
   let destinatarios = emailAtual;
-  if(emailProx) destinatarios += `; ${emailProx}`;
+  if(emailProx) destinatarios += `, ${emailProx}`;
 
   const assunto = `ATRASO NA COLETA - MWM - ROTA ${v.rota || ''} / VEÍCULO ${v.frota || ''} - ${it.fornecedor}`;
   
@@ -1988,7 +1988,7 @@ function enviarEmailFornecedor(idx) {
   corpo += `[ Caso haja um motivo específico, você pode digitá-lo aqui antes de enviar o e-mail ]\n\n`;
   corpo += `Atenciosamente,`;
 
-  let ccEmails = ['transporteSP@mwm.com.br'; 'trafego.mwm@sulista.com.br'];
+  let ccEmails = ['transporteSP@mwm.com.br', 'trafego.mwm@sulista.com.br'];
   
   if(!proxFornecedor) {
     ccEmails.push('RecebimentoSP@mwm.com.br');
@@ -2585,11 +2585,12 @@ document.addEventListener('DOMContentLoaded', () => {
   carregarTodos();
 
   // Atualizar badges e alertas a cada 30 segundos
+  // renderAlertas roda sempre (sem guard de página ativa) para manter
+  // o badge e os dados sincronizados com currentDate em qualquer aba.
   setInterval(() => {
     updateBadges();
     renderAlertas();
   }, 30000);
-}); // <-- Certifique-se de fechar o DOMContentLoaded perfeitamente aqui sem travar o script
 
   // Sincronização periódica a cada 1 minuto (quando aba ativa)
   setInterval(() => {
