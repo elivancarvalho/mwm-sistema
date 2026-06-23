@@ -4561,9 +4561,9 @@
             "id": "1782211329136-0",
             "fornecedor": "PRODUFLEX",
             "cidade": "SÃO PAULO",
-            "ji": "08:00",
-            "jf": "09:00",
-            "janela": "08:00-09:00",
+            "ji": "09:00",
+            "jf": "10:00",
+            "janela": "09:00-10:00",
             "pedido": "53267",
             "importado": false
           },
