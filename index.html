@@ -2585,12 +2585,11 @@ document.addEventListener('DOMContentLoaded', () => {
   carregarTodos();
 
   // Atualizar badges e alertas a cada 30 segundos
-  // renderAlertas roda sempre (sem guard de página ativa) para manter
-  // o badge e os dados sincronizados com currentDate em qualquer aba.
   setInterval(() => {
     updateBadges();
     renderAlertas();
   }, 30000);
+}); // <-- Certifique-se de fechar o DOMContentLoaded perfeitamente aqui sem travar o script
 
   // Sincronização periódica a cada 1 minuto (quando aba ativa)
   setInterval(() => {
