@@ -1969,7 +1969,7 @@ function enviarEmailFornecedor(idx) {
   }
 
   let destinatarios = emailAtual;
-  if(emailProx) destinatarios += `, ${emailProx}`;
+  if(emailProx) destinatarios += `; ${emailProx}`;
 
   const assunto = `ATRASO NA COLETA - MWM - ROTA ${v.rota || ''} / VEÍCULO ${v.frota || ''} - ${it.fornecedor}`;
   
@@ -1988,7 +1988,7 @@ function enviarEmailFornecedor(idx) {
   corpo += `[ Caso haja um motivo específico, você pode digitá-lo aqui antes de enviar o e-mail ]\n\n`;
   corpo += `Atenciosamente,`;
 
-  let ccEmails = ['transporteSP@mwm.com.br', 'trafego.mwm@sulista.com.br'];
+  let ccEmails = ['transporteSP@mwm.com.br'; 'trafego.mwm@sulista.com.br'];
   
   if(!proxFornecedor) {
     ccEmails.push('RecebimentoSP@mwm.com.br');
