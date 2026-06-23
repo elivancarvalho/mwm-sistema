@@ -4471,10 +4471,10 @@
       {
         "id": 1782211329163,
         "tipo": "TRUCK",
-        "frota": "JOI2796",
+        "frota": "C9955",
         "frotaAntiga": "Agregado Extra",
-        "placa": "Caminhão Terceiro",
-        "carreta": "",
+        "placa": "JOI2796",
+        "carreta": "—",
         "motorista": "ANDERSON MACENA MELENDRE",
         "rota": "ROTA 03",
         "saida": "05:00",
@@ -4489,7 +4489,7 @@
             "cidade": "SÃO PAULO",
             "ji": "08:00",
             "jf": "09:00",
-            "janela": "08:0009:00",
+            "janela": "08:00-09:00",
             "pedido": "53265",
             "importado": false
           }
