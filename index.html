@@ -1249,6 +1249,24 @@ function mesclarBancos(local, remote, original) {
         });
         
         mergedTrip.paradas = finalParadas;
+
+        // Mesclar ctePorPedido (mapa pedido -> status). Sem isso, o status
+        // de "Emitir CTE" alterado localmente era sobrescrito pelo valor
+        // remoto durante o merge, fazendo o clique no botão parecer não
+        // ter efeito (a gravação ocorria, mas com o valor antigo).
+        const lCte = lv.ctePorPedido || {};
+        const rCte = rv.ctePorPedido || {};
+        const oCte = (ov && ov.ctePorPedido) || {};
+        const allPedidos = [...new Set([...Object.keys(lCte), ...Object.keys(rCte), ...Object.keys(oCte)])];
+        const mergedCte = {};
+        allPedidos.forEach(ped => {
+          const vLocal = lCte[ped];
+          const vRemote = rCte[ped];
+          const vOrig = oCte[ped];
+          mergedCte[ped] = (vLocal !== vOrig) ? vLocal : vRemote;
+        });
+        mergedTrip.ctePorPedido = mergedCte;
+
         finalTrips.push(mergedTrip);
       }
     });
