@@ -4547,31 +4547,21 @@
         "paradas": [
           {
             "id": "1782211329414-0",
-            "fornecedor": "METAL 2",
+            "fornecedor": "MAHLE FILTROS",
             "cidade": "SÃO PAULO",
-            "ji": "10:00",
-            "jf": "11:00",
-            "janela": "10:0011:00",
+            "ji": "14:40",
+            "jf": "17:00",
+            "janela": "14:40-17:00",
             "pedido": "53264",
             "importado": false
           },
           {
             "id": "1782211329414-1",
-            "fornecedor": "MAHLE FILTROS",
-            "cidade": "SÃO PAULO",
-            "ji": "14:40",
-            "jf": "17:00",
-            "janela": "14:4017:00",
-            "pedido": "53264",
-            "importado": false
-          },
-          {
-            "id": "1782211329414-2",
             "fornecedor": "MAHLE PISTÕES",
             "cidade": "SÃO PAULO",
             "ji": "15:00",
             "jf": "17:00",
-            "janela": "15:0017:00",
+            "janela": "15:00-17:00",
             "pedido": "53264",
             "importado": false
           }
