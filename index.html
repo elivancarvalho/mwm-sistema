@@ -259,6 +259,18 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
 .jimported{color:var(--green);font-size:11px;}
 @keyframes blink-warn{0%,100%{opacity:1}50%{opacity:.5}}
 
+/* Destaque temporário ao navegar até um item de rastreio a partir de uma
+   notificação — ajuda o usuário a achar rapidamente qual coleta gerou o
+   alerta, sem precisar procurar "no olho" pela lista. */
+.rastreio-highlight{
+  animation: rastreio-pulse 1s ease-in-out 3;
+  outline:2px solid var(--accent);
+}
+@keyframes rastreio-pulse{
+  0%,100%{ background-color:var(--bg); }
+  50%{ background-color:rgba(91,156,246,.22); }
+}
+
 /* Buttons */
 .btn{
   display:inline-flex;align-items:center;gap:6px;padding:7px 14px;
@@ -616,6 +628,7 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
         <div class="pt">Disponibilidade da Frota</div>
         <div class="ps" id="disp-date-subtitle">Cruzamento em tempo real...</div>
       </div>
+      <button class="btn btn-primary" onclick="abrirModalVeiculo()">+ Novo Veículo</button>
     </div>
     <div class="disp-header">
       <div class="disp-stats-bar" id="disp-stats-bar"></div>
@@ -910,6 +923,45 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
 </div>
 </div>
 
+<div class="overlay" id="modal-veiculo">
+<div class="modal" style="width:420px;">
+  <div class="mhdr">
+    <div class="mtitle" id="veiculo-modal-title">🚚 Novo Veículo</div>
+    <button class="mx" onclick="fecharModal('veiculo')">×</button>
+  </div>
+  <div class="mbody" style="display:flex;flex-direction:column;gap:12px;">
+    <div>
+      <label class="fg-label">Frota (Identificação atual)</label>
+      <input type="text" id="veiculo-frota" class="f-upper" placeholder="Ex: R3025" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:8px 10px;font-family:var(--mono);font-size:13px;outline:none;">
+    </div>
+    <div>
+      <label class="fg-label">Frota Antiga (opcional)</label>
+      <input type="text" id="veiculo-frota-antiga" class="f-upper" placeholder="Ex: 661" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:8px 10px;font-family:var(--mono);font-size:13px;outline:none;">
+    </div>
+    <div>
+      <label class="fg-label">Placa</label>
+      <input type="text" id="veiculo-placa" class="f-upper" placeholder="Ex: ABC1D23" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:8px 10px;font-family:var(--mono);font-size:13px;outline:none;">
+    </div>
+    <div>
+      <label class="fg-label">Tipo</label>
+      <select id="veiculo-tipo" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:8px 10px;font-size:13px;outline:none;">
+        <option value="TRUCK">TRUCK</option>
+        <option value="CONJUNTO">CONJUNTO (Cavalo)</option>
+        <option value="CARRETA">CARRETA</option>
+      </select>
+    </div>
+    <p id="veiculo-modal-erro" style="color:var(--red);font-size:11px;display:none;"></p>
+  </div>
+  <div class="mftr" style="justify-content:space-between;">
+    <button class="btn btn-ghost" id="btn-excluir-veiculo" style="color:var(--red);display:none;" onclick="excluirVeiculo()">🗑 Excluir</button>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-ghost" onclick="fecharModal('veiculo')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarVeiculo()">Salvar</button>
+    </div>
+  </div>
+</div>
+</div>
+
 <div class="notif" id="notif"></div>
 
 <script>
@@ -945,6 +997,43 @@ let alertaSort = { col:'ji', dir:'asc' };
 let _alertaItensAtuais = [];
 
 // ══════════════════════════════════════════════════════════════════
+//  PADRONIZAÇÃO EM MAIÚSCULAS
+//  Todos os campos de texto "de negócio" (frota, placa, rota, motorista,
+//  origem, destino, fornecedor, obs etc.) são forçados para maiúsculas
+//  conforme o usuário digita — e não só visualmente via CSS, mas no
+//  próprio valor salvo, para manter o dado padronizado no banco.
+//  Campos de busca/filtro, senhas, tokens e identificadores de
+//  repositório/branch são deliberadamente deixados de fora.
+// ══════════════════════════════════════════════════════════════════
+const SELETOR_CAMPOS_MAIUSCULOS = [
+  '#form-frota-manual-input', '#form-frota-manual-placa',
+  '#form-rota', '#form-motorista', '#form-origem', '#form-destino', '#form-obs',
+  '#pedido-modal-input',
+  '.f-p-forn', '.f-upper'
+].join(', ');
+
+function forcarMaiusculaEl(el) {
+  if(!el || el.dataset.upperBound === '1') return;
+  el.dataset.upperBound = '1';
+  el.addEventListener('input', () => {
+    const inicio = el.selectionStart, fim = el.selectionEnd;
+    el.value = el.value.toUpperCase();
+    // Restaura a posição do cursor (toUpperCase não muda o tamanho do texto,
+    // mas sem isso o cursor saltaria para o final a cada tecla digitada).
+    if(typeof inicio === 'number') el.setSelectionRange(inicio, fim);
+  });
+}
+
+// Aplica o listener a todos os campos já presentes no DOM agora, e também
+// a quaisquer campos que surgirem depois via innerHTML dinâmico (paradas,
+// modais renderizados sob demanda etc.) através de um observer simples.
+function inicializarMaiusculasAutomaticas() {
+  document.querySelectorAll(SELETOR_CAMPOS_MAIUSCULOS).forEach(forcarMaiusculaEl);
+}
+
+const _observerMaiusculas = new MutationObserver(() => inicializarMaiusculasAutomaticas());
+
+// ══════════════════════════════════════════════════════════════════
 //  BLOCO 1: AUXILIARES DE INTERFACE
 // ══════════════════════════════════════════════════════════════════
 function obterGHCredenciais() {
@@ -974,12 +1063,18 @@ function setLoadingState(on, msg='') {
   if(on) renderSkeletons();
 }
 
-function notify(m, c, dur=2800) {
+function notify(m, c, dur=2800, onClick=null) {
   const n = document.getElementById('notif');
   if(!n) return;
   n.style.background = c || 'linear-gradient(135deg,#0f7a44,#065f33)';
   n.innerHTML = m;
   n.classList.add('show');
+  n.style.cursor = onClick ? 'pointer' : 'default';
+  // Remove qualquer handler de clique de uma notificação anterior antes de
+  // anexar o novo, para não acumular handlers de toasts antigos.
+  if(n._clickHandler) n.removeEventListener('click', n._clickHandler);
+  n._clickHandler = onClick ? () => { onClick(); n.classList.remove('show'); } : null;
+  if(n._clickHandler) n.addEventListener('click', n._clickHandler);
   clearTimeout(n._t);
   n._t = setTimeout(() => n.classList.remove('show'), dur);
 }
@@ -1744,6 +1839,137 @@ function updateBadges() {
 //  BLOCO 4: PÁGINAS SECUNDÁRIAS
 // ══════════════════════════════════════════════════════════════════
 
+// ══════════════════════════════════════════════════════════════════
+//  CRUD DE VEÍCULOS (FROTA) — frota.json no GitHub
+//  CONJUNTURA_VEICULOS é carregado de um arquivo separado (frota.json),
+//  então persistimos as alterações nesse mesmo arquivo, em vez do
+//  mwm_dados.json usado para viagens.
+// ══════════════════════════════════════════════════════════════════
+let _veiculoEditandoPref = null; // null = criando novo veículo
+
+function abrirModalVeiculo(pref) {
+  const titulo   = document.getElementById('veiculo-modal-title');
+  const inFrota  = document.getElementById('veiculo-frota');
+  const inAntiga = document.getElementById('veiculo-frota-antiga');
+  const inPlaca  = document.getElementById('veiculo-placa');
+  const selTipo  = document.getElementById('veiculo-tipo');
+  const btnExcluir = document.getElementById('btn-excluir-veiculo');
+  const erro = document.getElementById('veiculo-modal-erro');
+  erro.style.display = 'none';
+
+  if(pref && CONJUNTURA_VEICULOS[pref]) {
+    _veiculoEditandoPref = pref;
+    const v = CONJUNTURA_VEICULOS[pref];
+    titulo.textContent = `🚚 Editar Veículo — ${pref}`;
+    inFrota.value = pref;
+    inFrota.disabled = true; // a chave (frota nova) não é editável, só recriável
+    inAntiga.value = v.antigo || '';
+    inPlaca.value = v.placa || '';
+    selTipo.value = v.tipo || 'TRUCK';
+    btnExcluir.style.display = 'inline-block';
+  } else {
+    _veiculoEditandoPref = null;
+    titulo.textContent = '🚚 Novo Veículo';
+    inFrota.value = '';
+    inFrota.disabled = false;
+    inAntiga.value = '';
+    inPlaca.value = '';
+    selTipo.value = 'TRUCK';
+    btnExcluir.style.display = 'none';
+  }
+  abrirModal('veiculo');
+}
+
+async function salvarVeiculo() {
+  const inFrota  = document.getElementById('veiculo-frota');
+  const inAntiga = document.getElementById('veiculo-frota-antiga');
+  const inPlaca  = document.getElementById('veiculo-placa');
+  const selTipo  = document.getElementById('veiculo-tipo');
+  const erro = document.getElementById('veiculo-modal-erro');
+
+  const frota = inFrota.value.trim().toUpperCase();
+  const placa = inPlaca.value.trim().toUpperCase();
+  const antigo = inAntiga.value.trim().toUpperCase();
+  const tipo = selTipo.value;
+
+  if(!frota) {
+    erro.textContent = 'Informe a identificação da frota.';
+    erro.style.display = 'block';
+    return;
+  }
+  // Ao criar um novo veículo, não permite sobrescrever uma frota já existente
+  // sem querer (edição usa outro fluxo, com o campo desabilitado).
+  if(!_veiculoEditandoPref && CONJUNTURA_VEICULOS[frota]) {
+    erro.textContent = `Já existe um veículo cadastrado com a frota "${frota}".`;
+    erro.style.display = 'block';
+    return;
+  }
+
+  CONJUNTURA_VEICULOS[frota] = { placa, antigo: antigo || '—', tipo };
+
+  fecharModal('veiculo');
+  notify('🔄 Salvando veículo na nuvem...', 'linear-gradient(135deg,#0f4a7a,#063357)');
+  const ok = await gravarFrota();
+  if(ok) {
+    notify(`✓ Veículo ${frota} salvo!`);
+    renderDisponibilidade();
+  }
+}
+
+async function excluirVeiculo() {
+  if(!_veiculoEditandoPref) return;
+  const pref = _veiculoEditandoPref;
+  if(!confirm(`Excluir o veículo "${pref}" do cadastro de frota?\n\nIsso não remove viagens já programadas com essa frota, apenas o cadastro mestre.`)) return;
+
+  delete CONJUNTURA_VEICULOS[pref];
+  fecharModal('veiculo');
+  notify('🔄 Removendo veículo da nuvem...', 'linear-gradient(135deg,#0f4a7a,#063357)');
+  const ok = await gravarFrota();
+  if(ok) {
+    notify(`🗑 Veículo ${pref} removido.`);
+    renderDisponibilidade();
+  }
+}
+
+// Grava CONJUNTURA_VEICULOS de volta no frota.json do GitHub.
+// Retorna true em caso de sucesso, false em caso de falha.
+async function gravarFrota() {
+  const c = obterGHCredenciais();
+  if(!c.token) {
+    notify('⚠ Configure o token do GitHub primeiro (Configurações).', 'linear-gradient(135deg,#7a3f0f,#5a2d00)');
+    return false;
+  }
+  try {
+    // Obtém o SHA atual do arquivo para o PUT (necessário pela API do GitHub)
+    const getUrl = `https://api.github.com/repos/${c.ownerRepo}/contents/${c.fleetFile}?ref=${c.branch}&t=${Date.now()}`;
+    const getResp = await fetchComTimeout(getUrl, { headers:{Authorization:`token ${c.token}`, Accept:'application/vnd.github.v3+json'} });
+    let sha = null;
+    if(getResp.status === 200) {
+      const meta = await getResp.json();
+      sha = meta.sha;
+    }
+
+    const putUrl = `https://api.github.com/repos/${c.ownerRepo}/contents/${c.fleetFile}`;
+    const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(CONJUNTURA_VEICULOS, null, 2))));
+    const body = { message: 'Atualização do cadastro de frota', content: newContent, branch: c.branch };
+    if(sha) body.sha = sha;
+
+    const putResp = await fetchComTimeout(putUrl, {
+      method: 'PUT',
+      headers: { Authorization:`token ${c.token}`, Accept:'application/vnd.github.v3+json' },
+      body: JSON.stringify(body)
+    }, 15000);
+
+    if(putResp.ok) return true;
+    notify('⚠ Erro de conflito ao gravar a frota. Recarregue a página e tente novamente.', 'linear-gradient(135deg,#7a1414,#5a0a0a)');
+    return false;
+  } catch(e) {
+    console.error('Erro ao gravar frota:', e);
+    notify('⚠ Sem conexão para salvar a frota na nuvem.', 'linear-gradient(135deg,#7a3f0f,#5a2d00)');
+    return false;
+  }
+}
+
 function toggleManutencao(pref) {
   const vs = viagensDB[currentDate] || [];
   const idx = vs.findIndex(v => v.frota === pref && v.rota === 'MANUTENÇÃO');
@@ -1809,6 +2035,7 @@ function renderDisponibilidade() {
       htmlO += `<div class="disp-item" style="border-left:3px solid ${color}">
         <div class="disp-item-label">
           <span class="disp-item-frota">${pref}</span>
+          <button onclick="abrirModalVeiculo('${pref}')" title="Editar veículo" style="background:transparent;border:none;cursor:pointer;color:var(--text3);font-size:11px;padding:0 2px;">✏️</button>
           <span class="disp-item-placa">${v.placa||'—'} ${ocu.motorista ? '· '+ocu.motorista : ''}</span>
         </div>
         <div style="text-align:right">
@@ -1822,6 +2049,7 @@ function renderDisponibilidade() {
       htmlL += `<div class="disp-item" style="border-left:3px solid var(--green)">
         <div class="disp-item-label">
           <span class="disp-item-frota">${pref}</span>
+          <button onclick="abrirModalVeiculo('${pref}')" title="Editar veículo" style="background:transparent;border:none;cursor:pointer;color:var(--text3);font-size:11px;padding:0 2px;">✏️</button>
           <span class="disp-item-placa">${v.placa||'—'}</span>
         </div>
         <div style="text-align:right">
@@ -2113,24 +2341,45 @@ function renderRastreio() {
     v.paradas.forEach((p, idx) => {
       const st = p.statusRastreio || 'PENDENTE';
       const jiMins = timeToMins(p.ji);
-      
+      const aindaAberta = (st === 'PENDENTE' || st === 'EM_DESLOCAMENTO');
+      const dif = jiMins - currentMins;
+
+      // Indicador visual PERMANENTE na própria lista (não só no toast, que
+      // desaparece) — assim o usuário enxerga de cara quais coletas estão
+      // atrasadas ou próximas do prazo, sem precisar procurar "no olho".
+      let corBorda = 'var(--border)';
+      let etiqueta = '';
+      if (aindaAberta) {
+        if (dif < 0) {
+          corBorda = 'var(--red)';
+          etiqueta = `<span style="color:var(--red);font-size:10.5px;font-weight:700;">🚨 ATRASADO ${Math.abs(dif)}min</span>`;
+        } else if (dif <= 10) {
+          corBorda = 'var(--orange)';
+          etiqueta = `<span style="color:var(--orange);font-size:10.5px;font-weight:700;">⏰ Faltam ${dif}min</span>`;
+        }
+      }
+
       // Lógica de Notificações Ativas (apenas se PENDENTE ou EM_DESLOCAMENTO)
-      if (st === 'PENDENTE' || st === 'EM_DESLOCAMENTO') {
-        const dif = jiMins - currentMins;
+      if (aindaAberta) {
         window._notifiedAvacorp = window._notifiedAvacorp || {};
-        
+        // Contexto completo (rota + frota + fornecedor) para o usuário
+        // identificar a coleta de cara, sem precisar abrir a página e
+        // procurar "no olho" qual item gerou o aviso.
+        const contexto = `${v.rota} (${v.frota}) — ${p.fornecedor}`;
+        const irParaItem = () => irParaRastreioItem(v.id, p.id);
+
         if (dif >= 0 && dif <= 10) {
           // Aviso 10 minutos antes (Avisa apenas uma vez nesta faixa)
           const key10m = `${v.id}-${p.id}-10m`;
           if (!window._notifiedAvacorp[key10m]) {
-            notify(`⏰ Faltam ${dif} min para coleta na ${p.fornecedor}. Atualize o AVACORP!`, 'linear-gradient(135deg, #f59e0b, #d97706)');
+            notify(`⏰ Faltam ${dif} min para coleta em ${contexto}. Atualize o AVACORP! (clique para localizar)`, 'linear-gradient(135deg, #f59e0b, #d97706)', 6000, irParaItem);
             window._notifiedAvacorp[key10m] = true;
           }
         } else if (dif < 0) {
           // Atrasado: Veemência! Avisa a cada 2 minutos
           const keyOverdue = `${v.id}-${p.id}-overdue-${Math.abs(dif)}`;
           if (Math.abs(dif) % 2 === 0 && !window._notifiedAvacorp[keyOverdue]) {
-            notify(`🚨 ATRASADO: A coleta na ${p.fornecedor} estourou há ${Math.abs(dif)} min! AVACORP Desatualizado!`, 'linear-gradient(135deg, #ef4444, #b91c1c)');
+            notify(`🚨 ATRASADO: a coleta em ${contexto} estourou há ${Math.abs(dif)} min! AVACORP desatualizado! (clique para localizar)`, 'linear-gradient(135deg, #ef4444, #b91c1c)', 6000, irParaItem);
             window._notifiedAvacorp[keyOverdue] = true;
           }
         }
@@ -2144,9 +2393,9 @@ function renderRastreio() {
         <option value="NULA" ${st==='NULA'?'selected':''}>🚫 Coleta Nula</option>
       `;
 
-      html += `<div style="display:flex; align-items:center; gap:12px; background:var(--bg); padding:8px 12px; border-radius:var(--radius-sm); border-left:4px solid var(--border);">
+      html += `<div id="rastreio-item-${v.id}-${p.id}" style="display:flex; align-items:center; gap:12px; background:var(--bg); padding:8px 12px; border-radius:var(--radius-sm); border-left:4px solid ${corBorda};">
         <div style="flex:1;">
-          <strong style="color:var(--text2); font-size:13px;">${idx+1}. ${p.fornecedor}</strong><br>
+          <strong style="color:var(--text2); font-size:13px;">${idx+1}. ${p.fornecedor}</strong>${etiqueta ? ' &nbsp;'+etiqueta : ''}<br>
           <small style="color:var(--text4); font-family:var(--mono);">Janela: ${p.ji} às ${p.jf}</small>
         </div>
         <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
@@ -2749,6 +2998,22 @@ function navTo(id, el) {
   updateDashboard();
 }
 
+// Navega até a página de Rastreabilidade e destaca visualmente a parada
+// específica que originou um alerta — assim o usuário não precisa "ir no
+// olho" procurar qual fornecedor é, mesmo que o toast já tenha desaparecido.
+function irParaRastreioItem(vid, pid) {
+  const navEl = document.getElementById('nav-rastreio');
+  if(navEl) navTo('rastreio', navEl);
+  renderRastreio();
+  setTimeout(() => {
+    const el = document.getElementById(`rastreio-item-${vid}-${pid}`);
+    if(!el) return;
+    el.scrollIntoView({ behavior:'smooth', block:'center' });
+    el.classList.add('rastreio-highlight');
+    setTimeout(() => el.classList.remove('rastreio-highlight'), 4000);
+  }, 60);
+}
+
 function salvarCache() {
   try { localStorage.setItem('mwm_v6_cache', JSON.stringify({viagens:viagensDB, dates:availableDates})); }
   catch(e) { console.warn('Cache cheio, não foi possível salvar localmente.'); }
@@ -2814,6 +3079,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   carregarCache();
   carregarTodos();
+
+  // Padroniza em maiúsculas os campos de texto "de negócio" — tanto os
+  // que já existem no DOM agora quanto os que forem criados depois
+  // (modais e linhas de parada renderizados dinamicamente).
+  inicializarMaiusculasAutomaticas();
+  _observerMaiusculas.observe(document.body, { childList: true, subtree: true });
 
   // Atualizar badges, alertas e rastreio a cada 30 segundos
   setInterval(() => {
