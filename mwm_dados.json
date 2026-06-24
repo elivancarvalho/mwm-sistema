@@ -5244,7 +5244,7 @@
             "jf": "15:00",
             "janela": "14:00-15:00",
             "pedido": "53312",
-            "importado": false,
+            "importado": true,
             "statusRastreio": "NO_LOCAL"
           },
           {
@@ -5255,7 +5255,7 @@
             "jf": "16:30",
             "janela": "15:30-16:30",
             "pedido": "—",
-            "importado": false,
+            "importado": true,
             "statusRastreio": "NO_LOCAL"
           }
         ],
