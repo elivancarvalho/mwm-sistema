@@ -5147,7 +5147,7 @@
             "jf": "12:00",
             "janela": "11:00-12:00",
             "pedido": "53310",
-            "importado": false,
+            "importado": true,
             "statusRastreio": "NO_LOCAL"
           },
           {
