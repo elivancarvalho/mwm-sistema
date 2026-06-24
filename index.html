@@ -1252,7 +1252,7 @@ function mesclarBancos(local, remote, original) {
           
           if (lp && rp) {
             const mergedParada = { ...rp };
-            const pFields = ['fornecedor', 'ji', 'jf', 'janela', 'pedido', 'importado'];
+            const pFields = ['fornecedor', 'cidade', 'ji', 'jf', 'janela', 'pedido', 'importado', 'statusRastreio'];
             pFields.forEach(pf => {
               const vLocal = lp[pf];
               const vRemote = rp[pf];
@@ -2074,7 +2074,11 @@ function atualizarStatusRastreio(vid, pid, novoStatus) {
   const p = v.paradas.find(x=>x.id===pid);
   if(!p) return;
   p.statusRastreio = novoStatus;
-  salvarCache();
+  // agendarSalvamento() já chama salvarCache() internamente e, após o
+  // debounce, grava no GitHub. Sem isso, a mudança ficava só no cache local
+  // e era sobrescrita pela sincronização automática periódica (que busca o
+  // arquivo da nuvem, ainda com o status antigo, e substitui viagensDB).
+  agendarSalvamento();
   updateDashboard();
 }
 
