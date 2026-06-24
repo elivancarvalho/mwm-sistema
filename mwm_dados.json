@@ -5379,7 +5379,7 @@
             "jf": "15:30",
             "janela": "13:3015:30",
             "pedido": "—",
-            "importado": false,
+            "importado": true,
             "statusRastreio": "NO_LOCAL"
           }
         ],
