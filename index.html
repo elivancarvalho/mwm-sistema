@@ -2331,7 +2331,9 @@ function renderRastreio() {
     html += `<div style="background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; margin-bottom:12px;">
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:8px; margin-bottom:12px;">
         <div>
-          <strong style="color:var(--text); font-size:16px;">${v.rota}</strong> — <span style="font-family:var(--mono); color:var(--accent); font-size:14px;">${v.frota}</span>
+          <strong style="color:var(--text); font-size:16px;">${v.rota}</strong>
+          <span style="font-family:var(--mono); color:var(--accent); font-size:15px; font-weight:700; background:var(--accent3); border:1px solid rgba(91,156,246,.25); padding:2px 8px; border-radius:4px; margin-left:6px;" title="Placa (usada para rastreio no AVACORP)">🚚 ${v.placa || '—'}</span>
+          <span style="font-family:var(--mono); color:var(--text3); font-size:12px; margin-left:4px;">(Frota ${v.frota})</span>
           <br><small style="color:var(--text3);">Motorista: ${v.motorista} | Origem: ${v.origem}</small>
         </div>
         <div style="font-family:var(--mono); font-size:14px; color:var(--text2); background:var(--bg3); padding:4px 8px; border-radius:4px;">Saída: ${v.saida}</div>
@@ -2365,7 +2367,7 @@ function renderRastreio() {
         // Contexto completo (rota + frota + fornecedor) para o usuário
         // identificar a coleta de cara, sem precisar abrir a página e
         // procurar "no olho" qual item gerou o aviso.
-        const contexto = `${v.rota} (${v.frota}) — ${p.fornecedor}`;
+        const contexto = `${v.rota} (Placa ${v.placa || v.frota}) — ${p.fornecedor}`;
         const irParaItem = () => irParaRastreioItem(v.id, p.id);
 
         if (dif >= 0 && dif <= 10) {
