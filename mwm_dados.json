@@ -4813,7 +4813,7 @@
         "saida": "11:00",
         "origem": "MANN HUMMEL",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -4837,7 +4837,9 @@
             "importado": true
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {
+          "53271": "IMPRESSO"
+        }
       },
       {
         "id": 1782213540230,
