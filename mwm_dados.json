@@ -4926,7 +4926,7 @@
             "jf": "11:00",
             "janela": "10:0011:00",
             "pedido": "53306",
-            "importado": false,
+            "importado": true,
             "statusRastreio": "REALIZADA"
           },
           {
