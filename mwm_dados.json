@@ -5381,7 +5381,7 @@
             "janela": "13:3015:30",
             "pedido": "—",
             "importado": true,
-            "statusRastreio": "NO_LOCAL"
+            "statusRastreio": "REALIZADA"
           }
         ],
         "ctePorPedido": {}
@@ -5439,7 +5439,7 @@
             "janela": "07:00-12:00",
             "pedido": "—",
             "importado": true,
-            "statusRastreio": "NO_LOCAL"
+            "statusRastreio": "REALIZADA"
           }
         ],
         "ctePorPedido": {}
