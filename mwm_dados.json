@@ -5410,7 +5410,7 @@
             "janela": "10:00-11:30",
             "pedido": "53317",
             "importado": true,
-            "statusRastreio": "NO_LOCAL"
+            "statusRastreio": "REALIZADA"
           }
         ],
         "ctePorPedido": {}
