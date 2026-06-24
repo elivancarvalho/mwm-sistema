@@ -5380,7 +5380,8 @@
             "jf": "15:30",
             "janela": "13:3015:30",
             "pedido": "—",
-            "importado": false
+            "importado": false,
+            "statusRastreio": "NO_LOCAL"
           }
         ],
         "ctePorPedido": {}
