@@ -5327,7 +5327,7 @@
             "janela": "13:00-14:00",
             "pedido": "53315",
             "importado": true,
-            "statusRastreio": "NO_LOCAL"
+            "statusRastreio": "REALIZADA"
           },
           {
             "id": "1782270111793-1",
@@ -5338,7 +5338,7 @@
             "janela": "15:00-16:00",
             "pedido": "53315",
             "importado": true,
-            "statusRastreio": "NO_LOCAL"
+            "statusRastreio": "REALIZADA"
           },
           {
             "id": "1782270111793-2",
