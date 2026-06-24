@@ -5243,7 +5243,8 @@
             "jf": "12:00",
             "janela": "11:0012:00",
             "pedido": "—",
-            "importado": false
+            "importado": false,
+            "statusRastreio": "FRUSTRADA"
           },
           {
             "id": "1782270112120-1",
