@@ -5229,7 +5229,7 @@
         "frota": "R3022",
         "frotaAntiga": "3249",
         "placa": "TBB5J94",
-        "carreta": "-",
+        "carreta": "—",
         "motorista": "ELSON VIEIRA BORGES",
         "rota": "ROTA 12",
         "saida": "07:00",
@@ -5240,37 +5240,27 @@
         "paradas": [
           {
             "id": "1782270112120-0",
-            "fornecedor": "ZF CV",
-            "cidade": "SÃO PAULO",
-            "ji": "11:00",
-            "jf": "12:00",
-            "janela": "11:0012:00",
-            "pedido": "—",
-            "importado": false,
-            "statusRastreio": "FRUSTRADA"
-          },
-          {
-            "id": "1782270112120-1",
             "fornecedor": "MUVIQ BRASIL",
             "cidade": "SÃO PAULO",
             "ji": "14:00",
             "jf": "15:00",
-            "janela": "14:0015:00",
+            "janela": "14:00-15:00",
             "pedido": "—",
             "importado": false
           },
           {
-            "id": "1782270112120-2",
+            "id": "1782270112120-1",
             "fornecedor": "ZM (ZAKLAD)",
             "cidade": "SÃO PAULO",
             "ji": "15:30",
             "jf": "16:30",
-            "janela": "15:3016:30",
+            "janela": "15:30-16:30",
             "pedido": "—",
             "importado": false
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {},
+        "chegada": "19:00"
       },
       {
         "id": 1782270111677,
