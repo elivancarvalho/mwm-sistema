@@ -523,10 +523,9 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
       <span class="nav-txt">Alertas de Janela</span>
       <span class="nav-badge bc-orange" id="badge-alertas">0</span>
     </button>
-    <button class="nav-item" id="nav-pedidos" onclick="navTo('pedidos',this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke-width="1.8"/><polyline points="14 2 14 8 20 8" stroke-width="1.8"/></svg>
-      <span class="nav-txt">Pedidos AVACORP</span>
-      <span class="nav-badge bc-orange" id="badge-ava">0</span>
+    <button class="nav-item" id="nav-rastreio" onclick="navTo('rastreio',this)">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke-width="1.8"/><circle cx="12" cy="9" r="2.5" stroke-width="1.8"/></svg>
+      <span class="nav-txt">Rastreabilidade</span>
     </button>
     <button class="nav-item" id="nav-pend" onclick="navTo('pend',this)">
       <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.8"/><line x1="12" y1="8" x2="12" y2="12" stroke-width="2"/><line x1="12" y1="16" x2="12.01" y2="16" stroke-width="2"/></svg>
@@ -685,10 +684,10 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
     </div>
   </div>
 
-  <!-- ══════════ PEDIDOS AVACORP ══════════ -->
-  <div class="page" id="page-pedidos">
-    <div class="ph"><div><div class="pt">Pedidos — AVACORP</div><div class="ps">Gerenciamento por Número de Pedido</div></div></div>
-    <div style="padding:16px 28px" id="pedidos-list"></div>
+  <!-- ══════════ RASTREABILIDADE ══════════ -->
+  <div class="page" id="page-rastreio">
+    <div class="ph"><div><div class="pt" style="color:var(--accent);">📍 Rastreabilidade e Auditoria</div><div class="ps">Monitoramento e alertas antecipados de coletas</div></div></div>
+    <div style="padding:16px 28px; display:flex; flex-direction:column; gap:16px;" id="rastreio-list"></div>
   </div>
 
   <!-- ══════════ PENDENTES CTE ══════════ -->
@@ -1469,7 +1468,7 @@ function updateDashboard() {
   // sincronismo com currentDate, independente de qual está visível.
   renderDisponibilidade();
   renderAlertas();
-  renderPedidos();
+  renderRastreio();
   renderPend();
 }
 
@@ -2067,28 +2066,99 @@ function enviarEmailFornecedor(idx) {
   window.location.href = `mailto:${destinatarios}?subject=${encodeURIComponent(assunto)}${ccParams}&body=${encodeURIComponent(corpo)}`;
 }
 
-function renderPedidos() {
+function atualizarStatusRastreio(vid, pid, novoStatus) {
+  const vs = viagensDB[currentDate];
+  if(!vs) return;
+  const v = vs.find(x=>x.id===vid);
+  if(!v) return;
+  const p = v.paradas.find(x=>x.id===pid);
+  if(!p) return;
+  p.statusRastreio = novoStatus;
+  salvarCache();
+  updateDashboard();
+}
+
+function timeToMins(t) {
+  if(!t) return 0;
+  const [h,m] = t.split(':').map(Number);
+  return h * 60 + m;
+}
+
+function renderRastreio() {
   const vs = viagensDB[currentDate] || [];
-  const container = document.getElementById('pedidos-list');
-  if(!vs.length) { container.innerHTML=`<div style="color:var(--text3);padding:20px;text-align:center">📋 Nenhuma rota cadastrada.</div>`; return; }
+  const container = document.getElementById('rastreio-list');
+  if(!vs.length) { container.innerHTML=`<div style="color:var(--text3);padding:20px;text-align:center">📋 Nenhuma rota ativa hoje para rastrear.</div>`; return; }
+  
+  const now = new Date();
+  const currentMins = now.getHours() * 60 + now.getMinutes();
+  
   let html = '';
   vs.forEach(v => {
-    (v.paradas||[]).forEach(p => {
-      const st = p.importado ? `<span class="ava-ok">IMPORTADO</span>` : `<span class="ava-pend">PENDENTE</span>`;
-      html += `<div class="pedido-card">
+    if(!v.paradas || !v.paradas.length || v.rota==='MANUTENÇÃO') return;
+    
+    html += `<div style="background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:8px; margin-bottom:12px;">
         <div>
-          <strong style="color:var(--accent)">Pedido: ${p.pedido}</strong> — <span style="color:var(--text2)">${p.fornecedor}</span><br>
-          <small style="color:var(--text3)">Rota: ${v.rota} · Veículo: ${v.frota} · Motorista: ${v.motorista}</small>
+          <strong style="color:var(--text); font-size:16px;">${v.rota}</strong> — <span style="font-family:var(--mono); color:var(--accent); font-size:14px;">${v.frota}</span>
+          <br><small style="color:var(--text3);">Motorista: ${v.motorista} | Origem: ${v.origem}</small>
         </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          ${st}
-          <button class="btn btn-ghost btn-sm" onclick="abrirModalPedido(${v.id},'${p.id}',\`${p.pedido}\`)">✏️ Editar</button>
-          <button class="btn btn-sm ${p.importado?'btn-danger':'btn-success'}" onclick="marcarParadaImportada(${v.id},'${p.id}')">${p.importado?'↩ Estornar':'✓ NF Importada'}</button>
+        <div style="font-family:var(--mono); font-size:14px; color:var(--text2); background:var(--bg3); padding:4px 8px; border-radius:4px;">Saída: ${v.saida}</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px; padding-left:10px; border-left:2px solid var(--border);">`;
+    
+    v.paradas.forEach((p, idx) => {
+      const st = p.statusRastreio || 'PENDENTE';
+      const jiMins = timeToMins(p.ji);
+      
+      // Lógica de Notificações Ativas (apenas se PENDENTE ou EM_DESLOCAMENTO)
+      if (st === 'PENDENTE' || st === 'EM_DESLOCAMENTO') {
+        const dif = jiMins - currentMins;
+        window._notifiedAvacorp = window._notifiedAvacorp || {};
+        
+        if (dif >= 0 && dif <= 10) {
+          // Aviso 10 minutos antes (Avisa apenas uma vez nesta faixa)
+          const key10m = `${v.id}-${p.id}-10m`;
+          if (!window._notifiedAvacorp[key10m]) {
+            notify(`⏰ Faltam ${dif} min para coleta na ${p.fornecedor}. Atualize o AVACORP!`, 'linear-gradient(135deg, #f59e0b, #d97706)');
+            window._notifiedAvacorp[key10m] = true;
+          }
+        } else if (dif < 0) {
+          // Atrasado: Veemência! Avisa a cada 2 minutos
+          const keyOverdue = `${v.id}-${p.id}-overdue-${Math.abs(dif)}`;
+          if (Math.abs(dif) % 2 === 0 && !window._notifiedAvacorp[keyOverdue]) {
+            notify(`🚨 ATRASADO: A coleta na ${p.fornecedor} estourou há ${Math.abs(dif)} min! AVACORP Desatualizado!`, 'linear-gradient(135deg, #ef4444, #b91c1c)');
+            window._notifiedAvacorp[keyOverdue] = true;
+          }
+        }
+      }
+      
+      const selOpts = `
+        <option value="PENDENTE" ${st==='PENDENTE'?'selected':''}>⏳ Pendente</option>
+        <option value="NO_LOCAL" ${st==='NO_LOCAL'?'selected':''}>📍 No Local de Coleta</option>
+        <option value="REALIZADA" ${st==='REALIZADA'?'selected':''}>✅ Coleta Realizada</option>
+        <option value="FRUSTRADA" ${st==='FRUSTRADA'?'selected':''}>❌ Coleta Frustrada</option>
+        <option value="NULA" ${st==='NULA'?'selected':''}>🚫 Coleta Nula</option>
+      `;
+
+      html += `<div style="display:flex; align-items:center; gap:12px; background:var(--bg); padding:8px 12px; border-radius:var(--radius-sm); border-left:4px solid var(--border);">
+        <div style="flex:1;">
+          <strong style="color:var(--text2); font-size:13px;">${idx+1}. ${p.fornecedor}</strong><br>
+          <small style="color:var(--text4); font-family:var(--mono);">Janela: ${p.ji} às ${p.jf}</small>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+          <select style="background:var(--bg3); border:1px solid var(--border); border-radius:4px; color:var(--text); padding:4px 6px; font-size:12px; outline:none;" onchange="atualizarStatusRastreio(${v.id}, '${p.id}', this.value)">
+            ${selOpts}
+          </select>
         </div>
       </div>`;
     });
+
+    
+    html += `</div></div>`;
   });
-  container.innerHTML = html || `<div style="color:var(--text3);padding:20px;text-align:center">Nenhuma parada com pedidos.</div>`;
+  
+  if(!html) html = `<div style="color:var(--text3);padding:20px;text-align:center">Nenhuma parada para rastrear.</div>`;
+  container.innerHTML = html;
 }
 
 function renderPend() {
@@ -2741,10 +2811,11 @@ document.addEventListener('DOMContentLoaded', () => {
   carregarCache();
   carregarTodos();
 
-  // Atualizar badges e alertas a cada 30 segundos
+  // Atualizar badges, alertas e rastreio a cada 30 segundos
   setInterval(() => {
     updateBadges();
     renderAlertas();
+    renderRastreio();
   }, 30000);
 
   // Sincronização periódica a cada 1 minuto (quando aba ativa)
