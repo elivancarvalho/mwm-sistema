@@ -518,11 +518,6 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
       <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke-width="2"/><line x1="3" y1="9" x2="21" y2="9" stroke-width="2"/><line x1="9" y1="14" x2="15" y2="14" stroke-width="1.5"/></svg>
       <span class="nav-txt">Programação</span>
     </button>
-    <button class="nav-item" id="nav-disp" onclick="navTo('disp',this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M1 3h15v13H1z" stroke-width="1.8"/><path d="M16 8h5l3 4v5h-8V8z" stroke-width="1.8"/><circle cx="5.5" cy="18.5" r="2.5" stroke-width="1.8"/><circle cx="18.5" cy="18.5" r="2.5" stroke-width="1.8"/></svg>
-      <span class="nav-txt">Disponibilidade</span>
-      <span class="nav-badge bc-green" id="badge-disp">0</span>
-    </button>
     <button class="nav-item" id="nav-alertas" onclick="navTo('alertas',this)">
       <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-width="1.8"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke-width="1.8"/></svg>
       <span class="nav-txt">Alertas de Janela</span>
@@ -537,6 +532,11 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
       <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.8"/><line x1="12" y1="8" x2="12" y2="12" stroke-width="2"/><line x1="12" y1="16" x2="12.01" y2="16" stroke-width="2"/></svg>
       <span class="nav-txt">Pendentes CTE</span>
       <span class="nav-badge bc-red" id="badge-pend">0</span>
+    </button>
+    <button class="nav-item" id="nav-disp" onclick="navTo('disp',this)">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M1 3h15v13H1z" stroke-width="1.8"/><path d="M16 8h5l3 4v5h-8V8z" stroke-width="1.8"/><circle cx="5.5" cy="18.5" r="2.5" stroke-width="1.8"/><circle cx="18.5" cy="18.5" r="2.5" stroke-width="1.8"/></svg>
+      <span class="nav-txt">Disponibilidade</span>
+      <span class="nav-badge bc-green" id="badge-disp">0</span>
     </button>
   </div>
   <div class="sb-section">
@@ -596,7 +596,7 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
           <th>Motorista</th>
           <th>Rota</th>
           <th>Tipo</th>
-          <th>Saída CD</th>
+          <th>Horários (Saída → Chegada)</th>
           <th>Origem → Destino</th>
           <th>Pedido(s)</th>
           <th>AVACORP</th>
@@ -804,9 +804,10 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
         <div><label class="fg-label">Motorista</label><input type="text" id="form-motorista" placeholder="Nome completo do motorista"></div>
         <div><label class="fg-label">Horário Saída CD</label><input type="time" id="form-saida" value="06:00"></div>
       </div>
-      <div class="fg" style="margin-top:10px;">
+      <div class="fg" style="margin-top:10px; grid-template-columns: 1fr 1fr 140px;">
         <div><label class="fg-label">Origem</label><input type="text" id="form-origem" placeholder="CD SBC"></div>
         <div><label class="fg-label">Destino</label><input type="text" id="form-destino" placeholder="MWM STO AMARO"></div>
+        <div><label class="fg-label" title="Horário de chegada no destino final">Horário Chegada</label><input type="time" id="form-chegada" value="19:00"></div>
       </div>
     </div>
     <div class="msec">
@@ -1215,7 +1216,7 @@ function mesclarBancos(local, remote, original) {
         const mergedTrip = { ...rv };
         
         // Mesclar campos de nível superior
-        const fields = ['frota', 'frotaAntiga', 'placa', 'carreta', 'motorista', 'rota', 'tipo', 'saida', 'origem', 'destino', 'cte', 'obs'];
+        const fields = ['frota', 'frotaAntiga', 'placa', 'carreta', 'motorista', 'rota', 'tipo', 'saida', 'chegada', 'origem', 'destino', 'cte', 'obs'];
         fields.forEach(f => {
           const valLocal = lv[f];
           const valRemote = rv[f];
@@ -1591,6 +1592,7 @@ function renderTable() {
   const s = fSearch.toLowerCase();
   const filtered = (viagensDB[currentDate]||[]).filter(v => {
     if(!v || !v.frota) return false;
+    if(v.rota === 'MANUTENÇÃO') return false; // Esconde manutenção da tabela principal
     if(s && !v.frota.toLowerCase().includes(s) && !(v.motorista||'').toLowerCase().includes(s) && !(v.rota||'').toLowerCase().includes(s)) return false;
     if(fTipo  && v.tipo  !== fTipo)  return false;
     if(fCTE   && v.cte   !== fCTE)   return false;
@@ -1654,7 +1656,7 @@ function renderTable() {
       `<td style="color:var(--text)">${esc(v.motorista)}</td>` +
       `<td><strong style="color:var(--text)">${esc(v.rota)}</strong></td>` +
       `<td><span class="${v.tipo==='TRUCK'?'tipo-truck':'tipo-conj'}">${esc(v.tipo)}</span></td>` +
-      `<td style="font-family:var(--mono);color:var(--teal)">${esc(v.saida)}</td>` +
+      `<td style="font-family:var(--mono);color:var(--teal)">${esc(v.saida)} <span style="color:var(--text3);font-size:10px">→</span> ${esc(v.chegada||'19:00')}</td>` +
       `<td><small style="color:var(--text3)">${esc(v.origem)} <span style="color:var(--accent)">→</span> ${esc(v.destino)}</small></td>` +
       `<td>${v.paradas.map(p=>`<span class="pb p52">${esc(p.pedido)}</span>`).join(' ')}</td>` +
       `<td><span class="${ava==='IMPORTADO'?'ava-ok':ava==='PARCIAL'?'ava-par':'ava-pend'}">${ava}</span></td>` +
@@ -1742,6 +1744,37 @@ function updateBadges() {
 // ══════════════════════════════════════════════════════════════════
 //  BLOCO 4: PÁGINAS SECUNDÁRIAS
 // ══════════════════════════════════════════════════════════════════
+
+function toggleManutencao(pref) {
+  const vs = viagensDB[currentDate] || [];
+  const idx = vs.findIndex(v => v.frota === pref && v.rota === 'MANUTENÇÃO');
+  if (idx > -1) {
+    vs.splice(idx, 1);
+    notify(`🔧 ${pref} removido da manutenção.`);
+  } else {
+    if(!viagensDB[currentDate]) viagensDB[currentDate] = [];
+    const dbV = CONJUNTURA_VEICULOS[pref] || {};
+    viagensDB[currentDate].push({
+      id: Date.now(),
+      frota: pref,
+      rota: 'MANUTENÇÃO',
+      tipo: dbV.tipo || 'TRUCK',
+      placa: dbV.placa || '',
+      frotaAntiga: dbV.antigo || '—',
+      motorista: '',
+      carreta: '—',
+      saida: '',
+      origem: '',
+      destino: '',
+      paradas: [],
+      cte: 'N/A'
+    });
+    notify(`🔧 ${pref} colocado em manutenção.`);
+  }
+  agendarSalvamento();
+  updateDashboard();
+}
+
 function renderDisponibilidade() {
   const vs = viagensDB[currentDate] || [];
   const lblSub = document.getElementById('disp-date-subtitle');
@@ -1766,16 +1799,23 @@ function renderDisponibilidade() {
     if(v.tipo==='CARRETA') return;
     const ocu = frotasOcupadas[pref];
     const tipoTag = `<span class="tipo-${v.tipo==='TRUCK'?'truck':'conj'}" style="font-size:9px">${v.tipo||'?'}</span>`;
+    
     if(ocu) {
       countO++;
-      htmlO += `<div class="disp-item" style="border-left:3px solid var(--red)">
+      const isManutencao = ocu.rota === 'MANUTENÇÃO';
+      const color = isManutencao ? 'var(--orange)' : 'var(--red)';
+      const icon = isManutencao ? '🔧' : '🔒';
+      const toggleBtn = `<button onclick="toggleManutencao('${pref}')" style="background:transparent;border:none;cursor:pointer;color:var(--text3);font-size:11px;text-decoration:underline;">${isManutencao ? 'Remover Manutenção' : ''}</button>`;
+
+      htmlO += `<div class="disp-item" style="border-left:3px solid ${color}">
         <div class="disp-item-label">
           <span class="disp-item-frota">${pref}</span>
-          <span class="disp-item-placa">${v.placa||'—'} · ${ocu.motorista||'?'}</span>
+          <span class="disp-item-placa">${v.placa||'—'} ${ocu.motorista ? '· '+ocu.motorista : ''}</span>
         </div>
         <div style="text-align:right">
           ${tipoTag}
-          <div style="font-size:10.5px;color:var(--red);margin-top:2px">🔒 ${ocu.rota}</div>
+          <div style="font-size:10.5px;color:${color};margin-top:2px">${icon} ${ocu.rota}</div>
+          ${isManutencao ? toggleBtn : ''}
         </div>
       </div>`;
     } else {
@@ -1787,7 +1827,10 @@ function renderDisponibilidade() {
         </div>
         <div style="text-align:right">
           ${tipoTag}
-          <div style="font-size:10.5px;color:var(--green);margin-top:2px">✅ LIVRE</div>
+          <div style="font-size:10.5px;color:var(--green);margin-top:2px;display:flex;align-items:center;justify-content:flex-end;gap:8px;">
+            <span>✅ LIVRE</span>
+            <button onclick="toggleManutencao('${pref}')" title="Colocar em Manutenção" style="background:rgba(251,146,60,0.15);border:1px solid rgba(251,146,60,0.2);color:var(--orange);border-radius:4px;cursor:pointer;padding:2px 6px;font-size:9px;">🔧 Em Manutenção?</button>
+          </div>
         </div>
       </div>`;
     }
@@ -2236,13 +2279,13 @@ function exportarXLSX() {
   const vs = viagensDB[currentDate] || [];
   if(!vs.length) { notify('⚠ Nenhuma viagem para exportar.','linear-gradient(135deg,#7a3f0f,#5a2d00)'); return; }
 
-  const rows = [['Frota','Placa','Carreta','Motorista','Rota','Tipo','Saída CD','Origem','Destino','Pedidos','AVACORP','% Coletas','CTE','Observações']];
+  const rows = [['Frota','Placa','Carreta','Motorista','Rota','Tipo','Saída CD','Chegada','Origem','Destino','Pedidos','AVACORP','% Coletas','CTE','Observações']];
   vs.forEach(v => {
     const pedidos = v.paradas.map(p=>p.pedido).join(', ');
     const pct = v.paradas.length ? Math.round(v.paradas.filter(p=>p.importado).length/v.paradas.length*100) : 100;
     rows.push([
       v.frota, v.placa, v.carreta, v.motorista, v.rota, v.tipo,
-      v.saida, v.origem, v.destino, pedidos, avaSt(v), `${pct}%`, v.cte, v.obs||''
+      v.saida, v.chegada||'19:00', v.origem, v.destino, pedidos, avaSt(v), `${pct}%`, v.cte, v.obs||''
     ]);
   });
 
@@ -2290,6 +2333,7 @@ function verificarEAutoPreencherCamposRota() {
   document.getElementById('form-saida').value  = dados.saida;
   document.getElementById('form-origem').value = dados.origem || '';
   document.getElementById('form-destino').value= dados.destino || 'MWM STO AMARO';
+  document.getElementById('form-chegada').value = dados.chegada || '19:00';
   toggleFormCarreta();
   const container = document.getElementById('form-paradas-container');
   container.innerHTML = '';
@@ -2349,6 +2393,7 @@ function abrirModalCadastroViagem() {
   document.getElementById('form-saida').value     = '06:00';
   document.getElementById('form-origem').value    = '';
   document.getElementById('form-destino').value   = '';
+  document.getElementById('form-chegada').value   = '19:00';
   document.getElementById('form-obs').value       = '';
   document.getElementById('form-cte').value       = 'PENDENTE';
   document.getElementById('form-frota-manual-block').style.display = 'none';
@@ -2380,6 +2425,7 @@ function editarViagem(vid) {
   document.getElementById('form-saida').value     = v.saida     || '06:00';
   document.getElementById('form-origem').value    = v.origem    || '';
   document.getElementById('form-destino').value   = v.destino   || '';
+  document.getElementById('form-chegada').value   = v.chegada   || '19:00';
   document.getElementById('form-obs').value       = v.obs       || '';
   document.getElementById('form-cte').value       = v.cte       || 'PENDENTE';
   toggleFormCarreta();
@@ -2423,10 +2469,46 @@ function salvarFormViagem() {
   const saida     = document.getElementById('form-saida').value;
   const origem    = document.getElementById('form-origem').value.trim();
   const destino   = document.getElementById('form-destino').value.trim();
+  const chegada   = document.getElementById('form-chegada').value || '19:00';
   const cte       = document.getElementById('form-cte').value;
   const obs       = document.getElementById('form-obs').value.trim();
 
   if(!frota || !rota) { notify('⚠ Frota e Rota são obrigatórios!','linear-gradient(135deg,#7a1414,#5a0a0a)'); return; }
+
+  // VALIDAÇÃO DE COLISÃO DE HORÁRIO
+  function timeToMins(t) {
+    if(!t) return 0;
+    const [h,m] = t.split(':').map(Number);
+    return h * 60 + m;
+  }
+  
+  if (frota !== 'MANUAL_AGREGADO') {
+    const startMins = timeToMins(saida);
+    let endMins = timeToMins(chegada);
+    if(endMins <= startMins) endMins += 24*60; // Trata rotas que viram a noite (ex: 22:00 as 02:00)
+
+    const vs = viagensDB[currentDate] || [];
+    const conflito = vs.find(x => {
+      if (x.id === _editandoViagemId) return false;
+      if (x.frota !== frota) return false;
+      if (x.rota === 'MANUTENÇÃO') return true; // Manutenção bloqueia o dia todo
+      
+      const xStart = timeToMins(x.saida);
+      let xEnd = timeToMins(x.chegada || '19:00');
+      if(xEnd <= xStart) xEnd += 24*60;
+      
+      return Math.max(startMins, xStart) < Math.min(endMins, xEnd);
+    });
+
+    if (conflito) {
+      if (conflito.rota === 'MANUTENÇÃO') {
+        alert(`❌ O veículo ${frota} está em MANUTENÇÃO neste dia!\nRemova-o da manutenção na aba de Disponibilidade primeiro.`);
+      } else {
+        alert(`❌ Conflito de Horário!\nO veículo ${frota} já possui a viagem "${conflito.rota}" agendada das ${conflito.saida} às ${conflito.chegada || '19:00'} neste dia.`);
+      }
+      return; // Aborta salvamento
+    }
+  }
 
   let placaFinal='', antigoFinal='—';
   if(frota==='MANUAL_AGREGADO') {
@@ -2487,7 +2569,7 @@ function salvarFormViagem() {
       viagensDB[currentDate][idx] = {
         ...viagensDB[currentDate][idx],
         tipo, frota, frotaAntiga:antigoFinal, placa:placaFinal, carreta:carretaInfo,
-        motorista:motorista||'MOTORISTA PADRÃO', rota, saida,
+        motorista:motorista||'MOTORISTA PADRÃO', rota, saida, chegada,
         origem: origem || (paradas[0]?paradas[0].fornecedor:'CD SBC'),
         destino: destino || 'MWM STO AMARO', cte, obs, paradas
       };
@@ -2499,7 +2581,7 @@ function salvarFormViagem() {
     const vid = Date.now();
     const novaViagem = {
       id:vid, tipo, frota, frotaAntiga:antigoFinal, placa:placaFinal, carreta:carretaInfo,
-      motorista:motorista||'MOTORISTA PADRÃO', rota, saida,
+      motorista:motorista||'MOTORISTA PADRÃO', rota, saida, chegada,
       origem: origem || (paradas[0]?paradas[0].fornecedor:'CD SBC'),
       destino: destino || 'MWM STO AMARO', cte, obs, paradas
     };
@@ -2635,7 +2717,11 @@ document.querySelectorAll('.overlay').forEach(overlay => {
   overlay.addEventListener('click', (e) => {
     if(e.target === overlay) {
       const id = overlay.id.replace('modal-','');
-      fecharModal(id);
+      if (id === 'emitir-cte') {
+        cancelarEmitirCte();
+      } else {
+        fecharModal(id);
+      }
     }
   });
 });
