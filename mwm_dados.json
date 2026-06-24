@@ -4849,7 +4849,7 @@
         "saida": "12:00",
         "origem": "RESIPLASTIC",
         "destino": "CARGOLIFT SBC",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -4863,7 +4863,9 @@
             "importado": true
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {
+          "53272": "IMPRESSO"
+        }
       },
       {
         "id": 1782214777695,
