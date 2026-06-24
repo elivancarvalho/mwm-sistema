@@ -5109,11 +5109,11 @@
       {
         "id": 1782270112378,
         "tipo": "TRUCK",
-        "frota": "R3026",
-        "frotaAntiga": "3254",
-        "placa": "TBB6A14",
-        "carreta": "-",
-        "motorista": "TULIO DOS SANTOS CORDEIRO",
+        "frota": "R3012",
+        "frotaAntiga": "Agregado Extra",
+        "placa": "AUJ8E86",
+        "carreta": "—",
+        "motorista": "JOSE LUCAS",
         "rota": "ROTA 07",
         "saida": "07:00",
         "origem": "CARTEC",
@@ -5127,7 +5127,7 @@
             "cidade": "SÃO PAULO",
             "ji": "09:00",
             "jf": "10:00",
-            "janela": "09:0010:00",
+            "janela": "09:00-10:00",
             "pedido": "53310",
             "importado": false
           },
@@ -5137,7 +5137,7 @@
             "cidade": "SÃO PAULO",
             "ji": "11:00",
             "jf": "12:00",
-            "janela": "11:0012:00",
+            "janela": "11:00-12:00",
             "pedido": "53310",
             "importado": false
           },
@@ -5147,7 +5147,7 @@
             "cidade": "SÃO PAULO",
             "ji": "13:30",
             "jf": "14:30",
-            "janela": "13:3014:30",
+            "janela": "13:30-14:30",
             "pedido": "18810",
             "importado": false
           },
@@ -5157,12 +5157,13 @@
             "cidade": "SÃO PAULO",
             "ji": "15:00",
             "jf": "16:00",
-            "janela": "15:0016:00",
+            "janela": "15:00-16:00",
             "pedido": "18810",
             "importado": false
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {},
+        "chegada": "19:00"
       },
       {
         "id": 1782270111862,
