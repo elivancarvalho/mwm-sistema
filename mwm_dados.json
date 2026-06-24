@@ -4948,7 +4948,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782270111702,
@@ -4985,7 +4986,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782270112128,
@@ -5042,7 +5044,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782270112302,
@@ -5099,7 +5102,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782270112378,
@@ -5156,7 +5160,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782270111862,
@@ -5203,7 +5208,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782270112120,
@@ -5250,7 +5256,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782270111677,
@@ -5287,7 +5294,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782270111793,
@@ -5344,7 +5352,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782270111990,
@@ -5371,7 +5380,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782270111669,
@@ -5398,34 +5408,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
-      },
-      {
-        "id": 1782270112263,
-        "tipo": "CONJUNTO",
-        "frota": "B10021",
-        "frotaAntiga": "—",
-        "placa": "OWN8B50",
-        "carreta": "SL3022 / Placa: FWF5I52 (Antigo: 2522)",
-        "motorista": "LUCIANO LEMES DA SILVA",
-        "rota": "EXTRA GW",
-        "saida": "19:00",
-        "origem": "CD",
-        "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
-        "obs": "",
-        "paradas": [
-          {
-            "id": "1782270112263-0",
-            "fornecedor": "GW",
-            "cidade": "SÃÂO PAULO",
-            "ji": "15:00",
-            "jf": "19:00",
-            "janela": "15:00-19:00",
-            "pedido": "—",
-            "importado": false
-          }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782270112112,
@@ -5452,7 +5436,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       }
     ]
   },
