@@ -4901,6 +4901,559 @@
           "53273": "IMPRESSO"
         }
       }
+    ],
+    "24/06": [
+      {
+        "id": 1782270112130,
+        "tipo": "TRUCK",
+        "frota": "R3025",
+        "frotaAntiga": "3253",
+        "placa": "TBB3I31",
+        "carreta": "-",
+        "motorista": "MILTONILO DE MATOS",
+        "rota": "ROTA 01",
+        "saida": "06:00",
+        "origem": "SEG AUTOMOTIVE",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1782270112130-0",
+            "fornecedor": "SEG AUTOMOTIVE",
+            "cidade": "SÃO PAULO",
+            "ji": "10:00",
+            "jf": "11:00",
+            "janela": "10:0011:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270112130-1",
+            "fornecedor": "INTER ALLOY",
+            "cidade": "SÃO PAULO",
+            "ji": "13:00",
+            "jf": "14:00",
+            "janela": "13:0014:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270112130-2",
+            "fornecedor": "BORGWAGNER (PHINIA)",
+            "cidade": "SÃO PAULO",
+            "ji": "15:00",
+            "jf": "16:00",
+            "janela": "15:0016:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
+      },
+      {
+        "id": 1782270111702,
+        "tipo": "TRUCK",
+        "frota": "JOI2796",
+        "frotaAntiga": "Agregado Extra",
+        "placa": "Caminhão Terceiro",
+        "carreta": "—",
+        "motorista": "ANDERSON MACENA MELENDRE",
+        "rota": "ROTA 02",
+        "saida": "06:00",
+        "origem": "SABO",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1782270111702-0",
+            "fornecedor": "SABO",
+            "cidade": "SÃO PAULO",
+            "ji": "11:00",
+            "jf": "12:00",
+            "janela": "11:00-12:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270111702-1",
+            "fornecedor": "MAHLE PISTOES",
+            "cidade": "SÃO PAULO",
+            "ji": "15:00",
+            "jf": "18:00",
+            "janela": "15:00-18:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
+      },
+      {
+        "id": 1782270112128,
+        "tipo": "TRUCK",
+        "frota": "R3019",
+        "frotaAntiga": "3245",
+        "placa": "TBA3C89",
+        "carreta": "-",
+        "motorista": "GILMAR PEREIRA SILVA",
+        "rota": "ROTA 04",
+        "saida": "05:00",
+        "origem": "MANGOTEX",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1782270112128-0",
+            "fornecedor": "MANGOTEX",
+            "cidade": "SÃO PAULO",
+            "ji": "08:00",
+            "jf": "09:00",
+            "janela": "08:0009:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270112128-1",
+            "fornecedor": "METALAC",
+            "cidade": "SÃO PAULO",
+            "ji": "10:00",
+            "jf": "11:00",
+            "janela": "10:0011:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270112128-2",
+            "fornecedor": "TBA  EVAMO",
+            "cidade": "SÃO PAULO",
+            "ji": "12:00",
+            "jf": "13:00",
+            "janela": "12:0013:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270112128-3",
+            "fornecedor": "NEO PARTS",
+            "cidade": "SÃO PAULO",
+            "ji": "14:30",
+            "jf": "15:30",
+            "janela": "14:3015:30",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
+      },
+      {
+        "id": 1782270112302,
+        "tipo": "TRUCK",
+        "frota": "R3020",
+        "frotaAntiga": "3246",
+        "placa": "TBA3C87",
+        "carreta": "—",
+        "motorista": "JOSE APARECIDO",
+        "rota": "ROTA 05",
+        "saida": "06:00",
+        "origem": "ABR",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1782270112302-0",
+            "fornecedor": "ABR",
+            "cidade": "SÃO PAULO",
+            "ji": "10:00",
+            "jf": "11:00",
+            "janela": "10:00-11:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270112302-1",
+            "fornecedor": "PROTURBO",
+            "cidade": "SÃO PAULO",
+            "ji": "13:00",
+            "jf": "14:00",
+            "janela": "13:00-14:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270112302-2",
+            "fornecedor": "ALPINO",
+            "cidade": "SÃO PAULO",
+            "ji": "14:30",
+            "jf": "15:30",
+            "janela": "14:30-15:30",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270112302-3",
+            "fornecedor": "TENNECO",
+            "cidade": "SÃO PAULO",
+            "ji": "08:00",
+            "jf": "09:00",
+            "janela": "08:00-09:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
+      },
+      {
+        "id": 1782270112378,
+        "tipo": "TRUCK",
+        "frota": "R3026",
+        "frotaAntiga": "3254",
+        "placa": "TBB6A14",
+        "carreta": "-",
+        "motorista": "TULIO DOS SANTOS CORDEIRO",
+        "rota": "ROTA 07",
+        "saida": "07:00",
+        "origem": "CARTEC",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1782270112378-0",
+            "fornecedor": "CARTEC",
+            "cidade": "SÃO PAULO",
+            "ji": "09:00",
+            "jf": "10:00",
+            "janela": "09:0010:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270112378-1",
+            "fornecedor": "LOPSA",
+            "cidade": "SÃO PAULO",
+            "ji": "11:00",
+            "jf": "12:00",
+            "janela": "11:0012:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270112378-2",
+            "fornecedor": "MAHLE BRONZINAS",
+            "cidade": "SÃO PAULO",
+            "ji": "13:30",
+            "jf": "14:30",
+            "janela": "13:3014:30",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270112378-3",
+            "fornecedor": "IRBAS",
+            "cidade": "SÃO PAULO",
+            "ji": "15:00",
+            "jf": "16:00",
+            "janela": "15:0016:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
+      },
+      {
+        "id": 1782270111862,
+        "tipo": "TRUCK",
+        "frota": "DUO2539",
+        "frotaAntiga": "Agregado Extra",
+        "placa": "Caminhão Terceiro",
+        "carreta": "-",
+        "motorista": "SILVIO",
+        "rota": "ROTA 07",
+        "saida": "07:00",
+        "origem": "ARLINGTON THERMAL",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1782270111862-0",
+            "fornecedor": "ARLINGTON THERMAL",
+            "cidade": "SÃO PAULO",
+            "ji": "11:00",
+            "jf": "12:00",
+            "janela": "11:0012:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270111862-1",
+            "fornecedor": "MC BRASIL",
+            "cidade": "SÃO PAULO",
+            "ji": "13:00",
+            "jf": "14:00",
+            "janela": "13:0014:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270111862-2",
+            "fornecedor": "MARTINREA HONSSEL",
+            "cidade": "SÃO PAULO",
+            "ji": "17:00",
+            "jf": "18:00",
+            "janela": "17:0018:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
+      },
+      {
+        "id": 1782270112120,
+        "tipo": "TRUCK",
+        "frota": "R3022",
+        "frotaAntiga": "3249",
+        "placa": "TBB5J94",
+        "carreta": "-",
+        "motorista": "ELSON VIEIRA BORGES",
+        "rota": "ROTA 12",
+        "saida": "07:00",
+        "origem": "ZF CV",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1782270112120-0",
+            "fornecedor": "ZF CV",
+            "cidade": "SÃO PAULO",
+            "ji": "11:00",
+            "jf": "12:00",
+            "janela": "11:0012:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270112120-1",
+            "fornecedor": "MUVIQ BRASIL",
+            "cidade": "SÃO PAULO",
+            "ji": "14:00",
+            "jf": "15:00",
+            "janela": "14:0015:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270112120-2",
+            "fornecedor": "ZM (ZAKLAD)",
+            "cidade": "SÃO PAULO",
+            "ji": "15:30",
+            "jf": "16:30",
+            "janela": "15:3016:30",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
+      },
+      {
+        "id": 1782270111677,
+        "tipo": "TRUCK",
+        "frota": "OKZ6B54",
+        "frotaAntiga": "Agregado Extra",
+        "placa": "Caminhão Terceiro",
+        "carreta": "-",
+        "motorista": "SEBASTIAO MIGUEL",
+        "rota": "ROTA 13",
+        "saida": "05:00",
+        "origem": "THYSSENKRUPP",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1782270111677-0",
+            "fornecedor": "THYSSENKRUPP",
+            "cidade": "SÃO PAULO",
+            "ji": "08:00",
+            "jf": "09:30",
+            "janela": "08:0009:30",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270111677-1",
+            "fornecedor": "MWM STO AMARO",
+            "cidade": "SÃO PAULO",
+            "ji": "12:30",
+            "jf": "18:00",
+            "janela": "12:3018:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
+      },
+      {
+        "id": 1782270111793,
+        "tipo": "TRUCK",
+        "frota": "R3023",
+        "frotaAntiga": "3251",
+        "placa": "TBB6A15",
+        "carreta": "—",
+        "motorista": "IVAN LEONILDO",
+        "rota": "ROTA 14",
+        "saida": "10:00",
+        "origem": "GARRETT",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1782270111793-0",
+            "fornecedor": "GARRETT",
+            "cidade": "SÃO PAULO",
+            "ji": "13:00",
+            "jf": "14:00",
+            "janela": "13:00-14:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270111793-1",
+            "fornecedor": "DELUMA",
+            "cidade": "SÃO PAULO",
+            "ji": "15:00",
+            "jf": "16:00",
+            "janela": "15:00-16:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270111793-2",
+            "fornecedor": "PASCHOAL",
+            "cidade": "SÃO PAULO",
+            "ji": "09:30",
+            "jf": "10:30",
+            "janela": "09:30-10:30",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782270111793-3",
+            "fornecedor": "KONDOR",
+            "cidade": "SÃO PAULO",
+            "ji": "11:00",
+            "jf": "12:00",
+            "janela": "11:00-12:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
+      },
+      {
+        "id": 1782270111990,
+        "tipo": "TRUCK",
+        "frota": "R3021",
+        "frotaAntiga": "3247",
+        "placa": "TBA3C65",
+        "carreta": "-",
+        "motorista": "ANDREIA MARTINS DE ANDRADE",
+        "rota": "ROTA 21",
+        "saida": "10:00",
+        "origem": "CINPAL",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1782270111990-0",
+            "fornecedor": "CINPAL",
+            "cidade": "SÃO PAULO",
+            "ji": "13:30",
+            "jf": "15:30",
+            "janela": "13:3015:30",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
+      },
+      {
+        "id": 1782270111669,
+        "tipo": "CONJUNTO",
+        "frota": "TL2015",
+        "frotaAntiga": "3242",
+        "placa": "FPK9I21",
+        "carreta": "S3079 / Placa: EKU7A68 (Antigo: 2532)",
+        "motorista": "CELSO SOARES",
+        "rota": "ROTA 22",
+        "saida": "08:00",
+        "origem": "IDEAL",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1782270111669-0",
+            "fornecedor": "IDEAL",
+            "cidade": "SÃO PAULO",
+            "ji": "10:00",
+            "jf": "11:30",
+            "janela": "10:00-11:30",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
+      },
+      {
+        "id": 1782270112263,
+        "tipo": "CONJUNTO",
+        "frota": "B10021",
+        "frotaAntiga": "—",
+        "placa": "OWN8B50",
+        "carreta": "SL3022 / Placa: FWF5I52 (Antigo: 2522)",
+        "motorista": "LUCIANO LEMES DA SILVA",
+        "rota": "EXTRA GW",
+        "saida": "19:00",
+        "origem": "CD",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1782270112263-0",
+            "fornecedor": "GW",
+            "cidade": "SÃÂO PAULO",
+            "ji": "15:00",
+            "jf": "19:00",
+            "janela": "15:00-19:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
+      },
+      {
+        "id": 1782270112112,
+        "tipo": "CONJUNTO",
+        "frota": "TL2013",
+        "frotaAntiga": "3240",
+        "placa": "SUQ1I07",
+        "carreta": "SL3021 / Placa: DPL0E52 (Antigo: 2521)",
+        "motorista": "MARCELO DIAS",
+        "rota": "CONSOLIDADO",
+        "saida": "05:00",
+        "origem": "FILIAL SBC (EMBALAGEM)",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1782270112112-0",
+            "fornecedor": "FILIAL SBC (EMBALAGEM)",
+            "cidade": "SÃO PAULO",
+            "ji": "07:00",
+            "jf": "12:00",
+            "janela": "07:00-12:00",
+            "pedido": "—",
+            "importado": false
+          }
+        ]
+      }
     ]
   },
   "dates": [
@@ -4913,6 +5466,7 @@
     "18/06",
     "19/06",
     "22/06",
-    "23/06"
+    "23/06",
+    "24/06"
   ]
 }
