@@ -5300,7 +5300,7 @@
             "janela": "12:3018:00",
             "pedido": "53314",
             "importado": false,
-            "statusRastreio": "NO_LOCAL"
+            "statusRastreio": "REALIZADA"
           }
         ],
         "ctePorPedido": {}
