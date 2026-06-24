@@ -4937,7 +4937,8 @@
             "jf": "14:00",
             "janela": "13:0014:00",
             "pedido": "53306",
-            "importado": false
+            "importado": false,
+            "statusRastreio": "REALIZADA"
           },
           {
             "id": "1782270112130-2",
