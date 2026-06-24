@@ -5039,7 +5039,7 @@
             "jf": "13:00",
             "janela": "12:0013:00",
             "pedido": "53308",
-            "importado": false,
+            "importado": true,
             "statusRastreio": "NO_LOCAL"
           },
           {
