@@ -5347,30 +5347,19 @@
           },
           {
             "id": "1782270111793-2",
-            "fornecedor": "PASCHOAL",
-            "cidade": "SÃO PAULO",
-            "ji": "09:30",
-            "jf": "10:30",
-            "janela": "09:30-10:30",
-            "pedido": "53315",
-            "importado": false,
-            "statusRastreio": "NULA"
-          },
-          {
-            "id": "1782270111793-3",
             "fornecedor": "KONDOR",
             "cidade": "SÃO PAULO",
             "ji": "11:00",
             "jf": "12:00",
             "janela": "11:00-12:00",
             "pedido": "53315",
-            "importado": false,
-            "statusRastreio": "NO_LOCAL"
+            "importado": false
           }
         ],
         "ctePorPedido": {
           "53315": "PENDENTE"
-        }
+        },
+        "chegada": "19:00"
       },
       {
         "id": 1782270111990,
