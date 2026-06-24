@@ -5368,7 +5368,9 @@
             "statusRastreio": "NO_LOCAL"
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {
+          "53315": "NULA"
+        }
       },
       {
         "id": 1782270111990,
