@@ -5090,7 +5090,7 @@
             "jf": "15:30",
             "janela": "14:30-15:30",
             "pedido": "53309",
-            "importado": false,
+            "importado": true,
             "statusRastreio": "REALIZADA"
           },
           {
