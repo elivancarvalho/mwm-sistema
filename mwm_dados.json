@@ -5201,7 +5201,7 @@
             "janela": "11:0012:00",
             "pedido": "53311",
             "importado": true,
-            "statusRastreio": "NO_LOCAL"
+            "statusRastreio": "REALIZADA"
           },
           {
             "id": "1782270111862-1",
@@ -5211,7 +5211,8 @@
             "jf": "14:00",
             "janela": "13:0014:00",
             "pedido": "53311",
-            "importado": false
+            "importado": false,
+            "statusRastreio": "REALIZADA"
           },
           {
             "id": "1782270111862-2",
