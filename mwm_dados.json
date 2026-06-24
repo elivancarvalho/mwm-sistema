@@ -4720,7 +4720,7 @@
         "saida": "07:00",
         "origem": "LEPE",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -4754,7 +4754,9 @@
             "importado": true
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {
+          "53268": "IMPRESSO"
+        }
       },
       {
         "id": 1782211328790,
