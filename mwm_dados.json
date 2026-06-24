@@ -5024,7 +5024,8 @@
             "jf": "11:00",
             "janela": "10:0011:00",
             "pedido": "53308",
-            "importado": false
+            "importado": false,
+            "statusRastreio": "NO_LOCAL"
           },
           {
             "id": "1782270112128-2",
@@ -5072,7 +5073,8 @@
             "jf": "11:00",
             "janela": "10:00-11:00",
             "pedido": "53309",
-            "importado": false
+            "importado": false,
+            "statusRastreio": "NO_LOCAL"
           },
           {
             "id": "1782270112302-1",
@@ -5133,7 +5135,7 @@
             "janela": "09:00-10:00",
             "pedido": "53310",
             "importado": false,
-            "statusRastreio": "NO_LOCAL"
+            "statusRastreio": "REALIZADA"
           },
           {
             "id": "1782270112378-1",
@@ -5143,7 +5145,8 @@
             "jf": "12:00",
             "janela": "11:00-12:00",
             "pedido": "53310",
-            "importado": false
+            "importado": false,
+            "statusRastreio": "NO_LOCAL"
           },
           {
             "id": "1782270112378-2",
