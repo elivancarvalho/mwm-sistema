@@ -5544,54 +5544,6 @@
         "ctePorPedido": {}
       },
       {
-        "id": 1782384065380,
-        "tipo": "TRUCK",
-        "frota": "R3019",
-        "frotaAntiga": "3245",
-        "placa": "TBA3C89",
-        "carreta": "—",
-        "motorista": "GILMAR PEREIRA SILVA",
-        "rota": "ROTA 04",
-        "saida": "05:00",
-        "origem": "PROGERAL",
-        "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
-        "obs": "",
-        "paradas": [
-          {
-            "id": "1782384065380-0",
-            "fornecedor": "PROGERAL",
-            "cidade": "SÃO PAULO",
-            "ji": "09:00",
-            "jf": "10:00",
-            "janela": "09:00-10:00",
-            "pedido": "—",
-            "importado": false
-          },
-          {
-            "id": "1782384065380-1",
-            "fornecedor": "KNORR BREMSE",
-            "cidade": "SÃO PAULO",
-            "ji": "11:30",
-            "jf": "12:30",
-            "janela": "11:30-12:30",
-            "pedido": "—",
-            "importado": false
-          },
-          {
-            "id": "1782384065380-2",
-            "fornecedor": "HELLERMANN",
-            "cidade": "SÃO PAULO",
-            "ji": "13:30",
-            "jf": "14:30",
-            "janela": "13:30-14:30",
-            "pedido": "—",
-            "importado": false
-          }
-        ],
-        "ctePorPedido": {}
-      },
-      {
         "id": 1782384065164,
         "tipo": "TRUCK",
         "frota": "R3020",
