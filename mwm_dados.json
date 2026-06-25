@@ -5591,7 +5591,8 @@
             "jf": "16:00",
             "janela": "15:00-16:00",
             "pedido": "—",
-            "importado": false
+            "importado": false,
+            "statusRastreio": "REALIZADA"
           }
         ],
         "ctePorPedido": {},
