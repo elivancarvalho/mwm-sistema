@@ -5668,34 +5668,6 @@
           }
         ],
         "ctePorPedido": {}
-      },
-      {
-        "id": 1782384065440,
-        "tipo": "CONJUNTO",
-        "frota": "TL2012",
-        "frotaAntiga": "3239",
-        "placa": "SWK5B42",
-        "carreta": "SL3020 / Placa: FAW3H34 (Antigo: 2520)",
-        "motorista": "MARCIO BALESTRIN",
-        "rota": "ROTA 20",
-        "saida": "12:00",
-        "origem": "RESIPLASTIC",
-        "destino": "CARGOLIFT SBC",
-        "cte": "PENDENTE",
-        "obs": "",
-        "paradas": [
-          {
-            "id": "1782384065440-0",
-            "fornecedor": "RESIPLASTIC",
-            "cidade": "SÃO PAULO",
-            "ji": "16:00",
-            "jf": "18:00",
-            "janela": "16:00-18:00",
-            "pedido": "—",
-            "importado": false
-          }
-        ],
-        "ctePorPedido": {}
       }
     ]
   },
