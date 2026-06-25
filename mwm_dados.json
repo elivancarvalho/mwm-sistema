@@ -5010,7 +5010,7 @@
         "saida": "05:00",
         "origem": "MANGOTEX",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -5058,7 +5058,9 @@
             "statusRastreio": "NO_LOCAL"
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {
+          "53308": "IMPRESSO"
+        }
       },
       {
         "id": 1782270112302,
