@@ -5500,7 +5500,8 @@
             "jf": "17:00",
             "janela": "14:40-17:00",
             "pedido": "53354",
-            "importado": false
+            "importado": false,
+            "statusRastreio": "NO_LOCAL"
           },
           {
             "id": "1782384065701-2",
@@ -5510,7 +5511,8 @@
             "jf": "17:00",
             "janela": "15:00-17:00",
             "pedido": "53354",
-            "importado": false
+            "importado": false,
+            "statusRastreio": "NO_LOCAL"
           }
         ],
         "chegada": "22:00",
