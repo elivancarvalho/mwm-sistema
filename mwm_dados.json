@@ -5416,7 +5416,7 @@
         "saida": "08:00",
         "origem": "IDEAL",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -5431,7 +5431,9 @@
             "statusRastreio": "REALIZADA"
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {
+          "53317": "IMPRESSO"
+        }
       },
       {
         "id": 1782270112112,
