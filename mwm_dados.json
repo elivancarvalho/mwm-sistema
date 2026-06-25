@@ -4915,7 +4915,7 @@
         "saida": "06:00",
         "origem": "SEG AUTOMOTIVE",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -4952,7 +4952,9 @@
             "statusRastreio": "NO_LOCAL"
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {
+          "53306": "IMPRESSO"
+        }
       },
       {
         "id": 1782270111702,
