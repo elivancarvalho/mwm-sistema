@@ -5544,64 +5544,6 @@
         "ctePorPedido": {}
       },
       {
-        "id": 1782384065164,
-        "tipo": "TRUCK",
-        "frota": "R3020",
-        "frotaAntiga": "3246",
-        "placa": "TBA3C87",
-        "carreta": "—",
-        "motorista": "JOSE APARECIDO",
-        "rota": "ROTA 06",
-        "saida": "07:30",
-        "origem": "PRODUFLEX",
-        "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
-        "obs": "",
-        "paradas": [
-          {
-            "id": "1782384065164-0",
-            "fornecedor": "PRODUFLEX",
-            "cidade": "SÃO PAULO",
-            "ji": "09:00",
-            "jf": "10:00",
-            "janela": "09:00-10:00",
-            "pedido": "—",
-            "importado": false
-          },
-          {
-            "id": "1782384065164-1",
-            "fornecedor": "ZEPPINI",
-            "cidade": "SÃO PAULO",
-            "ji": "10:00",
-            "jf": "11:00",
-            "janela": "10:00-11:00",
-            "pedido": "—",
-            "importado": false
-          },
-          {
-            "id": "1782384065164-2",
-            "fornecedor": "FOUR RUBBER",
-            "cidade": "SÃO PAULO",
-            "ji": "12:00",
-            "jf": "13:00",
-            "janela": "12:00-13:00",
-            "pedido": "—",
-            "importado": false
-          },
-          {
-            "id": "1782384065164-3",
-            "fornecedor": "JARDIM SISTEMAS",
-            "cidade": "SÃO PAULO",
-            "ji": "13:30",
-            "jf": "14:30",
-            "janela": "13:30-14:30",
-            "pedido": "—",
-            "importado": false
-          }
-        ],
-        "ctePorPedido": {}
-      },
-      {
         "id": 1782384065594,
         "tipo": "TRUCK",
         "frota": "R3026",
