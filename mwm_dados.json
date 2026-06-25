@@ -5568,7 +5568,7 @@
             "janela": "08:00-09:00",
             "pedido": "—",
             "importado": false,
-            "statusRastreio": "PENDENTE"
+            "statusRastreio": "NO_LOCAL"
           },
           {
             "id": "1782384065594-0",
