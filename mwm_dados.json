@@ -5074,7 +5074,7 @@
         "saida": "06:00",
         "origem": "ABR",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -5111,7 +5111,9 @@
             "statusRastreio": "REALIZADA"
           }
         ],
-        "ctePorPedido": {},
+        "ctePorPedido": {
+          "53309": "IMPRESSO"
+        },
         "chegada": "19:00"
       },
       {
