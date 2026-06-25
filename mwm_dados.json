@@ -5483,6 +5483,16 @@
         "paradas": [
           {
             "id": "1782384065701-0",
+            "fornecedor": "METAL 2",
+            "cidade": "SÃO PAULO",
+            "ji": "10:00",
+            "jf": "11:00",
+            "janela": "10:00-11:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
+            "id": "1782384065701-1",
             "fornecedor": "MAHLE FILTROS",
             "cidade": "SÃO PAULO",
             "ji": "14:40",
@@ -5492,8 +5502,8 @@
             "importado": false
           },
           {
-            "id": "1782384065701-1",
-            "fornecedor": "MAHLE PISTÕES",
+            "id": "1782384065701-2",
+            "fornecedor": "MAHLE PISTOES",
             "cidade": "SÃO PAULO",
             "ji": "15:00",
             "jf": "17:00",
@@ -5501,7 +5511,9 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "chegada": "22:00",
+        "ctePorPedido": {}
       },
       {
         "id": 1782384065622,
@@ -5528,7 +5540,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782384065380,
@@ -5575,7 +5588,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782384065164,
@@ -5632,7 +5646,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782384065594,
@@ -5679,7 +5694,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782384065643,
@@ -5716,7 +5732,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782384065547,
@@ -5753,7 +5770,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782384065440,
@@ -5780,7 +5798,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782384065402,
@@ -5807,7 +5826,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       }
     ]
   },
