@@ -5128,7 +5128,7 @@
         "saida": "07:00",
         "origem": "CARTEC",
         "destino": "MWM STO AMARO",
-        "cte": "PARCIAL",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -5177,7 +5177,8 @@
           }
         ],
         "ctePorPedido": {
-          "18810": "IMPRESSO"
+          "18810": "IMPRESSO",
+          "53310": "IMPRESSO"
         },
         "chegada": "19:00"
       },
