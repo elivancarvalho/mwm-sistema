@@ -5194,7 +5194,7 @@
         "saida": "07:00",
         "origem": "ARLINGTON THERMAL",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -5231,7 +5231,9 @@
             "statusRastreio": "NO_LOCAL"
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {
+          "53311": "IMPRESSO"
+        }
       },
       {
         "id": 1782270112120,
