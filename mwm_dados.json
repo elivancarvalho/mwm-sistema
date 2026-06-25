@@ -5247,7 +5247,7 @@
         "saida": "07:00",
         "origem": "ZF CV",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -5273,7 +5273,9 @@
             "statusRastreio": "NO_LOCAL"
           }
         ],
-        "ctePorPedido": {},
+        "ctePorPedido": {
+          "53312": "IMPRESSO"
+        },
         "chegada": "19:00"
       },
       {
