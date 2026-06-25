@@ -5582,16 +5582,6 @@
           },
           {
             "id": "1782384065594-1",
-            "fornecedor": "CIP",
-            "cidade": "SÃO PAULO",
-            "ji": "13:00",
-            "jf": "14:00",
-            "janela": "13:00-14:00",
-            "pedido": "—",
-            "importado": false
-          },
-          {
-            "id": "1782384065594-2",
             "fornecedor": "DELGA",
             "cidade": "SÃO PAULO",
             "ji": "15:00",
@@ -5681,7 +5671,8 @@
             "importado": false,
             "statusRastreio": "PENDENTE"
           }
-        ]
+        ],
+        "ctePorPedido": {}
       }
     ]
   },
