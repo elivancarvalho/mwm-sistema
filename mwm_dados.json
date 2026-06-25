@@ -5540,7 +5540,7 @@
             "janela": "08:00-09:00",
             "pedido": "53355",
             "importado": true,
-            "statusRastreio": "NO_LOCAL"
+            "statusRastreio": "REALIZADA"
           }
         ],
         "ctePorPedido": {}
