@@ -5333,7 +5333,7 @@
         "saida": "10:00",
         "origem": "GARRETT",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -5371,7 +5371,7 @@
           }
         ],
         "ctePorPedido": {
-          "53315": "PENDENTE"
+          "53315": "IMPRESSO"
         },
         "chegada": "19:00"
       },
