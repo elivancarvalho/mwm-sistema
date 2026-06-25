@@ -601,14 +601,14 @@ tbody td{padding:9px 11px;font-size:12px;color:var(--text2);vertical-align:middl
       <table>
         <thead><tr>
           <th style="width:20px"></th>
-          <th>Frota</th>
-          <th>Placa</th>
-          <th>Carreta</th>
-          <th>Motorista</th>
-          <th>Rota</th>
-          <th>Tipo</th>
-          <th>Horários (Saída → Chegada)</th>
-          <th>Origem → Destino</th>
+          <th class="sortable" onclick="sortTable('frota')">Frota <span class="sort-ind" data-col="frota"></span></th>
+          <th class="sortable" onclick="sortTable('placa')">Placa <span class="sort-ind" data-col="placa"></span></th>
+          <th class="sortable" onclick="sortTable('carreta')">Carreta <span class="sort-ind" data-col="carreta"></span></th>
+          <th class="sortable" onclick="sortTable('motorista')">Motorista <span class="sort-ind" data-col="motorista"></span></th>
+          <th class="sortable" onclick="sortTable('rota')">Rota <span class="sort-ind" data-col="rota"></span></th>
+          <th class="sortable" onclick="sortTable('tipo')">Tipo <span class="sort-ind" data-col="tipo"></span></th>
+          <th class="sortable" onclick="sortTable('saida')">Horários (Saída → Chegada) <span class="sort-ind" data-col="saida"></span></th>
+          <th class="sortable" onclick="sortTable('origem')">Origem → Destino <span class="sort-ind" data-col="origem"></span></th>
           <th>Pedido(s)</th>
           <th>AVACORP</th>
           <th>Coletas</th>
@@ -994,6 +994,7 @@ let FORNECEDORES_CONTATOS = {};
 let alertaSearch = '';
 let alertaStatusFilter = '';
 let alertaSort = { col:'ji', dir:'asc' };
+let tableSort = { col:'rota', dir:'asc' }; // padrão: Rota em ordem crescente
 let _alertaItensAtuais = [];
 
 // ══════════════════════════════════════════════════════════════════
@@ -1697,6 +1698,20 @@ function renderTable() {
   const rc = document.getElementById('rcount');
   if(rc) rc.textContent = `${filtered.length} registro(s)`;
 
+  // Ordenação clicável pelo cabeçalho (padrão: Rota em ordem crescente)
+  const {col: sortCol, dir: sortDir} = tableSort;
+  filtered.sort((a, b) => {
+    let va, vb;
+    if(sortCol === 'saida') { va = timeToMins(a.saida); vb = timeToMins(b.saida); }
+    else { va = String(a[sortCol] || '').toLowerCase(); vb = String(b[sortCol] || '').toLowerCase(); }
+    if(va < vb) return sortDir === 'asc' ? -1 : 1;
+    if(va > vb) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+  document.querySelectorAll('#page-prog .sort-ind').forEach(el => {
+    el.textContent = el.dataset.col === sortCol ? (sortDir === 'asc' ? '▲' : '▼') : '';
+  });
+
   const tbody = document.getElementById('main-tbody');
   if(!tbody) return;
   tbody.innerHTML = '';
@@ -2090,6 +2105,12 @@ function sortAlertas(col) {
   if(alertaSort.col===col) alertaSort.dir = alertaSort.dir==='asc'?'desc':'asc';
   else { alertaSort.col=col; alertaSort.dir='asc'; }
   renderAlertas();
+}
+
+function sortTable(col) {
+  if(tableSort.col===col) tableSort.dir = tableSort.dir==='asc'?'desc':'asc';
+  else { tableSort.col=col; tableSort.dir='asc'; }
+  renderTable();
 }
 
 function renderAlertaDateNav() {
@@ -2873,7 +2894,8 @@ function salvarFormViagem() {
           id: pExist ? pExist.id : `${_editandoViagemId}-${idx}`,
           fornecedor:forn, cidade:'SÃO PAULO', ji, jf,
           janela:`${ji}-${jf}`, pedido: pExist ? pExist.pedido : '—',
-          importado: pExist ? pExist.importado : false
+          importado: pExist ? pExist.importado : false,
+          statusRastreio: pExist ? pExist.statusRastreio : 'PENDENTE'
         });
       }
     });
@@ -2883,9 +2905,17 @@ function salvarFormViagem() {
       const forn = box.querySelector('.f-p-forn').value.trim();
       const ji   = box.querySelector('.f-p-ji').value;
       const jf   = box.querySelector('.f-p-jf').value;
-      if(forn) paradas.push({id:`${vid}-${idx}`, fornecedor:forn, cidade:'SÃO PAULO', ji, jf, janela:`${ji}-${jf}`, pedido:'—', importado:false});
+      if(forn) paradas.push({id:`${vid}-${idx}`, fornecedor:forn, cidade:'SÃO PAULO', ji, jf, janela:`${ji}-${jf}`, pedido:'—', importado:false, statusRastreio:'PENDENTE'});
     });
   }
+
+  // Reordena as paradas por horário de janela (ji) — assim, ao acrescentar
+  // uma nova coleta com horário mais cedo, ela aparece na posição
+  // cronológica correta em vez de ir para o final da lista. Os IDs de cada
+  // parada são preservados (não dependem da posição no array), então
+  // vínculos como CTE, status de rastreio e "NF Importada" continuam
+  // corretos depois da reordenação.
+  paradas.sort((a, b) => timeToMins(a.ji) - timeToMins(b.ji));
 
   if(_editandoViagemId !== null) {
     // Modo edição: atualiza viagem existente
