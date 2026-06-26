@@ -5868,6 +5868,35 @@
           }
         ],
         "ctePorPedido": {}
+      },
+      {
+        "id": 1782474905112,
+        "tipo": "CONJUNTO",
+        "frota": "B10021",
+        "frotaAntiga": "—",
+        "placa": "OWN8B50",
+        "carreta": "SL3022 / Placa: FWF5I52 (Antigo: 2522)",
+        "motorista": "MGK",
+        "rota": "ROTA 2B",
+        "saida": "20:00",
+        "chegada": "06:00",
+        "origem": "MGK",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1782474905111-0",
+            "fornecedor": "MGK",
+            "cidade": "SÃO PAULO",
+            "ji": "00:00",
+            "jf": "02:00",
+            "janela": "00:00-02:00",
+            "pedido": "—",
+            "importado": false,
+            "statusRastreio": "PENDENTE"
+          }
+        ]
       }
     ]
   },
