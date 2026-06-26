@@ -5893,7 +5893,7 @@
             "jf": "02:00",
             "janela": "00:00-02:00",
             "pedido": "53052",
-            "importado": false,
+            "importado": true,
             "statusRastreio": "NO_LOCAL"
           }
         ],
