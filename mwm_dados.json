@@ -5808,6 +5808,35 @@
           }
         ],
         "ctePorPedido": {}
+      },
+      {
+        "id": 1782473800829,
+        "tipo": "CONJUNTO",
+        "frota": "TL2011",
+        "frotaAntiga": "3238",
+        "placa": "SUI0A86",
+        "carreta": "S3074 / Placa: JOK3001 (Antigo: —)",
+        "motorista": "CELSO SOARES",
+        "rota": "ROTA 21",
+        "saida": "11:00",
+        "chegada": "19:00",
+        "origem": "CINPAL",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1782473800828-0",
+            "fornecedor": "CINPAL",
+            "cidade": "SÃO PAULO",
+            "ji": "13:30",
+            "jf": "15:30",
+            "janela": "13:30-15:30",
+            "pedido": "—",
+            "importado": false,
+            "statusRastreio": "PENDENTE"
+          }
+        ]
       }
     ]
   },
