@@ -5684,6 +5684,37 @@
         ],
         "ctePorPedido": {}
       }
+    ],
+    "26/06": [
+      {
+        "id": 1782471257062,
+        "tipo": "TRUCK",
+        "frota": "9949",
+        "frotaAntiga": "Agregado Extra",
+        "placa": "DUO2539",
+        "carreta": "—",
+        "motorista": "SILVIO",
+        "rota": "ROTA 01",
+        "saida": "09:00",
+        "chegada": "22:00",
+        "origem": "V.S DE LIMA",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1782471257062-0",
+            "fornecedor": "BORGWAGNER",
+            "cidade": "SÃO PAULO",
+            "ji": "15:00",
+            "jf": "16:00",
+            "janela": "15:00-16:00",
+            "pedido": "—",
+            "importado": false,
+            "statusRastreio": "PENDENTE"
+          }
+        ]
+      }
     ]
   },
   "dates": [
@@ -5698,6 +5729,7 @@
     "22/06",
     "23/06",
     "24/06",
-    "25/06"
+    "25/06",
+    "26/06"
   ]
 }
