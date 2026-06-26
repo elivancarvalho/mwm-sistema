@@ -1,37 +1,182 @@
 {
-  "R3019": { "placa": "TBA3C89", "antigo": "3245", "tipo": "TRUCK" },
-  "R3020": { "placa": "TBA3C87", "antigo": "3246", "tipo": "TRUCK" },
-  "R3021": { "placa": "TBA3C65", "antigo": "3247", "tipo": "TRUCK" },
-  "R3022": { "placa": "TBB5J94", "antigo": "3249", "tipo": "TRUCK" },
-  "R3023": { "placa": "TBB6A15", "antigo": "3251", "tipo": "TRUCK" },
-  "R3024": { "placa": "TBB3I25", "antigo": "3252", "tipo": "TRUCK" },
-  "R3025": { "placa": "TBB3I31", "antigo": "3253", "tipo": "TRUCK" },
-  "R3026": { "placa": "TBB6A14", "antigo": "3254", "tipo": "TRUCK" },
-  "R3002": { "placa": "APG8526", "antigo": "366",  "tipo": "TRUCK" },
-  "TL2011": { "placa": "SUI0A86", "antigo": "3238", "tipo": "CONJUNTO" },
-  "TL2012": { "placa": "SWK5B42", "antigo": "3239", "tipo": "CONJUNTO" },
-  "TL2013": { "placa": "SUQ1I07", "antigo": "3240", "tipo": "CONJUNTO" },
-  "TL2014": { "placa": "SST1D31", "antigo": "3241", "tipo": "CONJUNTO" },
-  "TL2015": { "placa": "FPK9I21", "antigo": "3242", "tipo": "CONJUNTO" },
-  "TL2016": { "svf8h61": "SVF8H61", "antigo": "3243", "tipo": "CONJUNTO" },
-  "TL2017": { "placa": "SWT3J11", "antigo": "3244", "tipo": "CONJUNTO" },
-  "B10021": { "placa": "OWN8B50", "antigo": "—",    "tipo": "CONJUNTO" },
-  "T2019":  { "placa": "BCZ2B18", "antigo": "661",  "tipo": "CONJUNTO" },
-  "T2021":  { "placa": "BCZ4A86", "antigo": "663",  "tipo": "CONJUNTO" },
-  "SL3020": { "placa": "FAW3H34", "antigo": "2520", "tipo": "CARRETA" },
-  "SL3021": { "placa": "DPL0E52", "antigo": "2521", "tipo": "CARRETA" },
-  "SL3022": { "placa": "FWF5I52", "antigo": "2522", "tipo": "CARRETA" },
-  "SL3023": { "placa": "FUD1D17", "antigo": "2523", "tipo": "CARRETA" },
-  "SL3024": { "placa": "FNH4H42", "antigo": "2524", "tipo": "CARRETA" },
-  "SL3026": { "placa": "FHX9C41", "antigo": "2526", "tipo": "CARRETA" },
-  "SL3030": { "placa": "GBQ4C78", "antigo": "2530", "tipo": "CARRETA" },
-  "SL3031": { "placa": "GJV6J42", "antigo": "2531", "tipo": "CARRETA" },
-  "S3000":  { "placa": "AJX1741", "antigo": "265",  "tipo": "CARRETA" },
-  "S3001":  { "placa": "AJW7942", "antigo": "286",  "tipo": "CARRETA" },
-  "S3002":  { "placa": "AJW8991", "antigo": "288",  "tipo": "CARRETA" },
-  "S3036":  { "placa": "ESU8034", "antigo": "452",  "tipo": "CARRETA" },
-  "S3079":  { "placa": "EKU7A68", "antigo": "2532", "tipo": "CARRETA" },
-  "S3117":  { "placa": "JLS5900", "antigo": "584",  "tipo": "CARRETA" },
-  "G3000":  { "placa": "AJV8H90", "antigo": "257",  "tipo": "CARRETA" },
-  "G3001":  { "placa": "AJV6925", "antigo": "258",  "tipo": "CARRETA" }
+  "R3019": {
+    "placa": "TBA3C89",
+    "antigo": "3245",
+    "tipo": "TRUCK"
+  },
+  "R3020": {
+    "placa": "TBA3C87",
+    "antigo": "3246",
+    "tipo": "TRUCK"
+  },
+  "R3021": {
+    "placa": "TBA3C65",
+    "antigo": "3247",
+    "tipo": "TRUCK"
+  },
+  "R3022": {
+    "placa": "TBB5J94",
+    "antigo": "3249",
+    "tipo": "TRUCK"
+  },
+  "R3023": {
+    "placa": "TBB6A15",
+    "antigo": "3251",
+    "tipo": "TRUCK"
+  },
+  "R3024": {
+    "placa": "TBB3I25",
+    "antigo": "3252",
+    "tipo": "TRUCK"
+  },
+  "R3025": {
+    "placa": "TBB3I31",
+    "antigo": "3253",
+    "tipo": "TRUCK"
+  },
+  "R3026": {
+    "placa": "TBB6A14",
+    "antigo": "3254",
+    "tipo": "TRUCK"
+  },
+  "R3002": {
+    "placa": "APG8526",
+    "antigo": "366",
+    "tipo": "TRUCK"
+  },
+  "TL2011": {
+    "placa": "SUI0A86",
+    "antigo": "3238",
+    "tipo": "CONJUNTO"
+  },
+  "TL2012": {
+    "placa": "SWK5B42",
+    "antigo": "3239",
+    "tipo": "CONJUNTO"
+  },
+  "TL2013": {
+    "placa": "SUQ1I07",
+    "antigo": "3240",
+    "tipo": "CONJUNTO"
+  },
+  "TL2014": {
+    "placa": "SST1D31",
+    "antigo": "3241",
+    "tipo": "CONJUNTO"
+  },
+  "TL2015": {
+    "placa": "FPK9I21",
+    "antigo": "3242",
+    "tipo": "CONJUNTO"
+  },
+  "TL2016": {
+    "svf8h61": "SVF8H61",
+    "antigo": "3243",
+    "tipo": "CONJUNTO"
+  },
+  "TL2017": {
+    "placa": "SWT3J11",
+    "antigo": "3244",
+    "tipo": "CONJUNTO"
+  },
+  "B10021": {
+    "placa": "OWN8B50",
+    "antigo": "—",
+    "tipo": "CONJUNTO"
+  },
+  "T2019": {
+    "placa": "BCZ2B18",
+    "antigo": "661",
+    "tipo": "CONJUNTO"
+  },
+  "T2021": {
+    "placa": "BCZ4A86",
+    "antigo": "663",
+    "tipo": "CONJUNTO"
+  },
+  "SL3020": {
+    "placa": "FAW3H34",
+    "antigo": "2520",
+    "tipo": "CARRETA"
+  },
+  "SL3021": {
+    "placa": "DPL0E52",
+    "antigo": "2521",
+    "tipo": "CARRETA"
+  },
+  "SL3022": {
+    "placa": "FWF5I52",
+    "antigo": "2522",
+    "tipo": "CARRETA"
+  },
+  "SL3023": {
+    "placa": "FUD1D17",
+    "antigo": "2523",
+    "tipo": "CARRETA"
+  },
+  "SL3024": {
+    "placa": "FNH4H42",
+    "antigo": "2524",
+    "tipo": "CARRETA"
+  },
+  "SL3026": {
+    "placa": "FHX9C41",
+    "antigo": "2526",
+    "tipo": "CARRETA"
+  },
+  "SL3030": {
+    "placa": "GBQ4C78",
+    "antigo": "2530",
+    "tipo": "CARRETA"
+  },
+  "SL3031": {
+    "placa": "GJV6J42",
+    "antigo": "2531",
+    "tipo": "CARRETA"
+  },
+  "S3000": {
+    "placa": "AJX1741",
+    "antigo": "265",
+    "tipo": "CARRETA"
+  },
+  "S3001": {
+    "placa": "AJW7942",
+    "antigo": "286",
+    "tipo": "CARRETA"
+  },
+  "S3002": {
+    "placa": "AJW8991",
+    "antigo": "288",
+    "tipo": "CARRETA"
+  },
+  "S3036": {
+    "placa": "ESU8034",
+    "antigo": "452",
+    "tipo": "CARRETA"
+  },
+  "S3079": {
+    "placa": "EKU7A68",
+    "antigo": "2532",
+    "tipo": "CARRETA"
+  },
+  "S3117": {
+    "placa": "JLS5900",
+    "antigo": "584",
+    "tipo": "CARRETA"
+  },
+  "G3000": {
+    "placa": "AJV8H90",
+    "antigo": "257",
+    "tipo": "CARRETA"
+  },
+  "G3001": {
+    "placa": "AJV6925",
+    "antigo": "258",
+    "tipo": "CARRETA"
+  },
+  "S3074": {
+    "placa": "JOK3001",
+    "antigo": "—",
+    "tipo": "CARRETA"
+  }
 }
