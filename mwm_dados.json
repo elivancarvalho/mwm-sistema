@@ -5838,6 +5838,35 @@
           }
         ],
         "ctePorPedido": {}
+      },
+      {
+        "id": 1782474456784,
+        "tipo": "CONJUNTO",
+        "frota": "TL2014",
+        "frotaAntiga": "3241",
+        "placa": "SST1D31",
+        "carreta": "SL3030 / Placa: GBQ4C78 (Antigo: 2530)",
+        "motorista": "JOÃO GOMES",
+        "rota": "ROTA 22",
+        "saida": "08:00",
+        "chegada": "16:00",
+        "origem": "IDEAL",
+        "destino": "MWM STO AMARO",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1782474456783-0",
+            "fornecedor": "CINPAL",
+            "cidade": "SÃO PAULO",
+            "ji": "10:00",
+            "jf": "11:30",
+            "janela": "10:00-11:30",
+            "pedido": "—",
+            "importado": false,
+            "statusRastreio": "PENDENTE"
+          }
+        ]
       }
     ]
   },
