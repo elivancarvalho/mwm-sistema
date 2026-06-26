@@ -5741,7 +5741,7 @@
             "janela": "09:30-10:30",
             "pedido": "53375",
             "importado": false,
-            "statusRastreio": "PENDENTE"
+            "statusRastreio": "NO_LOCAL"
           },
           {
             "id": "1782471333487-1",
