@@ -5793,7 +5793,7 @@
             "janela": "08:00-09:00",
             "pedido": "—",
             "importado": false,
-            "statusRastreio": "PENDENTE"
+            "statusRastreio": "NO_LOCAL"
           },
           {
             "id": "1782471571237-1",
@@ -5806,7 +5806,8 @@
             "importado": false,
             "statusRastreio": "PENDENTE"
           }
-        ]
+        ],
+        "ctePorPedido": {}
       }
     ]
   },
