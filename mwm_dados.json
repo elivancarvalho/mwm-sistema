@@ -5478,7 +5478,7 @@
         "saida": "05:00",
         "origem": "METAL 2",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -5516,7 +5516,9 @@
           }
         ],
         "chegada": "22:00",
-        "ctePorPedido": {}
+        "ctePorPedido": {
+          "53354": "IMPRESSO"
+        }
       },
       {
         "id": 1782384065622,
