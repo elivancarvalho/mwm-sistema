@@ -5892,11 +5892,12 @@
             "ji": "00:00",
             "jf": "02:00",
             "janela": "00:00-02:00",
-            "pedido": "—",
+            "pedido": "53052",
             "importado": false,
             "statusRastreio": "PENDENTE"
           }
-        ]
+        ],
+        "ctePorPedido": {}
       }
     ]
   },
