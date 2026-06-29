@@ -5936,7 +5936,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782761345161,
@@ -5963,7 +5964,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782761344869,
@@ -6010,7 +6012,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782761345614,
@@ -6067,7 +6070,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782761345511,
@@ -6114,7 +6118,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782761345132,
@@ -6151,7 +6156,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782761345331,
@@ -6188,61 +6194,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
-      },
-      {
-        "id": 1782761345586,
-        "tipo": "CONJUNTO",
-        "frota": "TL2012",
-        "frotaAntiga": "3239",
-        "placa": "SWK5B42",
-        "carreta": "SL3020 / Placa: FAW3H34 (Antigo: 2520)",
-        "motorista": "MARCIO BALESTRIN",
-        "rota": "ROTA 20",
-        "saida": "12:00",
-        "origem": "RESIPLASTIC",
-        "destino": "CARGOLIFT SBC",
-        "cte": "PENDENTE",
-        "obs": "",
-        "paradas": [
-          {
-            "id": "1782761345586-0",
-            "fornecedor": "RESIPLASTIC",
-            "cidade": "SÃO PAULO",
-            "ji": "16:00",
-            "jf": "18:00",
-            "janela": "16:00-18:00",
-            "pedido": "—",
-            "importado": false
-          }
-        ]
-      },
-      {
-        "id": 1782761344645,
-        "tipo": "CONJUNTO",
-        "frota": "TL2014",
-        "frotaAntiga": "3241",
-        "placa": "SST1D31",
-        "carreta": "SL3030 / Placa: GBQ4C78 (Antigo: 2530)",
-        "motorista": "WESLEY DOS SANTOS SOUZA DIAS",
-        "rota": "ROTA 22",
-        "saida": "12:00",
-        "origem": "GW",
-        "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
-        "obs": "",
-        "paradas": [
-          {
-            "id": "1782761344645-0",
-            "fornecedor": "GW",
-            "cidade": "SÃO PAULO",
-            "ji": "16:00",
-            "jf": "19:00",
-            "janela": "16:00-19:00",
-            "pedido": "—",
-            "importado": false
-          }
-        ]
+        ],
+        "ctePorPedido": {}
       }
     ]
   },
@@ -6260,6 +6213,7 @@
     "24/06",
     "25/06",
     "26/06",
-    "29/06"
+    "29/06",
+    "30/06"
   ]
 }
