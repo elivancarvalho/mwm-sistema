@@ -6227,34 +6227,6 @@
           }
         ],
         "ctePorPedido": {}
-      },
-      {
-        "id": 1782761398953,
-        "tipo": "CONJUNTO",
-        "frota": "TL2014",
-        "frotaAntiga": "3241",
-        "placa": "SST1D31",
-        "carreta": "SL3030 / Placa: GBQ4C78 (Antigo: 2530)",
-        "motorista": "WESLEY DOS SANTOS SOUZA DIAS",
-        "rota": "ROTA 22",
-        "saida": "12:00",
-        "origem": "GW",
-        "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
-        "obs": "",
-        "paradas": [
-          {
-            "id": "1782761398953-0",
-            "fornecedor": "GW",
-            "cidade": "SÃO PAULO",
-            "ji": "16:00",
-            "jf": "19:00",
-            "janela": "16:00-19:00",
-            "pedido": "—",
-            "importado": false
-          }
-        ],
-        "ctePorPedido": {}
       }
     ]
   },
