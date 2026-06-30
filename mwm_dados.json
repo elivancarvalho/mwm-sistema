@@ -6125,14 +6125,14 @@
       },
       {
         "id": 1782761398522,
-        "tipo": "TRUCK",
-        "frota": "C10019",
-        "frotaAntiga": "Agregado Extra",
-        "placa": "OKZ6B54",
-        "carreta": "—",
-        "motorista": "SEBASTIAO MIGUEL",
+        "tipo": "CONJUNTO",
+        "frota": "TL2014",
+        "frotaAntiga": "3241",
+        "placa": "SST1D31",
+        "carreta": "SL3030 / Placa: GBQ4C78 (Antigo: 2530)",
+        "motorista": "WELINGTON MACHADO",
         "rota": "ROTA 13",
-        "saida": "07:00",
+        "saida": "05:00",
         "origem": "THYSSENKRUPP",
         "destino": "MWM STO AMARO",
         "cte": "PENDENTE",
@@ -6160,7 +6160,8 @@
             "importado": false
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {},
+        "chegada": "19:00"
       },
       {
         "id": 1782761399013,
