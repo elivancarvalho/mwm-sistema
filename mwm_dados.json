@@ -5937,7 +5937,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782761399423,
@@ -5962,9 +5963,11 @@
             "jf": "09:00",
             "janela": "08:00-09:00",
             "pedido": "—",
-            "importado": false
+            "importado": false,
+            "statusRastreio": "NO_LOCAL"
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782761398694,
@@ -6011,7 +6014,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782761398799,
@@ -6068,7 +6072,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782761398910,
@@ -6115,7 +6120,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782761398522,
@@ -6152,7 +6158,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782761399013,
@@ -6189,7 +6196,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782761398767,
@@ -6216,7 +6224,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782761398953,
@@ -6243,7 +6252,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       }
     ]
   },
