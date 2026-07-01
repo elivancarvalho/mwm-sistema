@@ -6471,7 +6471,8 @@
             "jf": "12:00",
             "janela": "11:00-12:00",
             "pedido": "—",
-            "importado": true
+            "importado": true,
+            "statusRastreio": "REALIZADA"
           },
           {
             "id": "1782903408674-2",
@@ -6481,7 +6482,8 @@
             "jf": "14:30",
             "janela": "13:30-14:30",
             "pedido": "—",
-            "importado": true
+            "importado": true,
+            "statusRastreio": "NO_LOCAL"
           },
           {
             "id": "1782903408674-3",
@@ -6491,7 +6493,8 @@
             "jf": "16:00",
             "janela": "15:00-16:00",
             "pedido": "—",
-            "importado": false
+            "importado": false,
+            "statusRastreio": "NO_LOCAL"
           }
         ],
         "ctePorPedido": {},
