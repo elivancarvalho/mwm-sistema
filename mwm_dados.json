@@ -6256,7 +6256,7 @@
             "jf": "11:00",
             "janela": "10:0011:00",
             "pedido": "53514",
-            "importado": false,
+            "importado": true,
             "statusRastreio": "NO_LOCAL"
           },
           {
@@ -6267,7 +6267,7 @@
             "jf": "14:00",
             "janela": "13:0014:00",
             "pedido": "53514",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1782903408452-2",
@@ -6305,7 +6305,7 @@
             "jf": "12:00",
             "janela": "11:00-12:00",
             "pedido": "53515",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1782903408697-1",
@@ -6343,7 +6343,7 @@
             "jf": "09:00",
             "janela": "08:0009:00",
             "pedido": "53610",
-            "importado": false,
+            "importado": true,
             "statusRastreio": "NO_LOCAL"
           },
           {
@@ -6354,7 +6354,7 @@
             "jf": "11:00",
             "janela": "10:0011:00",
             "pedido": "53610",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1782903408623-2",
@@ -6364,7 +6364,7 @@
             "jf": "13:00",
             "janela": "12:0013:00",
             "pedido": "53610",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1782903408623-3",
@@ -6402,7 +6402,7 @@
             "jf": "09:00",
             "janela": "08:00-09:00",
             "pedido": "—",
-            "importado": false,
+            "importado": true,
             "statusRastreio": "NO_LOCAL"
           },
           {
@@ -6413,7 +6413,7 @@
             "jf": "11:00",
             "janela": "10:00-11:00",
             "pedido": "—",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1782903407955-1",
@@ -6452,7 +6452,7 @@
             "jf": "10:00",
             "janela": "09:00-10:00",
             "pedido": "—",
-            "importado": false,
+            "importado": true,
             "statusRastreio": "NO_LOCAL"
           },
           {
@@ -6463,7 +6463,7 @@
             "jf": "12:00",
             "janela": "11:00-12:00",
             "pedido": "—",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1782903408674-2",
@@ -6473,7 +6473,7 @@
             "jf": "14:30",
             "janela": "13:30-14:30",
             "pedido": "—",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1782903408674-3",
@@ -6512,7 +6512,7 @@
             "jf": "12:00",
             "janela": "11:0012:00",
             "pedido": "—",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1782903407937-1",
@@ -6522,7 +6522,7 @@
             "jf": "14:00",
             "janela": "13:0014:00",
             "pedido": "—",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1782903407937-2",
@@ -6609,7 +6609,7 @@
             "jf": "18:00",
             "janela": "12:3018:00",
             "pedido": "—",
-            "importado": false
+            "importado": true
           }
         ],
         "ctePorPedido": {}
@@ -6637,7 +6637,7 @@
             "jf": "10:30",
             "janela": "09:30-10:30",
             "pedido": "—",
-            "importado": false,
+            "importado": true,
             "statusRastreio": "NO_LOCAL"
           },
           {
@@ -6648,7 +6648,7 @@
             "jf": "12:00",
             "janela": "11:00-12:00",
             "pedido": "—",
-            "importado": false,
+            "importado": true,
             "statusRastreio": "NO_LOCAL"
           },
           {
@@ -6659,7 +6659,7 @@
             "jf": "14:00",
             "janela": "13:00-14:00",
             "pedido": "—",
-            "importado": false
+            "importado": true
           },
           {
             "id": "1782903408495-1",
@@ -6726,7 +6726,7 @@
             "jf": "12:00",
             "janela": "07:00-12:00",
             "pedido": "53526",
-            "importado": false,
+            "importado": true,
             "statusRastreio": "NO_LOCAL"
           }
         ],
