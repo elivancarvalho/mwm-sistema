@@ -6592,7 +6592,8 @@
             "jf": "09:30",
             "janela": "08:0009:30",
             "pedido": "—",
-            "importado": false
+            "importado": false,
+            "statusRastreio": "NO_LOCAL"
           },
           {
             "id": "1782903408546-1",
