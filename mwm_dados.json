@@ -6435,7 +6435,7 @@
         "frotaAntiga": "Agregado Extra",
         "placa": "AUJ8E86",
         "carreta": "—",
-        "motorista": "JOSE LUCAS",
+        "motorista": "TULIO DOS SANTOS CORDEIRO",
         "rota": "ROTA 07",
         "saida": "07:00",
         "origem": "CARTEC",
@@ -6485,7 +6485,8 @@
             "importado": false
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {},
+        "chegada": "19:00"
       },
       {
         "id": 1782903407937,
