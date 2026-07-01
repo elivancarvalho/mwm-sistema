@@ -6636,7 +6636,7 @@
             "janela": "09:30-10:30",
             "pedido": "—",
             "importado": false,
-            "statusRastreio": "PENDENTE"
+            "statusRastreio": "NO_LOCAL"
           },
           {
             "id": "1782903408495-2",
