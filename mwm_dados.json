@@ -6278,7 +6278,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782903408697,
@@ -6315,7 +6316,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782903408623,
@@ -6372,7 +6374,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782903407955,
@@ -6419,7 +6422,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782903408674,
@@ -6476,7 +6480,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782903407937,
@@ -6523,7 +6528,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782903408534,
@@ -6560,7 +6566,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782903408546,
@@ -6597,7 +6604,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782903408495,
@@ -6644,7 +6652,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782903408601,
@@ -6671,7 +6680,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782903408480,
@@ -6698,7 +6708,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1782903408504,
@@ -6723,9 +6734,11 @@
             "jf": "12:00",
             "janela": "07:00-12:00",
             "pedido": "—",
-            "importado": false
+            "importado": false,
+            "statusRastreio": "NO_LOCAL"
           }
-        ]
+        ],
+        "ctePorPedido": {}
       }
     ]
   },
