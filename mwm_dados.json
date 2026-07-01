@@ -6368,7 +6368,8 @@
             "jf": "13:00",
             "janela": "12:0013:00",
             "pedido": "53610",
-            "importado": true
+            "importado": true,
+            "statusRastreio": "NO_LOCAL"
           },
           {
             "id": "1782903408623-3",
