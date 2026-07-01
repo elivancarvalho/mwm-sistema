@@ -6628,6 +6628,27 @@
         "obs": "",
         "paradas": [
           {
+            "id": "1782903408495-3",
+            "fornecedor": "PASCHOAL",
+            "cidade": "SÃO PAULO",
+            "ji": "09:30",
+            "jf": "10:30",
+            "janela": "09:30-10:30",
+            "pedido": "—",
+            "importado": false,
+            "statusRastreio": "PENDENTE"
+          },
+          {
+            "id": "1782903408495-2",
+            "fornecedor": "KONDOR",
+            "cidade": "SÃO PAULO",
+            "ji": "11:00",
+            "jf": "12:00",
+            "janela": "11:00-12:00",
+            "pedido": "—",
+            "importado": false
+          },
+          {
             "id": "1782903408495-0",
             "fornecedor": "GARRETT",
             "cidade": "SÃO PAULO",
@@ -6646,19 +6667,10 @@
             "janela": "15:00-16:00",
             "pedido": "—",
             "importado": false
-          },
-          {
-            "id": "1782903408495-2",
-            "fornecedor": "KONDOR",
-            "cidade": "SÃO PAULO",
-            "ji": "11:00",
-            "jf": "12:00",
-            "janela": "11:00-12:00",
-            "pedido": "—",
-            "importado": false
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {},
+        "chegada": "19:00"
       },
       {
         "id": 1782903408601,
