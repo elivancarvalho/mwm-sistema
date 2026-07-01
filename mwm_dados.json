@@ -6381,9 +6381,9 @@
       {
         "id": 1782903407955,
         "tipo": "TRUCK",
-        "frota": "R3020",
-        "frotaAntiga": "3246",
-        "placa": "TBA3C87",
+        "frota": "R3002",
+        "frotaAntiga": "366",
+        "placa": "APG8526",
         "carreta": "—",
         "motorista": "JOSE APARECIDO",
         "rota": "ROTA 05",
@@ -6393,6 +6393,17 @@
         "cte": "PENDENTE",
         "obs": "",
         "paradas": [
+          {
+            "id": "1782903407955-2",
+            "fornecedor": "TENNECO",
+            "cidade": "SÃO PAULO",
+            "ji": "08:00",
+            "jf": "09:00",
+            "janela": "08:00-09:00",
+            "pedido": "—",
+            "importado": false,
+            "statusRastreio": "NO_LOCAL"
+          },
           {
             "id": "1782903407955-0",
             "fornecedor": "ABR",
@@ -6412,19 +6423,10 @@
             "janela": "14:30-15:30",
             "pedido": "—",
             "importado": false
-          },
-          {
-            "id": "1782903407955-2",
-            "fornecedor": "TENNECO",
-            "cidade": "SÃO PAULO",
-            "ji": "08:00",
-            "jf": "09:00",
-            "janela": "08:00-09:00",
-            "pedido": "—",
-            "importado": false
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {},
+        "chegada": "19:00"
       },
       {
         "id": 1782903408674,
