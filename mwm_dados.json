@@ -6703,34 +6703,6 @@
         "ctePorPedido": {}
       },
       {
-        "id": 1782903408480,
-        "tipo": "CONJUNTO",
-        "frota": "TL2015",
-        "frotaAntiga": "3242",
-        "placa": "FPK9I21",
-        "carreta": "S3079 / Placa: EKU7A68 (Antigo: 2532)",
-        "motorista": "CELSO SOARES",
-        "rota": "ROTA 22",
-        "saida": "08:00",
-        "origem": "IDEAL",
-        "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
-        "obs": "",
-        "paradas": [
-          {
-            "id": "1782903408480-0",
-            "fornecedor": "IDEAL",
-            "cidade": "SÃO PAULO",
-            "ji": "10:00",
-            "jf": "11:30",
-            "janela": "10:00-11:30",
-            "pedido": "—",
-            "importado": false
-          }
-        ],
-        "ctePorPedido": {}
-      },
-      {
         "id": 1782903408504,
         "tipo": "CONJUNTO",
         "frota": "TL2013",
