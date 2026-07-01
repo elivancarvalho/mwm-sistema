@@ -6317,7 +6317,8 @@
             "jf": "18:00",
             "janela": "15:00-18:00",
             "pedido": "53515",
-            "importado": false
+            "importado": false,
+            "statusRastreio": "NO_LOCAL"
           }
         ],
         "ctePorPedido": {}
