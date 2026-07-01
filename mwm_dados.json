@@ -6347,7 +6347,7 @@
             "janela": "08:0009:00",
             "pedido": "53610",
             "importado": true,
-            "statusRastreio": "NO_LOCAL"
+            "statusRastreio": "REALIZADA"
           },
           {
             "id": "1782903408623-1",
@@ -6357,7 +6357,8 @@
             "jf": "11:00",
             "janela": "10:0011:00",
             "pedido": "53610",
-            "importado": true
+            "importado": true,
+            "statusRastreio": "REALIZADA"
           },
           {
             "id": "1782903408623-2",
