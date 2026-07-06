@@ -6752,10 +6752,75 @@
         ],
         "ctePorPedido": {}
       }
+    ],
+    "06/07": [
+      {
+        "id": 1783339233739,
+        "tipo": "TRUCK",
+        "frota": "C955",
+        "frotaAntiga": "Agregado Extra",
+        "placa": "JOI2796",
+        "carreta": "—",
+        "motorista": "ANDERSON MACENA MELENDRE",
+        "rota": "ROTA 04",
+        "saida": "05:00",
+        "chegada": "19:00",
+        "origem": "MANGOTEX",
+        "destino": "FILIAL SBC",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1783339233738-0",
+            "fornecedor": "MANGOTEX",
+            "cidade": "SÃO PAULO",
+            "ji": "08:00",
+            "jf": "09:00",
+            "janela": "08:00-09:00",
+            "pedido": "—",
+            "importado": false,
+            "statusRastreio": "PENDENTE"
+          },
+          {
+            "id": "1783339233738-1",
+            "fornecedor": "SCHADEK",
+            "cidade": "SÃO PAULO",
+            "ji": "10:00",
+            "jf": "11:00",
+            "janela": "10:00-11:00",
+            "pedido": "—",
+            "importado": false,
+            "statusRastreio": "PENDENTE"
+          },
+          {
+            "id": "1783339233738-2",
+            "fornecedor": "TBA - EVAMO",
+            "cidade": "SÃO PAULO",
+            "ji": "12:00",
+            "jf": "13:00",
+            "janela": "12:00-13:00",
+            "pedido": "—",
+            "importado": false,
+            "statusRastreio": "PENDENTE"
+          },
+          {
+            "id": "1783339233738-3",
+            "fornecedor": "METALAC",
+            "cidade": "SÃO PAULO",
+            "ji": "14:30",
+            "jf": "15:30",
+            "janela": "14:30-15:30",
+            "pedido": "—",
+            "importado": false,
+            "statusRastreio": "PENDENTE"
+          }
+        ]
+      }
     ]
   },
   "dates": [
     "01/07",
+    "06/07",
     "08/06",
     "09/06",
     "10/06",
