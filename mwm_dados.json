@@ -6814,6 +6814,69 @@
             "importado": false,
             "statusRastreio": "PENDENTE"
           }
+        ],
+        "ctePorPedido": {}
+      },
+      {
+        "id": 1783339284343,
+        "tipo": "TRUCK",
+        "frota": "R3022",
+        "frotaAntiga": "3249",
+        "placa": "TBB5J94",
+        "carreta": "—",
+        "motorista": "ELSON VIEIRA BORGES",
+        "rota": "ROTA 05",
+        "saida": "05:00",
+        "chegada": "19:00",
+        "origem": "TENNECO",
+        "destino": "FILIAL SBC",
+        "cte": "PENDENTE",
+        "obs": "",
+        "paradas": [
+          {
+            "id": "1783339284342-0",
+            "fornecedor": "TENNECO",
+            "cidade": "SÃO PAULO",
+            "ji": "08:00",
+            "jf": "09:00",
+            "janela": "08:00-09:00",
+            "pedido": "—",
+            "importado": false,
+            "statusRastreio": "PENDENTE"
+          },
+          {
+            "id": "1783339284342-1",
+            "fornecedor": "ABR",
+            "cidade": "SÃO PAULO",
+            "ji": "10:00",
+            "jf": "11:00",
+            "janela": "10:00-11:00",
+            "pedido": "—",
+            "importado": false,
+            "statusRastreio": "PENDENTE"
+          },
+          {
+            "id": "1783339284342-2",
+            "fornecedor": "PROTURBO",
+            "cidade": "SÃO PAULO",
+            "ji": "13:00",
+            "jf": "14:00",
+            "janela": "13:00-14:00",
+            "pedido": "—",
+            "importado": false,
+            "statusRastreio": "PENDENTE"
+          },
+          {
+            "id": "1783339284342-3",
+            "fornecedor": "ALPINO",
+            "cidade": "SÃO PAULO",
+            "ji": "14:30",
+            "jf": "15:30",
+            "janela": "14:30-15:30",
+            "pedido": "—",
+            "importado": false,
+            "statusRastreio": "PENDENTE"
+          }
         ]
       }
     ]
