@@ -5963,7 +5963,7 @@
             "jf": "09:00",
             "janela": "08:00-09:00",
             "pedido": "—",
-            "importado": false,
+            "importado": true,
             "statusRastreio": "NO_LOCAL"
           }
         ],
@@ -6940,7 +6940,8 @@
             "importado": false,
             "statusRastreio": "PENDENTE"
           }
-        ]
+        ],
+        "ctePorPedido": {}
       }
     ]
   },
