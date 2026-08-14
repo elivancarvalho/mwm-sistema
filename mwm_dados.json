@@ -9233,7 +9233,8 @@
             "jf": "15:30",
             "janela": "13:30-15:30",
             "pedido": "—",
-            "importado": true
+            "importado": true,
+            "statusRastreio": "REALIZADA"
           }
         ],
         "ctePorPedido": {},
