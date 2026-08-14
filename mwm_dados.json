@@ -9155,7 +9155,8 @@
             "jf": "12:30",
             "janela": "11:30-12:30",
             "pedido": "—",
-            "importado": false
+            "importado": false,
+            "statusRastreio": "REALIZADA"
           },
           {
             "id": "1786713157951-2",
