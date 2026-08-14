@@ -9122,34 +9122,6 @@
     ],
     "14/08": [
       {
-        "id": 1786713158317,
-        "tipo": "TRUCK",
-        "frota": "9949",
-        "frotaAntiga": "Agregado Extra",
-        "placa": "DUO2539",
-        "carreta": "—",
-        "motorista": "SILVIO",
-        "rota": "ROTA 01",
-        "saida": "09:00",
-        "origem": "V.S DE LIMA",
-        "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
-        "obs": "",
-        "paradas": [
-          {
-            "id": "1786713158317-0",
-            "fornecedor": "BORGWAGNER",
-            "cidade": "SÃO PAULO",
-            "ji": "15:00",
-            "jf": "16:00",
-            "janela": "15:00-16:00",
-            "pedido": "—",
-            "importado": false
-          }
-        ],
-        "ctePorPedido": {}
-      },
-      {
         "id": 1786713157951,
         "tipo": "CONJUNTO",
         "frota": "TL2014",
