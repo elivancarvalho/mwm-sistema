@@ -9292,7 +9292,7 @@
         "paradas": [
           {
             "id": "1786713157756-0",
-            "fornecedor": "MGK",
+            "fornecedor": "MARCELO FELIX",
             "cidade": "SÃO PAULO",
             "ji": "00:00",
             "jf": "02:00",
@@ -9302,7 +9302,8 @@
             "statusRastreio": "REALIZADA"
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {},
+        "chegada": "19:00"
       }
     ],
     "17/08": [
