@@ -9320,7 +9320,8 @@
             "jf": "02:00",
             "janela": "00:00-02:00",
             "pedido": "—",
-            "importado": true
+            "importado": true,
+            "statusRastreio": "REALIZADA"
           }
         ],
         "ctePorPedido": {}
