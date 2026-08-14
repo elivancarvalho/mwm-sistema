@@ -9167,7 +9167,7 @@
             "janela": "13:00-14:00",
             "pedido": "—",
             "importado": false,
-            "statusRastreio": "NO_LOCAL"
+            "statusRastreio": "REALIZADA"
           }
         ],
         "ctePorPedido": {},
@@ -9208,7 +9208,7 @@
             "janela": "11:00-12:00",
             "pedido": "—",
             "importado": false,
-            "statusRastreio": "NO_LOCAL"
+            "statusRastreio": "FRUSTRADA"
           }
         ],
         "ctePorPedido": {}
@@ -9349,7 +9349,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786726284732,
@@ -9406,7 +9407,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786726285156,
@@ -9453,7 +9455,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786726284941,
@@ -9500,7 +9503,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786726285277,
@@ -9537,7 +9541,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786726285112,
@@ -9584,7 +9589,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786726284954,
@@ -9631,7 +9637,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786726284515,
@@ -9688,7 +9695,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786726284828,
@@ -9725,7 +9733,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786726284599,
@@ -9782,7 +9791,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786726284468,
@@ -9809,7 +9819,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786726284399,
@@ -9836,7 +9847,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786726284563,
@@ -9863,7 +9875,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786726284449,
@@ -9890,7 +9903,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786726284905,
@@ -9937,7 +9951,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786726285212,
@@ -9994,7 +10009,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786726284389,
@@ -10041,7 +10057,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786726285175,
@@ -10078,7 +10095,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786726284658,
@@ -10115,7 +10133,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       }
     ]
   },
