@@ -9239,12 +9239,12 @@
       },
       {
         "id": 1786713158506,
-        "tipo": "CONJUNTO",
-        "frota": "TL2011",
-        "frotaAntiga": "3238",
-        "placa": "SUI0A86",
-        "carreta": "S3074 / Placa: JOK3001 (Antigo: —)",
-        "motorista": "CELSO SOARES",
+        "tipo": "TRUCK",
+        "frota": "R3025",
+        "frotaAntiga": "3253",
+        "placa": "TBB3I31",
+        "carreta": "—",
+        "motorista": "MILTONILO DE MATOS",
         "rota": "ROTA 21",
         "saida": "11:00",
         "origem": "CINPAL",
@@ -9263,7 +9263,8 @@
             "importado": false
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {},
+        "chegada": "19:00"
       },
       {
         "id": 1786713158054,
