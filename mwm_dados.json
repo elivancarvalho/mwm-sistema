@@ -9225,7 +9225,7 @@
         "saida": "11:00",
         "origem": "CINPAL",
         "destino": "MWM STO AMARO",
-        "cte": "PENDENTE",
+        "cte": "IMPRESSO",
         "obs": "",
         "paradas": [
           {
@@ -9240,7 +9240,9 @@
             "statusRastreio": "REALIZADA"
           }
         ],
-        "ctePorPedido": {},
+        "ctePorPedido": {
+          "55301": "IMPRESSO"
+        },
         "chegada": "19:00"
       },
       {
