@@ -9146,7 +9146,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786713157951,
@@ -9193,7 +9194,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786713158396,
@@ -9230,7 +9232,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786713158506,
@@ -9257,7 +9260,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786713158054,
@@ -9284,7 +9288,8 @@
             "pedido": "—",
             "importado": false
           }
-        ]
+        ],
+        "ctePorPedido": {}
       },
       {
         "id": 1786713157756,
@@ -9309,9 +9314,10 @@
             "jf": "02:00",
             "janela": "00:00-02:00",
             "pedido": "—",
-            "importado": false
+            "importado": true
           }
-        ]
+        ],
+        "ctePorPedido": {}
       }
     ]
   },
