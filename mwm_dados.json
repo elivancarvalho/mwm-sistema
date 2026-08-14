@@ -9292,7 +9292,8 @@
             "statusRastreio": "REALIZADA"
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {},
+        "chegada": "19:00"
       },
       {
         "id": 1786713157756,
