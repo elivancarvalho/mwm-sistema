@@ -9166,7 +9166,8 @@
             "jf": "14:00",
             "janela": "13:00-14:00",
             "pedido": "—",
-            "importado": false
+            "importado": false,
+            "statusRastreio": "NO_LOCAL"
           }
         ],
         "ctePorPedido": {},
