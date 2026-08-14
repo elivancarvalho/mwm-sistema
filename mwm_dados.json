@@ -9267,7 +9267,7 @@
             "janela": "10:00-11:30",
             "pedido": "—",
             "importado": false,
-            "statusRastreio": "REALIZADA"
+            "statusRastreio": "NO_LOCAL"
           }
         ],
         "ctePorPedido": {},
