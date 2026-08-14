@@ -9151,11 +9151,11 @@
       },
       {
         "id": 1786713157951,
-        "tipo": "TRUCK",
-        "frota": "R3022",
-        "frotaAntiga": "3249",
-        "placa": "TBB5J94",
-        "carreta": "—",
+        "tipo": "CONJUNTO",
+        "frota": "TL2014",
+        "frotaAntiga": "3241",
+        "placa": "SST1D31",
+        "carreta": "SL3030 / Placa: GBQ4C78 (Antigo: 2530)",
         "motorista": "ELSON VIEIRA BORGES",
         "rota": "ROTA 04",
         "saida": "05:00",
@@ -9196,7 +9196,8 @@
             "importado": false
           }
         ],
-        "ctePorPedido": {}
+        "ctePorPedido": {},
+        "chegada": "19:00"
       },
       {
         "id": 1786713158396,
